@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Migration Script Of Todo Lists From Basecamp To Acunote</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+        <a href="http://github.com/qpleple/migration-basecamp-acunote">
+            <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+        </a>
+    
+    
+    <h1>Migration Script Of Todo Lists From Basecamp To Acunote</h1>
+    
+    <div id="post-content">
+        <blockquote>
+<p>This script if made for those who want to migrate their todo lists from
+Basecamp to Acunote.</p>
+</blockquote>
+
+<p>As Acunote does not have (yet) an API, this script
+is making API calls to get the data from Basecamp and outputs a CSV file
+that you can import in Acunote.</p>
+
+<h3>Usage</h3>
+
+<p>Edit the file <code>params.py</code> according to your credentials :</p>
+<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="c"># Basecamp URL for API calls</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s">&quot;https://example.basecamphq.com&quot;</span>
+
+<span class="c"># Basecamp API key</span>
+<span class="n">apikey</span> <span class="o">=</span> <span class="s">&quot;04f69569a36d306701238466d5ea12cb097b959d&quot;</span>
+
+<span class="c"># Users</span>
+<span class="c"># List here all the user IDs in Basecamp</span>
+<span class="c"># and associate a name in Acunote :</span>
+<span class="c"># Basecamp IDs =&gt; Acunote names</span>
+<span class="n">creatorNames</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;7248751&#39;</span> <span class="p">:</span> <span class="s">&quot;quentin&quot;</span><span class="p">,</span>
+    <span class="s">&#39;1122334&#39;</span> <span class="p">:</span> <span class="s">&quot;bob&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Give the todo list ID in argument to the script and it will output the
+CSV file to import in Acunote :</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>python migration-basecamp-acunote.py 3248324
+Level,Number,Description,Tags,Owner,Status,Priority,Estimate,Remaining,Wiki,Watchers,Related,Duplicate,Version 1
+,<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;Item B&quot;</span>,,<span class="s2">&quot;quentin&quot;</span>,<span class="s2">&quot;Not Started&quot;</span>,,,,,,,,
+,<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;Item C&quot;</span>,,<span class="s2">&quot;quentin&quot;</span>,<span class="s2">&quot;Completed&quot;</span>,,,,,,,,
+,<span class="s2">&quot;2&quot;</span>,<span class="s2">&quot;Item A&quot;</span>,,<span class="s2">&quot;bob&quot;</span>,<span class="s2">&quot;Not Started&quot;</span>,,,,,,,,
+,<span class="s2">&quot;3&quot;</span>,<span class="s2">&quot;Item D&quot;</span>,,<span class="s2">&quot;blabla&quot;</span>,<span class="s2">&quot;Not Started&quot;</span>,,,,,,,,
+</code></pre></div>
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="http://graph.facebook.com/qpleple/picture?type=large">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            June 2011
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>

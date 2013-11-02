@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Unit Testing Symfony2 Repositories</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+    
+    <h1>Unit Testing Symfony2 Repositories</h1>
+    
+    <div id="post-content">
+        <blockquote>
+<p>Unit testing of Symfony2 repositories are harder as they require a connection to the database. Here is a step-by-step tutorial showing how to do it with PHPUnit.</p>
+</blockquote>
+
+<p><img class="pull-right" style="width: 100px" src="/img/logos/symfony2.png" /></p>
+
+<p>Here is the workflow I have to add a new function in an entity repository.
+Let&#39;s say I have a blog and I want to get the most seen posts by
+counting the visits for each post. Here is the workflow I have:</p>
+
+<ol>
+<li> Write the functions structure in the repository</li>
+<li> Write the test structure test class</li>
+<li> Write the DQL query with the console</li>
+<li> Write the test in the test class</li>
+<li> Write the query in the repository</li>
+</ol>
+
+<h3>1. Write the functions structure in the repository</h3>
+
+<p>The usual way to do add a query in a repository to add a new function
+that query the database and return the results:</p>
+
+<div class="highlight"><pre><code class="php"><span class="k">namespace</span> <span class="nx">Acme\BlogBundle\Repository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Doctrine\ORM\EntityRepository</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">PostRepository</span> <span class="k">extends</span> <span class="nx">EntityRepository</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">qbMostSeen</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span>
+            <span class="o">-&gt;</span><span class="na">createQueryBuilder</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+            <span class="o">-&gt;</span> <span class="c1">// ...</span>
+    <span class="p">}</span>
+    
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getMostSeen</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span>
+            <span class="o">-&gt;</span><span class="na">qbMostSeen</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">getQuery</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">getResult</span><span class="p">()</span>
+        <span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2. Write the test structure test class</h3>
+
+<p>The test class will be in the <code>Tests</code> directory of the bundle:</p>
+
+<div class="highlight"><pre><code class="php"><span class="k">namespace</span> <span class="nx">Acme\BlogBundle\Tests\Repository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Bundle\FrameworkBundle\Test\WebTestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostRespositoryTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>But we want to be able to instantiate <code>PostRepository</code> and for that we
+need the Entity Manager and a kernel (that we don&#39;t have by default). So
+let&#39;s add <code>setUp()</code> that will be executed before the tests:</p>
+
+<div class="highlight"><pre><code class="php"><span class="k">namespace</span> <span class="nx">Acme\BlogBundle\Tests\Repository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Bundle\FrameworkBundle\Test\WebTestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostRespositoryTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$repo</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$kernel</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">createKernel</span><span class="p">();</span>
+        <span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">boot</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span> <span class="o">=</span> <span class="nv">$kernel</span>
+            <span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">getRepository</span><span class="p">(</span><span class="s1">&#39;AcmeBlogBundle:Post&#39;</span><span class="p">)</span>
+        <span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>We add our tests:</p>
+
+<ul>
+<li>on the query itself: here we compare the query DQL to the DQL we are
+going to write</li>
+<li>on the results: here we check that we have some results</li>
+</ul>
+
+<div class="highlight"><pre><code class="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">testMostSeen</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span><span class="o">-&gt;</span><span class="na">qbMostSeen</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getDql</span><span class="p">(),</span>
+        <span class="s2">&quot;...&quot;</span> <span class="c1">// the DQL query</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertNotEquals</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span><span class="o">-&gt;</span><span class="na">getMostSeen</span><span class="p">()));</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>You can add your tests on either the query or the results.</p>
+
+<h3>3. Write the DQL query with the console</h3>
+
+<p>Let&#39;s write the DQL step by step testing each step with
+the console. Here, we get all the posts:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">app/console doctrine:query:dql --max-result<span class="o">=</span>5 <span class="s2">&quot;SELECT p.title FROM Acme\BlogBundle\Entity\Post p&quot;</span>
+</code></pre></div>
+<p>then we add one by one parts of our query, testing on our database to
+check the result every time. A left join to get all the visits:</p>
+<div class="highlight"><pre><code class="mysql language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">id</span>
+<span class="k">FROM</span> <span class="n">Acme</span><span class="err">\</span><span class="n">BlogBundle</span><span class="err">\</span><span class="n">Entity</span><span class="err">\</span><span class="n">Post</span> <span class="n">p</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">p</span><span class="p">.</span><span class="n">visits</span> <span class="n">v</span>
+</code></pre></div>
+<p>then we add the visit count:</p>
+<div class="highlight"><pre><code class="mysql language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">AS</span> <span class="n">visit_count</span>
+<span class="k">FROM</span> <span class="n">Acme</span><span class="err">\</span><span class="n">BlogBundle</span><span class="err">\</span><span class="n">Entity</span><span class="err">\</span><span class="n">Post</span> <span class="n">p</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">p</span><span class="p">.</span><span class="n">visits</span> <span class="n">v</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span>
+</code></pre></div>
+<p>and we order by visit count:</p>
+<div class="highlight"><pre><code class="mysql language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">AS</span> <span class="n">visit_count</span>
+<span class="k">FROM</span> <span class="n">Acme</span><span class="err">\</span><span class="n">BlogBundle</span><span class="err">\</span><span class="n">Entity</span><span class="err">\</span><span class="n">Post</span> <span class="n">p</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">p</span><span class="p">.</span><span class="n">visits</span> <span class="n">v</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">visit_count</span> <span class="k">DESC</span>
+</code></pre></div>
+<p>Now that we are happy with the query, we can finish to write our tests.</p>
+
+<h3>4. Write the test in the test class</h3>
+
+<p>Just insert the DQL in the test:</p>
+
+<div class="highlight"><pre><code class="php"><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span><span class="o">-&gt;</span><span class="na">qbMostSeen</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getDql</span><span class="p">(),</span>
+    <span class="s2">&quot;SELECT p.title, COUNT(v) AS visit_count FROM Acme\BlogBundle\Entity\Post p LEFT JOIN p.visits v GROUP BY p.title ORDER BY visit_count DESC&quot;</span>
+<span class="p">);</span>
+</code></pre></div>
+
+<h3>5. Write the query in the repository</h3>
+
+<p>Finally, write the query until PHPUnit is green!</p>
+
+<div class="highlight"><pre><code class="php"><span class="k">namespace</span> <span class="nx">Acme\BlogBundle\Repository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Doctrine\ORM\EntityRepository</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostRepository</span> <span class="k">extends</span> <span class="nx">EntityRepository</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">qbMostSeen</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span>
+            <span class="o">-&gt;</span><span class="na">createQueryBuilder</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s1">&#39;p.title&#39;</span><span class="p">,</span> <span class="s1">&#39;COUNT(v) AS visit_counts&#39;</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">leftJoin</span><span class="p">(</span><span class="s1">&#39;p.visits&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">orderBy</span><span class="p">(</span><span class="s1">&#39;visit_counts&#39;</span><span class="p">,</span> <span class="s1">&#39;DESC&#39;</span><span class="p">)</span>
+        <span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getMostSeen</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span>
+            <span class="o">-&gt;</span><span class="na">qbMostSeen</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">getQuery</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">getResult</span><span class="p">()</span>
+        <span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>Pro tip</h3>
+
+<p>You might want to add the alias <code>dql</code> to your shell environment
+(<code>.bash_profile</code>, <code>.zsh/zshaliases</code> or whatever):</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nb">alias </span><span class="nv">dql</span><span class="o">=</span><span class="s2">&quot;app/console doctrine:query:dql&quot;</span>
+</code></pre></div>
+<p>so you can just run in your shell:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">dql <span class="s2">&quot;SELECT p.title FROM Acme\BlogBundle\Entity\Post p&quot;</span>
+</code></pre></div>
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="http://graph.facebook.com/qpleple/picture?type=large">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            October 2011
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>

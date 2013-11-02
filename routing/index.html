@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Le routage, comment ça marche ?</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+    
+    <h1>Le routage, comment ça marche ?</h1>
+    
+    <div id="post-content">
+        <blockquote>
+<p>Je vous explique, avec mes mots, comment un message est transporté d&#39;un ordi à un autre sur internet.</p>
+</blockquote>
+
+<p><img class="pull-right" style="margin: 0 0 10px 10px; width: 170px" src="/img/post-routing/envelope1.png" /></p>
+
+<p>Dans mon article précédent, <a href="/internet" title="Internet, comment ça marche ?">Internet, Comment ça mache ?</a>,
+j&#39;ai dit que pour envoyer un message à un ordinateur à l&#39;autre bout du
+monde, il suffisait de balancer le message sur le réseau en précisant
+l&#39;adresse IP du destinataire et que le message était amené à bon port
+&quot;comme par magie&quot;. C&#39;est cette magie que je vais essayer d&#39;expliquer
+avec mes mots dans cet article. Je vais simplifier un peu ce qui se
+passe pour que cela soit compréhensible par tous.</p>
+
+<h3>Exemple</h3>
+
+<p>Les ordinateurs sur internet communiquent entre eux pour s&#39;échanger des
+informations. Lorsque vous allez sur le site de Google, vous envoyez en
+fait un message à l&#39;ordinateur (appelé le serveur) sur lequel est
+enregistré le site qui ressemble à :</p>
+
+<p><em>Bonjour www.google.fr, pouvez vous m&#39;envoyer le contenu de la page d&#39;accueil de votre site ?</em></p>
+
+<p>et le serveur renvoie un message contenant la page d&#39;accueil de Google.
+Vous pouvez lire <a href="/internet" title="Internet, comment ça marche ?">Internet, Comment ça mache ?</a> pour plus de détails mais vous n&#39;en avez pas besoin pour comprendre ce qui suit.</p>
+
+<h3>Adresses IP et adresses MAC</h3>
+
+<p>Tous les ordinateurs sur internet ont une adresse IP, avec 4 nombres.
+C&#39;est comme un numéro de téléphone, ça permet de les joindre :
+129.104.201.51 par exemple. Toutes les cartes réseau (trou dans lequel
+on branche le câble réseau) ont également une adresse MAC. C&#39;est à voir
+comme un numéro de série de la carte réseau et ça a cette tête là :
+00:26:bb:5b:a4:28 L&#39;adresse IP on peut plus ou moins la choisir (en tout
+cas, on la choisit pour vous), l&#39;adresse MAC, quant à elle, n&#39;est pas
+modifiable. Votre ordinateur n&#39;a qu&#39;une seule carte réseau (vous ne
+pouvez brancher le câble réseau qu&#39;à un seul endroit) et donc qu&#39;une
+seule adresse IP et qu&#39;une seule adresse MAC. Mais on va voir plus loin
+qu&#39;il y a des sortes de multiprises réseau (des routeurs) pour faire
+suivre les messages sur internet qui elles peuvent avoir plus de
+100 prises réseau. Chacune de ces prises aura sa propre adresse MAC et
+sa propre adresse IP.</p>
+
+<h3>Le matos nécessaire à l&#39;envoi d&#39;un message</h3>
+
+<p>Un message, ça ne s&#39;envoie pas tel quel, il faut le mettre dans toutes
+sortes d&#39;enveloppes. Voyons ce dont on a besoin pour envoyer un message.
+On dit communément qu&#39;il y a 4 couches, numérotées de 1 à 4 : couche
+physique, couche liaison, couche réseau et couche transport.</p>
+
+<ol>
+<li><p>Déjà, on a besoin du câble réseau qui relie l&#39;ordi à internet. C&#39;est la
+<em>couche physique</em>, la première couche, et pour s&#39;en souvenir on écrit
+un gros « 1 » au marqueur rouge sur le câble.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/couche1.png" />
+</div></li>
+<li><p>Il faut ensuite une enveloppe pour indiquer à quelle prise réseau au
+bout du câble on envoie le message. Ce n&#39;est en général pas le
+destinataire final, mais un intermédiaire qui fera suivre le message.
+Dans certaines situations, le message peut passer par plus de
+20 intermédiaires avant d&#39;arriver là où il doit aller. On utilise pour
+ça ce que je vais appeler les enveloppes liaison (en jaune). Sur ces
+enveloppes on doit noter l&#39;adresse MAC (rappel : le numéro de série de
+la carte réseau) du prochain intermédiaire. Ces enveloppe constituent la
+<em>couche liaison</em>, la couche n°2, et pour s&#39;en souvenir on écrit un
+gros « 2 » en guise de timbre sur ces enveloppes.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/tas21.png" />
+</div>
+
+<p>Ces enveloppes liaison en jaune sont à usage unique et ne peuvent pas passer
+de machine à machine. Pour permettre de faire suivre le courrier à
+travers le réseau, on a besoin d&#39;un autre type d&#39;enveloppe : les
+enveloppes réseau.</p></li>
+<li><p>Voici les enveloppes réseau (en bleu), qui vont dans les enveloppes
+liaison (en jaune) et que les différents ordinateurs qui sont sur le
+chemin pourront se passer jusqu&#39;au destinataire, on note dessus
+l&#39;adresse IP du destinataire. Ces enveloppe réseau constituent la
+<em>couche réseau</em>, la couche n°3. Et comme j&#39;aime bien mon marqueur
+rouge, on va noter un gros « 3 » en guise de timbre sur les enveloppes
+réseau.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/tas31.png" />
+</div></li>
+<li><p>Enfin, les logiciels utilisent un protocole spécial pour échanger les
+messages, un protocole de transport, TCP (Transport Control Protocol
+pour protocole de contrôle de transport) la plupart du temps sur
+internet. Un protocole c&#39;est comme une langue : c&#39;est des mots spéciaux
+(vocabulaire) et des manières de demander les choses et de répondre
+(grammaire). Pour chaque protocole, il existe des gros documents qui
+expliquent comment les logiciels doivent utiliser ces sortes de langues.
+On va représenter ce protocole par du papier spécial : lorsqu&#39;un
+logiciel &quot;écrit&quot; un message sur ce papier, c&#39;est qu&#39;il utilise le
+protocole TCP. C&#39;est la <em>couche transport</em>, la couche n°4, et pour
+s&#39;en rappeler on va utiliser du papier à en-tête avec un gros « 4 »
+rouge dessus.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/tas4vierge.png" />
+</div></li>
+</ol>
+
+<h3>Envoyer un message</h3>
+
+<blockquote>
+<p>Bon, mais comment j&#39;envoie un message finalement ?</p>
+</blockquote>
+
+<p>Il faut descendre toutes les couches, une à une :</p>
+
+<ul>
+<li><p><em>Couche 4</em> : commencer par encapsuler le message avec le protocole TCP
+(l&#39;écrire sur notre papier à entête spécial).</p></li>
+<li><p><em>Couche 3</em> : mettre le message dans l&#39;enveloppe réseau (en bleu) et
+noter dessus l&#39;adresse IP du destinataire.</p></li>
+<li><p><em>Couche 2</em> : mettre l&#39;enveloppe réseau dans une grosse enveloppe
+liaison (en jaune), chercher à qui il faut envoyer le message en
+premier pour qu&#39;il le fasse suivre vers le destinataire (on va voir
+plus loin comment on fait pour ça) et noter son adresse MAC sur
+l&#39;enveloppe liaison.</p></li>
+<li><p><em>Couche 1</em> : envoyer l&#39;enveloppe liaison dans le câble réseau.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/envoi-message.png" />
+</div></li>
+</ul>
+
+<p>Attention à bien faire la distinction entre ces 2 là qui sont la plupart
+du temps différents :</p>
+
+<ul>
+<li><p>le destinataire, dont l&#39;adresse IP est notée sur l&#39;enveloppe réseau
+(en bleu)</p></li>
+<li><p>le premier intermédiaire, dont l&#39;adresse MAC est notée sur
+l&#39;enveloppe liaison (en jaune)</p></li>
+</ul>
+
+<h3>Un réseau</h3>
+
+<blockquote>
+<p>Et après être parti dans le câble réseau, il va où le message ?</p>
+</blockquote>
+
+<p>Le message est parti dans le réseau. Voilà à quoi ça ressemble un réseau
+:</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/reseau-vierge.png" />
+</div>
+
+<p>Il y a des ordinateurs reliés entre eux par des câbles réseaux qui sont
+concentrés sur des sortes de multiprises réseau. Vous pouvez en voir 2
+types sur le schéma :</p>
+
+<ul>
+<li><p>les switchs qui sont les sortes de pastilles grises,</p></li>
+<li><p>et les routeurs qui sont les sortes de camemberts bleus.</p></li>
+</ul>
+
+<p>Les ordinateurs et les routeurs ont des adresses MAC et IP pour chaque
+carte réseau, donc à chaque câble réseau auquel ils sont branchés. Les
+switchs n&#39;ont ni adresse MAC, ni adresse IP.</p>
+
+<blockquote>
+<p>Ouh là, c&#39;est compliqué. Dans le réseau précédent par exemple, qui a
+des adresses et combien ?</p>
+</blockquote>
+
+<p>Si on note à côté de chaque prise les adresses MAC et IP, voila ce que
+ça donne :</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/reseau-avec-lbl.png" />
+</div>
+
+<p>Pour l&#39;exemple, j&#39;ai pris des adresses simples et j&#39;ai coupé les
+adresses MAC (normalement, ça a cette tête : 00:26:bb:5b:a4:28). Vous
+avez remarqué sur le schéma que :</p>
+
+<ul>
+<li><p>les <em>ordinateurs</em> ont une adresses MAC et une adresse IP,</p></li>
+<li><p>les <em>routeurs</em> ont chacun deux adresses MAC et deux adresses IP (une
+par prise),</p></li>
+<li><p>et les <em>switchs</em> n&#39;ont aucune adresse</p></li>
+</ul>
+
+<p>Voyons maintenant à quoi servent les switchs et les routeurs et quelle
+est la différence entre les deux.</p>
+
+<h3>La terre vue d&#39;un switch</h3>
+
+<p>Un switch est à voir comme une multiprise réseau qui redirige les
+messages sans les ouvrir ni les modifier. Pour cela, il garde en mémoire
+qui est connecté au bout des différents câbles réseau qu&#39;il relie. Voilà
+le réseau à travers les yeux d&#39;un switch en particulier (celui en haut à
+gauche sur le schéma précédent) :</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/la-terre-vue-dun-switch2.png" />
+</div>
+
+<p>Comme vous pouvez le voir, le switch ne connait absolument pas la carte
+de tout le réseau. Il ne sait rien d&#39;autre que quelle carte réseau
+(adresse MAC) est connectée au bout de quel câble.</p>
+
+<blockquote>
+<p>Et comment il le sait ?</p>
+</blockquote>
+
+<p>Il le sait en observant les messages qui proviennent des câbles : je ne
+vous l&#39;avais pas dit, mais au dos de l&#39;enveloppe liaison (niveau 2, les
+jaunes) est notée l&#39;adresse MAC de l&#39;expéditeur. Il apprend donc au fur
+et à mesure qui est au bout de quoi.</p>
+
+<blockquote>
+<p>Et ça fait quoi un switch ?</p>
+</blockquote>
+
+<p>La seule chose qu&#39;un switch fait c&#39;est lorsqu&#39;un message arrive, il lit
+l&#39;adresse MAC et redirige le message dans le bon câble réseau (sans
+l&#39;ouvir ni le modifier).</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/la-terre-vue-dun-switch-21.png" />
+</div>
+
+<p>Ici le switch reçoit un message à destination de ...:01:02, il va donc
+le faire suivre dans le câble de droite.</p>
+
+<h3>Sous-réseaux</h3>
+
+<blockquote>
+<p>Et ça ne suffit pas des switchs ? Pourquoi tout le monde ne serait pas
+relié par des switchs ?</p>
+</blockquote>
+
+<p>Déjà, les switchs ne peuvent pas avoir en mémoire toutes les adresses
+MAC de la terre, il y en a beaucoup trop. Ensuite, parce que quand un
+switch reçoit un message à destination d&#39;une adresse qu&#39;il ne connaît
+pas encore, il l&#39;envoie à tout le monde. Comme ça au moins, il est sûr
+que le message arrivera bien au destinataire. Vous imaginez si chaque
+ordinateur sur terre se mettait à envoyer des messages à tout le monde ?
+Internet tomberait rapidement en panne parce que le réseau serait trop
+encombré. Donc on a besoin d&#39;isoler différents petits réseaux : des
+sous-réseaux. La vraie définition est un peu compliquée mais voyez un
+sous-réseau comme le groupe des ordinateurs branchés à un même switch et
+dont l&#39;adresse IP commence par le même préfixe (0.0.1 par exemple). Sur
+le schéma suivant, j&#39;ai séparé les sous-réseaux dans des boîtes
+différentes. Il y en a 4 et on les définies par le préfixe commun des
+adresses IP. Je vais noter 0.0.1.X le sous-réseau des adresses IP
+commençant par 0.0.1.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/sous-reseaux.png" />
+</div>
+
+<p>Les sous-réseaux 0.0.1.X, 0.0.2.X et 0.0.3.X contiennent des ordinateurs
+alors que le sous-réseau 0.0.4.X ne contient que des routeurs (les
+camemberts bleus). Vous remarquez que les routeurs appartiennent à
+plusieurs sous-réseaux : c&#39;est justement eux qui vont faire office de
+pont et faire passer les messages d&#39;un sous-réseau à un autre.</p>
+
+<h3>Le job d&#39;un routeur</h3>
+
+<p>Le job d&#39;un routeur c&#39;est de faire passer les messages d&#39;un sous-réseau
+à un autre. Car à l&#39;intérieur d&#39;un sous-réseau, les gens peuvent
+s&#39;envoyer directement des messages : il suffit de spécifier l&#39;adresse
+MAC du destinataire sur l&#39;enveloppe liaison (la jaune) et le switch va
+directement lui donner. Mais pour envoyer un message à l&#39;extérieur, il
+faut l&#39;envoyer au routeur : c&#39;est lui qui va se charger de le faire
+sortir. Voila la marche à suivre :</p>
+
+<ul>
+<li><p>noter sur l&#39;enveloppe réseau (la bleue) l&#39;adresse IP du destinataire
+final (comme ça les routeurs savent à qui le message va finalement),</p></li>
+<li><p>et sur l&#39;enveloppe liaison (la jaune) l&#39;adresse MAC du routeur
+(comme ça, le message va aller au routeur).</p></li>
+</ul>
+
+<p>Il est important de comprendre que c&#39;est les adresses MAC qui
+déterminent à quelles machines vont les messages, l&#39;adresse IP du
+destinataire est utilisée à chaque étape du parcours pour déterminer
+l&#39;adresse MAC du prochain intermédiaire.</p>
+
+<blockquote>
+<p>Mais concrètement, comment un routeur &quot;fait suivre&quot; un message d&#39;un
+sous-réseau à un autre ?</p>
+</blockquote>
+
+<p>Voila un petit schéma qui explique comment ça se passe.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/faire-suivre3.png" />
+</div>
+
+<p>Comme exemple, je prends le routeur d&#39;en haut à gauche sur le schéma du
+réseau. Celui-ci a bien 2 cartes réseau :</p>
+
+<ul>
+<li><p>une avec l&#39;IP 0.0.1.10 et donc qui est dans le sous-réseau 0.0.1.X</p></li>
+<li><p>une avec l&#39;IP 0.0.4.1 et donc qui est dans le sous-réseau 0.0.4.X</p></li>
+</ul>
+
+<ol>
+<li><p>Le routeur reçoit un message dans une enveloppe liaison (en jaune), il
+n&#39;y a de toute façon qu&#39;elle qui peut passer par les câbles réseau. Il
+regarde l&#39;adresse MAC qui est dessus : ...:01:10 et c&#39;est bien la
+sienne. Il ouvre alors l&#39;enveloppe liaison (en jaune) pour en sortir
+l&#39;enveloppe réseau (en bleu). Cette étape est très importante : ça veut
+dire que le routeur travaille dans la couche n°3, la couche réseau,
+alors que les switchs travaillent uniquement dans la couche n°2, la
+couche liaison (les enveloppes jaunes).</p></li>
+<li><p>Il regarde ensuite l&#39;adresse IP sur l&#39;enveloppe réseau : 0.0.3.2, ce
+n&#39;est pas la sienne. Il sait donc qu&#39;il doit faire suivre le message. Il
+cherche la prochaine machine à qui il faut faire suivre le message pour
+qu&#39;il arrive jusqu&#39;à l&#39;ordinateur 0.0.3.2 et note l&#39;adresse MAC de cette
+prochaine machine : ...:04:03 Il remet ensuite l&#39;enveloppe réseau (en
+bleu) dans une enveloppe liaison (en jaune) avec l&#39;adresse MAC du
+prochain intermédiaire dans le réseau.</p></li>
+<li><p>Le message est ensuite renvoyé dans le réseau. Voila comment un routeur
+fait pour faire passer des messages d&#39;un sous-réseau à un autre. En
+gros, il garde l&#39;enveloppe bleue et change d&#39;enveloppe jaune pour
+l&#39;envoyer au prochain intermédiaire : le destinataire lui-même ou un
+autre routeur.</p></li>
+</ol>
+
+<h3>Recap : la vie d&#39;un message sur le réseau</h3>
+
+<p>En guise de conclusion, je vais faire un récapitulatif de tout ce qu&#39;on
+a vu en observant étape par étape comment un message suit le trajet en
+rouge sur notre réseau (de gauche à droite) :</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/reseau1.png" />
+</div>
+
+<p>A chaque étape, numérotées de 1 à 7, je vais me placer du point de vue
+de la machine (ordinateur ou routeur qui a le message) et voir comment
+il arrive finalement au destinataire. Je rajoute les adresses MAC et IP
+qui nous concernent sur le schéma et on peut y aller :</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/resau-path-numbers.png" />
+</div>
+
+<p>Donc on se place dans la situation où l&#39;ordinateur en haut à gauche
+(0.0.1.1) veut envoyer un message à l&#39;ordinateur à droite (0.0.3.1).</p>
+
+<ol>
+<li><p>Il écrit donc son message sur notre papier spécial (c&#39;est-à-dire,
+utilise le protocole TCP), le met dans une enveloppe réseau (en bleu)
+qui va parcourir tout le réseau et y note l&#39;adresse IP du destinataire :
+0.0.3.1. Ensuite, il regarde ensuite si le destinataire est dans le même
+sous-réseau que lui ou pas. Il est dans le sous-réseau 0.0.1.X alors que
+le destinataire est dans le sous-réseau 0.0.3.X, donc ils ne sont pas
+dans le même : il doit donc l&#39;envoyer par un routeur. Sinon, il aurait
+pu lui envoyer directement le message. Le routeur a comme adresse MAC
+... :01:10 donc l&#39;ordinateur met l&#39;enveloppe réseau dans une enveloppe
+liaison sur laquelle il note ... :01:10 puis envoie le message dans le
+réseau.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/suite-recap.png" />
+</div></li>
+<li><p>Le switch voit arriver une enveloppe liaison à destination de ... :01:10
+et l&#39;aiguille donc dans sa branche d&#39;en bas à droite, rien de plus (ni
+ouverture, ni modification du message).</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/switch1.png" />
+</div></li>
+<li><p>Le routeur voit arriver une enveloppe liaison (en jaune) avec son
+adresse MAC, il l&#39;ouvre donc. Il y trouve une enveloppe réseau (en bleu)
+avec une adresse IP qui n&#39;est pas la sienne, il ne l&#39;ouvre donc pas. Il
+la remet dans une autre enveloppe liaison et note l&#39;adresse MAC de la
+prochaine étape : ... :04:03.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/router1.png" />
+</div></li>
+<li><p>Le switch voit arriver une enveloppe liaison à destination de ... :04:03
+et l&#39;aiguille donc dans sa branche de droite.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/switch1.png" />
+</div></li>
+<li><p>Le routeur voit arriver une enveloppe liaison (en jaune) avec son
+adresse MAC, il l&#39;ouvre donc. Il y trouve une enveloppe réseau (en bleu)
+avec une adress IP qui n&#39;est pas la sienne, il ne l&#39;ouvre donc pas. Il
+contaste cependant que le destinataire est dans le même sous-réseau que
+lui : il peut donc lui envoyer directement le message. Il remet
+l&#39;enveloppe réseau dans une autre enveloppe liaison et note l&#39;adresse
+MAC du destinataire : ... :03:02.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/router1.png" />
+</div></li>
+<li><p>Le switch voit arriver une enveloppe liaison à destination de ... :03:02
+et l&#39;aiguille donc dans sa branche d&#39;en bas à droite.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-routing/switch1.png" />
+</div></li>
+<li><p>Enfin, l&#39;ordinateur 0.0.3.1 voit arriver une enveloppe liaison avec son
+adresse MAC (... :03:02), il l&#39;ouvre donc. Il y trouve une enveloppe
+réseau avec son adresse IP (0.0.3.1), il l&#39;ouvre donc et peux récupérer
+le message que lui a envoyé 0.0.1.1. Ouf !</p></li>
+</ol>
+
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="http://graph.facebook.com/qpleple/picture?type=large">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            September 2010
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>

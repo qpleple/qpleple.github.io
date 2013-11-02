@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>How To Contribute To A Project On Github</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+    
+    <h1>How To Contribute To A Project On Github</h1>
+    
+    <div id="post-content">
+        <blockquote>
+<p>This is a step-by-step tutorial going through how to easily submit a patch to a github project.</p>
+</blockquote>
+
+<p>I assume you have already an account on <a href="http://github.com">github</a>. Let&#39;s say you want to contribute to <a href="http://github.com/qpleple/wordpress-on-dotcloud">Wordpress on Dotcloud</a>.</p>
+
+<ol>
+<li><p>Make your own working copy of the project by forking it: go on the project page
+(<a href="http://github.com/qpleple/wordpress-on-dotcloud">http://github.com/qpleple/wordpress-on-dotcloud</a>) and click &quot;Fork&quot;. You can access you copy at:
+<a href="http://github.com/YOUR_USERNAME/wordpress-on-dotcloud">http://github.com/YOUR_USERNAME/wordpress-on-dotcloud</a></p></li>
+<li><p>Clone your fork git repository on your local computer:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git clone git@github.com:YOUR_USERNAME/wordpress-on-dotcloud.git
+</code></pre></div></li>
+<li><p>Create a new branch for your patch:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git branch my-awesome-patch
+</code></pre></div>
+<p>This is very important, create one branch per patch. And never submit a
+patch that has been done on the branch <code>master</code>!</p></li>
+<li><p>Do your trick, make your patch, change the code, fix a bug, have a coffee, add a cool
+feature, etc.</p></li>
+<li><p>When you are done, commit your changes:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">git add -u
+git commit -m <span class="s2">&quot;fixing this broken feature&quot;</span>
+</code></pre></div>
+<p>Try to keep commit message short, less than 100 characters.</p></li>
+<li><p>Push your new branch to github:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git push origin my-awesome-patch
+</code></pre></div></li>
+<li><p>Go on your fork page (<a href="http://github.com/YOUR_USERNAME/wordpress-on-dotcloud">http://github.com/YOUR_USERNAME/wordpress-on-dotcloud</a>), then select <code>my-awesome-patch</code> in the branch list and click &quot;Pull Request&quot;.</p></li>
+<li><p>Check the diff, write a message explaining what you have
+done and why the repository owner should accept your pull request and
+submit.</p></li>
+</ol>
+
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="http://graph.facebook.com/qpleple/picture?type=large">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            November 2011
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>
