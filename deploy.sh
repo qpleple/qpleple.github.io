@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 cd ~/Sites/qpleple
 jekyll build
