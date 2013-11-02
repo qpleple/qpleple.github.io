@@ -51,3 +51,8 @@ body {
 pre {
     margin: 20px 0;
 }
+
+.img-legend {
+    padding: 10px 15% 0 15%;
+    font-size: 0.9em;
+}

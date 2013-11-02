@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Word relevance within a topic</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+        
+            <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
+            });
+            </script>
+            <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+            </script>
+        
+    
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-18013119-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+    
+    <h1>Word relevance within a topic</h1>
+    
+    <div id="post-content">
+        <p>The most common way to display a topic, a discrete distribution over words, is to print out the top ten words ordered by decreasing frequency within this topic. Given a single topic, there is nothing much more we can do. But knowing other topics that are describing the same corpus gives us more information. It seems we can use this information to pick better words to represent topics.</p>
+
+<p>In this article we present a novel way to pick words to represent topics and illustrate it by examples of this new representation.</p>
+
+<h3>Word relevance for a topic</h3>
+
+<p><a href="/word-distinctiveness-and-saliency">Word distinctiveness and saliency</a> have been design to find relevant words corpus-wide, not for a specific topic. They are not good to find candidates for topic representatives. In this section, we present a word relevance score within a topic based on the same idea: penalize the word frequency by a factor that captures how much the word is shared across topics.</p>
+
+<p>First, instead of the global word frequency $p(w)$, we consider the frequency $p(w|k)$ of the word within a topic $k$. Then as a sharing penalty, we divide by the exponential entropy $e^{H_w}$, where
+    $$ H_w \triangleq - \sum_k p(k|w) \log p(k|w) $$
+is the entropy of the distribution of topics given a word $w$, capturing how much the word $w$ is shared across several topics. We define the relevance measure
+    $$
+    \mathcal R (w|k) \triangleq \frac{p(w|k)}{e^{H_w}}
+    $$
+for word $w$ within topic $k$ as being the frequency divided by the exponential entropy.</p>
+
+<h4>Interpretation of exponential entropy $e^{H}$</h4>
+
+<p>The exponential entropy can be seen as a measure of the extent, or the spread, of a distribution [<a href="/bib#Campbell66">Campbell66</a>].  By extent, we mean the size of the support, or the number of elements with non-zero probability. Here is a figure illustrating it on three examples.</p>
+
+<div class="row">
+    <div class="col-md-4 text-center">
+        <img src="/img/thesis/eh-delta.png" class="img-responsive" />
+        <p class="img-legend">Delta distribution <br /> $H = 0$, and $e^H = 1$</p>
+    </div>
+    <div class="col-md-4 text-center">
+        <img src="/img/thesis/eh-example.png" class="img-responsive" />
+        <p class="img-legend">Example distribution <br /> $H=0.67$, and $e^H = 1.96$</p>
+    </div>
+    <div class="col-md-4 text-center">
+        <img src="/img/thesis/eh-uniform.png" class="img-responsive" />
+        <p class="img-legend">Uniform distribution <br /> $H=\log K$, and $e^H = K$</p>
+    </div>
+</div>
+
+<h3>Computation of word relevance measure</h3>
+
+<p>Let&#39;s see how to express relevance $\mathcal R(w|k)$ in terms of LDA parameters. The numerator is straightforward
+    $$ \mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H_w}} = \frac{\phi_{kw}}{e^{H_w}} $$
+Now, computing the entropy
+    $$ E_w = \sum_k p(k|w) \log p(k|w) $$
+requires applying Bayes rule on $p(k|w)$:
+$$
+\begin{aligned}
+    p(k|w) &amp; \propto p(w|k) \ p(k)\\
+    &amp; = \phi_{kw} \ \sum_d p(k|d) p(d)\\
+    &amp; \propto \phi_{kw} \ \sum_d \theta_{dk} N_d
+\end{aligned}
+$$
+where $N_d$ is the length of document.
+Recombining the results, we get a procedure to compute the relevance score:</p>
+
+<ol>
+<li>Compute topic-distribution given word $w$:
+$$ p(k|w) \propto \phi_{kw} \ \sum_d \theta_{dk} N_d $$</li>
+<li>Compute its entropy:
+$$ H_w \triangleq \sum_k p(k|w) \log p(k|w) $$</li>
+<li>Divide the frequency of word $w$ within topic $k$ by the exponential entropy:
+$$ \mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H_w}} $$</li>
+</ol>
+
+<h3>Top relevant word to describe topics</h3>
+
+<p>When running LDA on a corpus, some <em>background</em> words are going to be frequent throughout the corpus, and therefore be found as top words by frequency $p(w|k)$ of several topics. The following table shows this situation on the [20news] corpus where most of the top words are background words and don&#39;t convey any meaning: <em>people</em>, <em>writes</em>, <em>article</em>, <em>good</em>, etc. These are three topics extracted from the output of LDA run on the corpus [20news] with 30 topics. For each topic, we give the top words according to frequency $p(w|k)$ and relevance $p(w|k) e^{-H_w}$.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Topic 1</th>
+            <th>Topic 2</th>
+            <th>Topic 3</th>
+        </tr>
+        <tr>
+            <td>Top words by frequency $p(w|k)$</td>
+            <td><i>people<br />writes<br />article<br />guns<br />police<br />government<br />state</i> </td>
+            <td><i>writes <br /> space <br /> article <br /> power <br /> radio <br /> ground <br /> problem</i></td>
+            <td><i>writes<br />article<br />good<br />cars<br />engine<br />bike<br />time</i></td>
+        </tr>
+        <tr>
+            <td>Top words by relevance  $p(w|k)e^{-H_w}$</td>
+            <td><i>guns <br /> firearms <br /> weapons <br /> firearm <br /> handgun <br /> crime <br /> police</i></td>
+            <td><i>voltage <br /> circuit <br /> space <br /> larson <br /> wiring <br /> circuits <br /> wire</i></td>
+            <td><i>engine <br /> cars <br /> bike <br /> tires <br /> drive <br /> miles <br /> ford</i></td>
+        </tr>
+    </thead>
+</table>
+
+<p>Those background words such as <em>people</em>, <em>writes</em>, <em>article</em>, <em>good</em>, etc. are shared across numerous topics, and their $e^{H_w}$ will be high. They will be penalized by $e^{-H_w}$ and score low on word relevance measure. On the other hand, words scoring high on word relevance measure $p(w|k) e^{-H_w}$ are more descriptive, and topics that did not make sense when described by top words by frequency $p(w|k)$, become intelligible when described by top words by relevance $p(w|k) e^{-H_w}$.</p>
+
+<p>This effect is even stronger for specialized corpora, such as [nips] or [nsf] that contain research papers of one specific area. The following table shows six topics extracted from a run of LDA on the highly specialized corpus [nips] with 30 topics. For each topic, we give the top words by frequency $p(w|k)$ and relevance $p(w|k)e^{-H_w}$.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Topic 1</th>
+            <th>Topic 2</th>
+            <th>Topic 3</th>
+            <th>Topic 4</th>
+            <th>Topic 5</th>
+            <th>Topic 6</th>
+        </tr>
+        <tr>
+            <td>Top words sorted by $p(w|k)$</td>
+            <td><i>network <br /> input <br /> output <br /> neural <br /> time</i></td>
+            <td><i>network <br /> neural <br /> training <br /> networks <br /> input</i></td>
+            <td><i>network <br /> input <br /> model <br /> system <br /> neural</i></td>
+            <td><i>network <br /> neural <br /> control <br /> model <br /> system</i></td>
+            <td><i>network <br /> networks <br /> neural <br /> neurons <br /> dynamics</i></td>
+            <td><i>network <br /> neural <br /> networks <br /> algorithm <br /> time</i></td>
+        </tr>
+        <tr>
+            <td>Relevant words sorted by $\mathcal R(w|k)$</td>
+            <td><i>chip <br /> analog <br /> network <br /> circuit <br /> voltage</i></td>
+            <td><i>characters <br /> character <br /> network <br /> printed <br /> classifier</i></td>
+            <td><i>head <br /> cells <br /> motor <br /> network <br /> vestibular</i></td>
+            <td><i>controller <br /> precursor <br /> plant <br /> parse <br /> control</i></td>
+            <td><i>dynamics <br /> neurons <br /> bifurcation <br /> neuron <br /> network</i></td>
+            <td><i>dataflow <br /> network <br /> neural <br /> networks <br /> boolean</i></td>
+        </tr>
+    </thead>
+</table>
+
+<p>Background words here are not general English words, like for [20news], but words describing the field of the research papers: <em>network, networks, neural</em>, and <em>input</em>. Each of these topics, taken alone by itself, will look intelligible by humans. However, all presented next to each other, it becomes unclear what is the difference between them. Being able to understand interactions between topics is important when topics are used for an external task, such as browsing the corpus or information retrieval.</p>
+
+<p>Showing the top words by relevance $p(w|k)e^{-H_w}$ will show what is specific about each topic. Topic 1 is more about chips and circuits where topic 3 is specifically about head direction cells, a special type of neurons involved in self-motion, and topic 4 about controlled substances (drugs, precursors and plants).</p>
+
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="http://graph.facebook.com/qpleple/picture?type=large">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            November 2013
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>

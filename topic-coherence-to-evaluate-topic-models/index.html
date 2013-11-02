@@ -66,6 +66,11 @@ Then a topic significance score is computed from various dissimilarities and sim
     $$ \text{Coherence} = \sum_{i \lt j} \text{score}(w_i, w_j) $$
 of pairwise scores on the words $w_1$, ..., $w_n$ used to describe the topic, usually the top $n$ words by frequency $p(w|k)$. This measure can be seen as the sum of all edges on complete graph.</p>
 
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/thesis/complete-graph.png" style="height: 350px" />
+    <p class="img-legend">Both topic coherence measures UCI and UMass are based on the sum $\sum_{i \lt j} \text{score}(w_i, w_j)$ of the pairwise scores of the $n$ top words $w_1$, ..., $w_n$ of the topic.</p>
+</div>
+
 <p><em>Notation.</em> Let&#39;s define $D(w_i)$ as the count of documents containing the word $w_i$, $D(w_i, w_j)$ the count of documents containing both words $w_i$ and $w_j$, and $D$ the total number or documents in the corpus. The corpus used to compute the counts is specified in a subscript of symbol $D$. For example, $D_{\text{Wikipedia}}(w_i)$ it the count of documents of the Wikipedia corpus containing the word $w_i$. When no subscript is specified, the corpus used is the corpus on which the model have been trained.</p>
 
 <h3>Extrinsic UCI measure</h3>
