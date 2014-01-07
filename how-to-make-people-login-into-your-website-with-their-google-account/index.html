@@ -46,7 +46,7 @@ to one OpenID provider, a Google account for instance, and they will
 login into your site with this account.</p>
 
 <div class="text-center" style="margin: 20px 0">
-    <img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/signin-google.png"/>
+    <img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/signin-google-3.png"/>
 </div>
 
 <p>I will show you how to implement it with Google accounts, but the source
@@ -63,12 +63,12 @@ user will:</p>
 <li><p>give his credentials (or not, if he is already logged on Gmail for instance):</p>
 
 <div class="text-center" style="margin: 20px 0">
-    <img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/google-login.png"/>
+    <img class="img-thumbnail" src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/google-login-2.png"/>
 </div></li>
 <li><p>give the authorization to Google to give you some his personnal data that you request:</p>
 
 <div class="text-center" style="margin: 20px 0">
-    <img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/google-auto.png"/>
+    <img class="img-thumbnail" src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/google-auto-2.png"/>
 </div></li>
 </ol>
 
@@ -145,20 +145,38 @@ window to redirect to your site after.</p>
 <p>Here you have to change the <code>returnUrl</code> field: put the absolute URL of
 the PHP page. Once again, make sure to replace <code>my-domain.com</code> by your domain name.</p>
 
-<p>To logout a user, just destroy the session:</p>
+<h3>Persisting the authenticated state</h3>
 
-<div class="highlight"><pre><code class="php"><span class="nb">session_destroy</span><span class="p">();</span>
+<p>OpenID is just the authentication mechanism: is the user the one he claims to be? In order to persist the state in your application you can use sessions.</p>
+
+<p>When you have the user&#39;s data, you can authenticate him in your application</p>
+
+<div class="highlight"><pre><code class="php"><span class="nb">session_start</span><span class="p">();</span>
+<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$email</span><span class="p">;</span>
 </code></pre></div>
 
+<p>To test if the user is logged in your application or not:</p>
 
-And that's it! Finally, some figures about with what OpenID provider
-users prefer login according to [JanRain](http://ghdialogue.posterous.com/how-to-gain-customer-insights-with-openid).
+<div class="highlight"><pre><code class="php"><span class="nb">session_start</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="c1">// user logged in</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// user not logged in</span>
+<span class="p">}</span>
+</code></pre></div>
 
-<div class="text-center" style="margin: 20px 0">
-    <img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/chart.png"/>
-</div>
+<p>To logout the user, just destroy the session:</p>
+
+<div class="highlight"><pre><code class="php"><span class="nb">session_start</span><span class="p">();</span>
+<span class="nb">session_destroy</span><span class="p">();</span>
+</code></pre></div>
 
 <h3>Other OpenID providers</h3>
+
+<p>And that&#39;s it! Finally, some figures about with what authentication provider
+users prefer login according to <a href="http://ghdialogue.posterous.com/how-to-gain-customer-insights-with-openid">JanRain</a>.</p>
+
+<div class="text-center" style="margin: 20px 0;"><img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/chart.png" /></div>
 
 <p>You can use this code to make people login into your website with some
 other accounts: Yahoo, Wordpress, AOL, ... You just have to change the
