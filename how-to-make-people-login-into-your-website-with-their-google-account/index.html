@@ -174,9 +174,9 @@ the PHP page. Once again, make sure to replace <code>my-domain.com</code> by you
 <h3>Other OpenID providers</h3>
 
 <p>And that&#39;s it! Finally, some figures about with what authentication provider
-users prefer login according to <a href="http://ghdialogue.posterous.com/how-to-gain-customer-insights-with-openid">JanRain</a>.</p>
+users prefer login according to <a href="http://janrain.com/blog/social-login-trends-across-the-web-for-q4-2013/">JanRain</a>.</p>
 
-<div class="text-center" style="margin: 20px 0;"><img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/chart.png" /></div>
+<div class="text-center" style="margin: 20px 0;"><img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/login-preferences.png" /></div>
 
 <p>You can use this code to make people login into your website with some
 other accounts: Yahoo, Wordpress, AOL, ... You just have to change the
@@ -190,6 +190,8 @@ url <code>$openid-&gt;identity</code> by:</p>
 <li><p>Wordpress: <code>http://YOURBLOG.wordpress.com</code></p></li>
 <li><p>LiveJournal: <code>http://www.livejournal.com/openid/server.bml</code></p></li>
 </ul>
+
+<p>However, Facebook and Twitter are not OpenID provider: you cannot use the above code with them. Here is an article I wrote for <a href="/authenticate-users-with-their-facebook-account">implementing Facebook authentication in PHP</a>. As for Twitter, refer to <a href="https://dev.twitter.com/docs/auth/sign-twitter">the official documentation</a>.</p>
 
 <h3>Other languages</h3>
 
