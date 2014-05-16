@@ -42,11 +42,14 @@
 
 <p>Node.js is available as a package on Amazon Linux but only through the <a href="https://fedoraproject.org/wiki/EPEL">Extra Packages for Enterprise Linux (EPEL)</a> repository, so we can&#39;t install it with the section <code>package</code> of our <code>.ebextension/*.config</code> files. We have to run a command to install it.</p>
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># .ebextensions/myapp.config</span>
+
+<span class="c1"># these commands run before the application and web server are</span>
+<span class="c1"># set up and the application version file is extracted</span>
 <span class="l-Scalar-Plain">commands</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">01_node_install</span><span class="p-Indicator">:</span>
     <span class="c1"># run this command from /tmp directory</span>
     <span class="l-Scalar-Plain">cwd</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/tmp</span>
-    <span class="c1"># don&#39;t run the command if node is already installed (file /usr/bin/node) exists</span>
+    <span class="c1"># don&#39;t run the command if node is already installed (file /usr/bin/node exists)</span>
     <span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span> <span class="s">&#39;[</span><span class="nv"> </span><span class="s">!</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/usr/bin/node</span><span class="nv"> </span><span class="s">]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">&quot;node</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">installed&quot;&#39;</span>
     <span class="c1"># install from epel repository</span>
     <span class="c1"># flag -y for no-interaction installation</span>
