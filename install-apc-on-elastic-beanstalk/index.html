@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Recipe: Install APC On Elastic Beanstalk</title>
+    <title>Install APC On Elastic Beanstalk</title>
     <meta name="viewport" content="width=device-width">
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -33,10 +33,10 @@
   <div id="page" style="position: relative">
     
     
-    <h1>Recipe: Install APC On Elastic Beanstalk</h1>
+    <h1>Install APC On Elastic Beanstalk</h1>
     
     <div id="post-content">
-        <h2>Install</h2>
+        <h3>Install</h3>
 
 <p>APC can be installed as a package on Amazon Linux AMIs.</p>
 
@@ -46,13 +46,22 @@
   <span class="l-Scalar-Plain">yum</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">php55-pecl-apc</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
 </code></pre></div>
-<h2>Troubleshooting</h2>
+<p>See <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html#customize-containers-format-packages">Amazon&#39;s documentation</a> for more info.</p>
+
+<h3>Troubleshooting</h3>
+
+<h4>Logs</h4>
 
 <p>Logs of the execution of <code>.ebextension/*.config</code> files are found in <code>/var/log/cfn-init.log</code>.</p>
 
 <p>You should see something like</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">[DEBUG] Installing/updating [u&#39;php55-pecl-apc&#39;] via yum
-[INFO] Yum installed [u&#39;php55-pecl-apc&#39;
+[INFO] Yum installed [u&#39;php55-pecl-apc&#39;]
+</code></pre></div>
+<h4>Wrong package</h4>
+
+<p>To search for APC packages:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">yum search node
 </code></pre></div>
     </div>
 
