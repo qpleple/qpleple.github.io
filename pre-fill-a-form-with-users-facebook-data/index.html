@@ -73,11 +73,10 @@ that we will be using in step 2.</p>
   <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">FacebookApiException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$user</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>The form</h3>
-<div class="highlight"><pre><code class="php language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span><span class="x"></span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span><span class="x"></span>
 <span class="x">    &lt;form action=&quot;#&quot; method=&quot;get&quot;&gt;</span>
 <span class="x">        &lt;input type=&quot;text&quot; name=&quot;name&quot;</span>
 <span class="x">            value=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$user_profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="cp">?&gt;</span><span class="x">&quot;&gt;</span>

@@ -45,8 +45,7 @@
 <p>When I started with Symfony2, I was confused by these kind of things I could read :</p>
 
 <div class="highlight"><pre><code class="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
-<span class="nv">$request</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
-</code></pre></div>
+<span class="nv">$request</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span></code></pre></div>
 
 
 I could understand it when I was reading the code but I did not feel
@@ -96,8 +95,7 @@ controller by adding that it implements the interface
         
         <span class="c1">//...</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 
 **Container Services** are all the services you can access in you
@@ -109,16 +107,14 @@ container.
 
 <p>To access one service in a controller :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span></code></pre></div>
 
+<h3>Routing</h3>
 
-### Routing
-
-You will find in that tab two sections : **Sources** and **Routes**.
-**Sources** is the list of all file that SF2 process to make the routing
-table. It's a good start to debug if a route does not work : first check
-if the file in which you declare the route is processed by SF2.
+<p>You will find in that tab two sections : <strong>Sources</strong> and <strong>Routes</strong>.
+<strong>Sources</strong> is the list of all file that SF2 process to make the routing
+table. It&#39;s a good start to debug if a route does not work : first check
+if the file in which you declare the route is processed by SF2.</p>
 
 <div class="text-center" style="margin: 20px 0">
     <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/sources.png"/>
@@ -126,7 +122,7 @@ if the file in which you declare the route is processed by SF2.
 
 <p><strong>Routes</strong> is the list of all the routes of your project. It gives you
 the same info than the command :</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">app/console router:debug
+<div class="highlight"><pre><code class="language-text" data-lang="text">app/console router:debug
 </code></pre></div>
 <p>but add also the controller that goes which each route. It is a good way
 to have an overview of your routing for your app, as you define routes
@@ -160,7 +156,7 @@ debug when some filters or functions don&#39;t work.</p>
 </div>
 
 <p>For example, to test if an number is divisible by 3 :</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="nb">loop</span><span class="nv">.index</span> <span class="k">is</span> <span class="nf">divisibleby</span><span class="o">(</span><span class="m">3</span><span class="o">)</span> <span class="cp">%}</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="nb">loop</span><span class="nv">.index</span> <span class="k">is</span> <span class="nf">divisibleby</span><span class="o">(</span><span class="m">3</span><span class="o">)</span> <span class="cp">%}</span>
 </code></pre></div>
 <p><strong>Twig Filters available</strong> is the list of the filters you can use in
 your Twig templates.</p>
@@ -170,7 +166,7 @@ your Twig templates.</p>
 </div>
 
 <p>For example, to truncate a string :</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="cp">{{</span> <span class="nv">post.content</span> <span class="o">|</span> <span class="nf">truncate</span><span class="o">(</span><span class="m">150</span><span class="o">)</span> <span class="cp">}}</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{{</span> <span class="nv">post.content</span> <span class="o">|</span> <span class="nf">truncate</span><span class="o">(</span><span class="m">150</span><span class="o">)</span> <span class="cp">}}</span>
 </code></pre></div>
 <p>Finally, <strong>Twig Functions available</strong> are the functions available.</p>
 
@@ -179,7 +175,7 @@ your Twig templates.</p>
 </div>
 
 <p>For example, the function <code>range</code> to have a range :</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">for</span> <span class="nv">i</span> <span class="k">in</span> <span class="nv">range</span><span class="o">(</span><span class="m">0</span><span class="o">,</span> <span class="m">3</span><span class="o">)</span> <span class="cp">%}</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">for</span> <span class="nv">i</span> <span class="k">in</span> <span class="nv">range</span><span class="o">(</span><span class="m">0</span><span class="o">,</span> <span class="m">3</span><span class="o">)</span> <span class="cp">%}</span>
 </code></pre></div>
     </div>
 

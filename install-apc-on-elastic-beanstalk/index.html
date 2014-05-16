@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>How To Get Your Facebook Id</title>
+    <title>Recipe: Install APC On Elastic Beanstalk</title>
     <meta name="viewport" content="width=device-width">
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -33,43 +33,34 @@
   <div id="page" style="position: relative">
     
     
-    <h1>How To Get Your Facebook Id</h1>
+    <h1>Recipe: Install APC On Elastic Beanstalk</h1>
     
     <div id="post-content">
-        <p>You may need to get your Facebook token if you
-install a Facebook plugin on your website or if you develop a Facebook
-application. To get your Facebook ID, go to the <a href="http://developers.facebook.com/docs/reference/api/#reading">Facebook API reference page</a>, look for the link <code>graph.facebook.com/me</code> (right above the Pictures title)
-and click it. You can then see your Facebook ID:</p>
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="s">&quot;id&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;1536397056&quot;</span>
+        <h2>Install</h2>
+
+<p>APC can be installed as a package on Amazon Linux AMIs.</p>
+
+<p>It&#39;s enough to just add it to the package to be installed in one of your <code>.config</code> file in <code>.ebextensions</code></p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># .ebextensions/myapp.config</span>
+<span class="l-Scalar-Plain">packages</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">yum</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">php55-pecl-apc</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
 </code></pre></div>
-<h3>Why do I get an error if I go directly to <a href="https://graph.facebook.com/me">graph.facebook.com/me</a>?</h3>
+<h2>Troubleshooting</h2>
 
-<p>It is because that URL is part of the Facebook API which is not made to
-be used directly but by third-party applications (applications which are
-not Facebook but that can access your Facebook data).</p>
+<p>Logs of the execution of <code>.ebextension/*.config</code> files are found in <code>/var/log/cfn-init.log</code>.</p>
 
-<p>To be sure that
-one application is allowed to ask for your private data, Facebook gives
-it a kind of password (an access token) if you have allowed this
-application. Your data is given only if the token is valid, otherwise it
-returns the error message you may have seen.</p>
-
-<p>Now, when Facebook generate
-the <a href="http://developers.facebook.com/docs/reference/api/#reading">Facebook API reference page</a>, it
-provides to each URL (that are API requests), a temporary access token
-in order to make you able to see examples of real responses:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">https://graph.facebook.com/me?access_token=983798430|dslfuqsf...
+<p>You should see something like</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">[DEBUG] Installing/updating [u&#39;php55-pecl-apc&#39;] via yum
+[INFO] Yum installed [u&#39;php55-pecl-apc&#39;
 </code></pre></div>
-<p>This access token (which is in fact a lot more longer than that) becomes
-invalid as soon as you log out from Facebook.</p>
-
     </div>
 
     <div id="card-post">
         <img class="img-circle pull-left" style="height: 50px" src="/img/picture.jpg">
         <a href="/">Quentin Pleplé</a> <br>
         <span class="muted">
-            April 2011
+            May 2014
         </span>
     </div>
 

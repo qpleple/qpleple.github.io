@@ -77,7 +77,7 @@ $$</p></li>
 <h4>Naive algorithm</h4>
 
 <p>To compute $a^n$, repeat $n$ times multiplying by $a$.</p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">def</span> <span class="nf">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
   <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">a</span>
   <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span>
 </code></pre></div>
@@ -86,7 +86,7 @@ $$</p></li>
 <h4>Efficient algorithm</h4>
 
 <p>The idea is to square $a^{n/2}$ to get $a^n$ (one multiplication) and when $n$ is odd, evaluate $a^{n-1}$ the same way and then multiply it by $a$ (one multiplication).</p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">def</span> <span class="nf">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
   <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">a</span>
   <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="n">even</span><span class="p">:</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
@@ -105,7 +105,7 @@ $$ T(n) = \sum_{k=0}^{\log n} 1 = O(\log n) $$</p>
 <h4>Recursive algorithm</h4>
 
 <p>To move a pile of $n$ disk to another rod, first recursively move a pile of $n-1$ to the last rod, then move the largest disk, then move back the $n-1$ on top of the largest. </p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">def</span> <span class="nf">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
         <span class="n">MoveOne</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
@@ -145,7 +145,7 @@ $$ \displaystyle T(n) = 5T \left( \frac n 2 \right) + O(n) \to \text{(draw the t
 <h4>Naive algorithm</h4>
 
 <p>The naive approach is just to check all elements. The time complexity is linear.</p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">def</span> <span class="nf">NaiveFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">.</span><span class="n">n</span><span class="p">]):</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">NaiveFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">.</span><span class="n">n</span><span class="p">]):</span>
   <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">..</span><span class="n">n</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">:</span> <span class="k">return</span> <span class="bp">True</span>
   <span class="k">return</span> <span class="bp">False</span>
@@ -153,7 +153,7 @@ $$ \displaystyle T(n) = 5T \left( \frac n 2 \right) + O(n) \to \text{(draw the t
 <h4>Efficient algorithm</h4>
 
 <p>We didn&#39;t use the fact it is sorted in the previous idea. We look at the middle element of the array. Because the array is sorted, if the element is strictly larger than its index, then we know for sure that if an element being equal to its index exists, then it has to be in the right side of the array. Same idea for the opposite situation.</p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">def</span> <span class="nf">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">..</span><span class="n">n</span><span class="p">]):</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">..</span><span class="n">n</span><span class="p">]):</span>
   <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="n">empty</span><span class="p">:</span> <span class="k">return</span> <span class="bp">False</span>
   <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span>
   <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">:</span> <span class="k">return</span> <span class="bp">True</span>

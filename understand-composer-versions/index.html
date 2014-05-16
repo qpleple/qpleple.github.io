@@ -46,7 +46,7 @@
 <p>[Versions] follow the format of <code>X.Y.Z</code> or <code>vX.Y.Z</code> with an optional suffix of <code>-dev</code>, <code>-patch</code>, <code>-alpha</code>, <code>-beta</code> or <code>-RC</code>. The patch, alpha, beta and RC suffixes can also be followed by a number.</p>
 
 <p>Examples:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">1.0.0
+<div class="highlight"><pre><code class="language-text" data-lang="text">1.0.0
 1.0.2
 1.1.0
 0.2.5
@@ -62,7 +62,7 @@
 <p>For every tag that looks like a version, a package version of that tag will be created. It should match <code>X.Y.Z</code> or <code>vX.Y.Z</code>, with an optional suffix of <code>-patch</code>, <code>-alpha</code>, <code>-beta</code> or <code>-RC</code>. The suffixes can also be followed by a number.</p>
 
 <p>Here are a few examples of valid tag names:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">1.0.0
+<div class="highlight"><pre><code class="language-text" data-lang="text">1.0.0
 v1.0.0
 1.10.5-RC1
 v4.4.4beta2
@@ -78,7 +78,7 @@ v2.0.4-p1
 <p>For every branch, a package development version will be created. If the branch name looks like a version, the version will be <code>{branchname}-dev</code>. For example a branch <code>2.0</code> will get a version <code>2.0.x-dev</code> (the <code>.x</code> is added for technical reasons, to make sure it is recognized as a branch, a <code>2.0.x</code> branch would also be valid and be turned into <code>2.0.x-dev</code> as well. If the branch does not look like a version, it will be <code>dev-{branchname}</code>. <code>master</code> results in a <code>dev-master</code> version.</p>
 
 <p>Here are some examples of version branch names:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">1.x
+<div class="highlight"><pre><code class="language-text" data-lang="text">1.x
 1.0 (equals 1.0.x)
 1.1.x
 </code></pre></div>
@@ -96,7 +96,7 @@ v2.0.4-p1
 
 <p>Example:</p>
 </blockquote>
-<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
  <span class="nt">&quot;require&quot;</span><span class="p">:</span> <span class="p">{</span>
      <span class="nt">&quot;monolog/monolog&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.*@beta&quot;</span><span class="p">,</span>    <span class="err">&lt;-- @beta applied to a constraint</span>
      <span class="nt">&quot;acme/foo&quot;</span><span class="p">:</span> <span class="s2">&quot;@dev&quot;</span>                  <span class="err">&lt;-- @dev applied to an empty constraint</span>
@@ -108,7 +108,7 @@ v2.0.4-p1
 
 <p>Example:</p>
 </blockquote>
-<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
  <span class="nt">&quot;require&quot;</span><span class="p">:</span> <span class="p">{</span>
      <span class="nt">&quot;doctrine/doctrine-fixtures-bundle&quot;</span><span class="p">:</span> <span class="s2">&quot;dev-master&quot;</span><span class="p">,</span>
      <span class="nt">&quot;doctrine/data-fixtures&quot;</span><span class="p">:</span> <span class="s2">&quot;@dev&quot;</span>
@@ -189,33 +189,33 @@ v2.0.4-p1
 <p>Will resolve all dependencies of the project and write the exact versions into <code>composer.lock</code>. [...]</p>
 
 <p>To update a few packages and not all:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">composer update vendor/package vendor/package2
+<div class="highlight"><pre><code class="language-text" data-lang="text">composer update vendor/package vendor/package2
 </code></pre></div></blockquote>
 
 <h3>Show <a href="https://getcomposer.org/doc/03-cli.md#show">(doc)</a></h3>
 
 <p>To see all existing packages:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ composer show
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show
 absolvent/phpunit-symfony
 acid/symfony
 admafa/proyecto-final-symfony
 ...
 </code></pre></div>
 <p>To see the details of one package:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">composer show vendor/package
+<div class="highlight"><pre><code class="language-text" data-lang="text">composer show vendor/package
 </code></pre></div>
 <p>To see the details of a specific version of one package</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">composer show vendor/package 1.0.2
+<div class="highlight"><pre><code class="language-text" data-lang="text">composer show vendor/package 1.0.2
 </code></pre></div>
 <p>To see all installed package with versions:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ composer show -i
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show -i
 alexandresalome/php-selenium     1.0.1      PHP Library for Selenium
 behat/behat                      v2.5.0     Scenario-oriented BDD framework for ...
 behat/common-contexts            v1.2.0     Commonly used contexts for Behat
 ...
 </code></pre></div>
 <p>To see what composer understood from the <code>composer.json</code> file:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ composer show -s
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show -s
 ...
 requires
 php &gt;=5.4.0
@@ -228,13 +228,13 @@ symfony/monolog-bundle 2.3.*
 <h2>Troubleshooting</h2>
 
 <p>See what composer understood from the <code>composer.json</code> file:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">composer show -s | grep doctrine-migrations-bundle
+<div class="highlight"><pre><code class="language-text" data-lang="text">composer show -s | grep doctrine-migrations-bundle
 </code></pre></div>
 <p>See what version is installed:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">composer show -i | grep doctrine-migrations-bundle
+<div class="highlight"><pre><code class="language-text" data-lang="text">composer show -i | grep doctrine-migrations-bundle
 </code></pre></div>
 <p>See if there exists some stable version for a package (here no):</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ composer show doctrine/doctrine-migrations-bundle
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show doctrine/doctrine-migrations-bundle
 ...
 versions : * dev-master, 2.1.x-dev, 2.0.x-dev,
 1.0.0-BETA4, 1.0.0-BETA3, 1.0.0-BETA2, v1.0.0-beta1

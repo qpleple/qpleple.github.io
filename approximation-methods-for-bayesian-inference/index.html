@@ -60,7 +60,7 @@ But when the model gets complicated, computing the posterior $p(\boldsymbol{z}|\
 <h3>Stochastic methods</h3>
 
 <p>Gibbs sampling is a Markov Chain Monte Carlo algorithm [<a href="/bib#Geman84">Geman84</a>] that repeatedly picks one hidden variable $z_i$ at random and samples it from the distribution of that variable conditioned on all other hidden variables $\boldsymbol{z}_{-i}$ and the observation $\boldsymbol x$.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">initialize z randomly
+<div class="highlight"><pre><code class="language-text" data-lang="text">initialize z randomly
 repeat until convergence:
     pick i randomly
     draw z_i from p(z_i | z_-i, x)

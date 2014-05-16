@@ -56,7 +56,7 @@ a lot of time. Currently, there are 3 of them:</p>
 <h3>New Bundle</h3>
 
 <p>To create a new bundle, run the command:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">app/console generate:bundle
+<div class="highlight"><pre><code class="language-text" data-lang="text">app/console generate:bundle
 </code></pre></div>
 <p>It will launch an assistant that will ask you these questions: Bundle
 namespace, Bundle name, Target directory, Configuration format (yml,
@@ -76,17 +76,16 @@ you can start to play with:</p>
     <span class="p">{</span>
         <span class="k">return</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>And a template for this controller:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">Hello !
+<div class="highlight"><pre><code class="language-text" data-lang="text">Hello !
 </code></pre></div>
 <h3>New Entity</h3>
 
 <p>Instead of creating all your entities by creating and editing the PHP
 files in <code>MyBundle/Entity</code>, just run the command:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">app/console generate:doctrine:entity
+<div class="highlight"><pre><code class="language-text" data-lang="text">app/console generate:doctrine:entity
 </code></pre></div>
 <p>Follow the wizard and declare the name of your entity and the fields you
 want. The script will generate all the code for you. Here is an example
@@ -135,8 +134,7 @@ of the code generated with only one field <code>name</code>:</p>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">getName</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>See how much time you just saved ? It can even generate an empty
 repository for this entity if you say <code>yes</code> during when you are asked
@@ -151,13 +149,12 @@ the question:</p>
 <span class="sd"> * Add your own custom repository methods below.</span>
 <span class="sd"> */</span>
 <span class="k">class</span> <span class="nc">PostRepository</span> <span class="k">extends</span> <span class="nx">EntityRepository</span> <span class="p">{</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>Entity CRUD generator</h3>
 
 <p>But the real time saver is the CRUD generator. You run the command:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">app/console generate:doctrine:crud
+<div class="highlight"><pre><code class="language-text" data-lang="text">app/console generate:doctrine:crud
 </code></pre></div>
 <p>Answer the question (what bundle, write actions or not, route prefix,
 etc.) and it will generate a new controller with all the method to deal
@@ -203,11 +200,10 @@ the <code>update</code> action for my entity that the script just generated:</p>
         <span class="s1">&#39;edit_form&#39;</span>   <span class="o">=&gt;</span> <span class="nv">$editForm</span><span class="o">-&gt;</span><span class="na">createView</span><span class="p">(),</span>
         <span class="s1">&#39;delete_form&#39;</span> <span class="o">=&gt;</span> <span class="nv">$deleteForm</span><span class="o">-&gt;</span><span class="na">createView</span><span class="p">(),</span>
     <span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>and the template:</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="nt">&lt;h1&gt;</span>Post edit<span class="nt">&lt;/h1&gt;</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="nt">&lt;h1&gt;</span>Post edit<span class="nt">&lt;/h1&gt;</span>
 
 <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;post_update&#39;</span><span class="o">,</span> <span class="o">{</span> <span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="nv">entity.id</span> <span class="o">})</span> <span class="cp">}}</span><span class="s">&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="cp">{{</span> <span class="nv">form_enctype</span><span class="o">(</span><span class="nv">edit_form</span><span class="o">)</span> <span class="cp">}}</span><span class="nt">&gt;</span>
     <span class="cp">{{</span> <span class="nv">form_widget</span><span class="o">(</span><span class="nv">edit_form</span><span class="o">)</span> <span class="cp">}}</span>

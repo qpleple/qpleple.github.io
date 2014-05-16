@@ -62,7 +62,7 @@ see your new bucket in your bucket list:</p>
 to make all content publicly available. Select your bucket and click on
 &quot;Edit bucket policy&quot;, paste this policy (which is making everything
 public) replacing <code>my-blog-drink-coffee</code> by your bucket name and save.</p>
-<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
   <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2008-10-17&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
       <span class="nt">&quot;Sid&quot;</span><span class="p">:</span> <span class="s2">&quot;AllowPublicRead&quot;</span><span class="p">,</span>
@@ -103,7 +103,7 @@ should see the file in your bucket (under the directory <code>wp-content</code>)
 The image should display correctly in your post when you publish it and
 when you look at the source of your page, the URL of the image should be
 something like</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">http://my-blog-drink-coffee.s3.amazonaws.com/...
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://my-blog-drink-coffee.s3.amazonaws.com/...
 </code></pre></div>
     </div>
 

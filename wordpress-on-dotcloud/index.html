@@ -46,7 +46,7 @@
 
 <p>Copy all the files of this package in the
 root of your Wordpress directory and push to Dotcloud:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cd wordpress
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd wordpress
 git clone https://github.com/qpleple/wordpress-on-dotcloud
 mv wordpress-on-dotcloud/* .
 dotcloud create myblog
@@ -54,7 +54,7 @@ dotcloud push myblog
 </code></pre></div>
 <p>Due to a Dotcloud issue, you may have to push twice the first time:
 <code>dotcloud push myblog</code>. Push local modifications to remote server with:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">dotcloud push myblog
+<div class="highlight"><pre><code class="language-text" data-lang="text">dotcloud push myblog
 </code></pre></div>
 <p>Note that remote <code>wp-content/</code> will not be overwritten. so uploaded
 static files will be kept and local plugins and themes will not be
@@ -66,7 +66,7 @@ pushed remotely.</p>
 
 <ol>
 <li><p>The <code>dotcloud.yml</code> file required to push to Dotcloud declaring 2 services:</p>
-<div class="highlight"><pre><code class="yaml language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">www</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">www</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">php</span>
 <span class="l-Scalar-Plain">db</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mysql</span>
@@ -74,7 +74,7 @@ pushed remotely.</p>
 <li><p>The <code>nginx.conf</code> file telling Nginx to redirect everything to
 Wordpress front controller as Dotcloud does not support <code>.htaccess</code>
 files (included in Wordpress):</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">try_files $uri $uri/ /index.php;
+<div class="highlight"><pre><code class="language-text" data-lang="text">try_files $uri $uri/ /index.php;
 </code></pre></div></li>
 <li><p>The <code>postinstall</code> script that is a post-install hook and will be
 executed by Dotcloud after each push. It executes the scripts in the

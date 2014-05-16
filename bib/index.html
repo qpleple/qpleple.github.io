@@ -69,7 +69,7 @@
 <h4>Paper <code>Hofmann99</code></h4>
 
 <p>Introduced pLSI, a probabilistic topic model based on the following generative process. No priors on $\boldsymbol \theta_d$ and $\boldsymbol \phi_k$.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">for document d = 1..D:
+<div class="highlight"><pre><code class="language-text" data-lang="text">for document d = 1..D:
   for position i = 1..N in document d:
     Draw a topic z_di from Discrete(theta_d)
     Draw a word w_di from Discrete(phi_z_di)

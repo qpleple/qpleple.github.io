@@ -58,7 +58,7 @@ on a per-instance basis, whereas Symfony security component uses
 encoders on a per-class basis.</p>
 
 <p>Install <a href="https://github.com/FriendsOfSymfony/FOSAdvancedEncoderBundle">FOSAdvancedEncoderBundle</a> following the instructions in the bundle documentation. Then, specify in <code>config.yml</code> the two encoders you want to use.</p>
-<div class="highlight"><pre><code class="yaml language-yaml" data-lang="yaml"><span class="c1"># app/config/config.yml</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># app/config/config.yml</span>
 <span class="l-Scalar-Plain">fos_advanced_encoder</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">encoders</span><span class="p-Indicator">:</span>
     <span class="c1"># default values for FOSUserBundle (Symfony2)</span>
@@ -90,8 +90,7 @@ a field <code>algorithm</code> like this.</p>
   <span class="k">public</span> <span class="k">function</span> <span class="nf">getEncoderName</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">algorithm</span> <span class="o">==</span> <span class="s1">&#39;sha1&#39;</span> <span class="o">?</span> <span class="s1">&#39;legacy&#39;</span> <span class="o">:</span> <span class="s1">&#39;default&#39;</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>Password and salt merging</h3>
 
@@ -101,7 +100,7 @@ new folder <code>Security/</code> in your bundle and add the file
 <code>Acme\SiteBundle</code> according to your names. Then add to your config file
 this line telling your app that we want to use that class instead of the
 default one:</p>
-<div class="highlight"><pre><code class="yaml language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">security.encoder.digest.class</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Acme\SiteBundle\Security\MessageDigestPasswordEncoder</span>
 </code></pre></div>
 <p>Don&#39;t forget, here again, to change <code>Acme\SiteBundle</code> according to your
@@ -129,15 +128,13 @@ FOSUserBundle users. It will probably look like that:</p>
 
     <span class="nv">$em</span><span class="o">-&gt;</span><span class="na">persist</span><span class="p">(</span><span class="nv">$userFOS</span><span class="p">);</span>
 <span class="p">}</span>
-<span class="nv">$em</span><span class="o">-&gt;</span><span class="na">flush</span><span class="p">();</span>
-</code></pre></div>
+<span class="nv">$em</span><span class="o">-&gt;</span><span class="na">flush</span><span class="p">();</span></code></pre></div>
 
 <p>If so, you will have to add the method <code>setSalt()</code> to your <code>User</code> entity:</p>
 
 <div class="highlight"><pre><code class="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">setSalt</span><span class="p">(</span><span class="nv">$salt</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">salt</span> <span class="o">=</span> <span class="nv">$salt</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>Having some problems?</h3>
 

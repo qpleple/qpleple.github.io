@@ -41,11 +41,11 @@
 </blockquote>
 
 <p>For each of your loop</p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">my_list</span><span class="p">:</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">my_list</span><span class="p">:</span>
   <span class="c"># do stuff</span>
 </code></pre></div>
 <p>wrap the object on which you iterate with <code>pbar()</code>.</p>
-<div class="highlight"><pre><code class="python language-python" data-lang="python"><span class="kn">from</span> <span class="nn">progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
 <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">(</span><span class="n">my_list</span><span class="p">):</span>
@@ -53,7 +53,7 @@
 </code></pre></div>
 <p>and it will display a progress that automatically updates itself after
 each iteration of the loop.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">28% |######################                                    |
+<div class="highlight"><pre><code class="language-text" data-lang="text">28% |######################                                    |
 </code></pre></div>
 <p>It&#39;s great if your run long script and you want to have an idea of how
 long it is going to run.</p>
@@ -61,7 +61,7 @@ long it is going to run.</p>
 <h3>Install</h3>
 
 <p>Use pip.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">pip install progressbar
+<div class="highlight"><pre><code class="language-text" data-lang="text">pip install progressbar
 </code></pre></div>
 <h3>Customize it</h3>
 
@@ -69,7 +69,7 @@ long it is going to run.</p>
 bar that displays the number of iterations done over the total number of
 iterations, an estimation of the remaining running time (!) and the
 &quot;loop speed&quot;, here 1.18 iterations per seconds.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">2401 of 1958 [------------                       ] ETA:  0:27:27 (at  1.18  it/s)
+<div class="highlight"><pre><code class="language-text" data-lang="text">2401 of 1958 [------------                       ] ETA:  0:27:27 (at  1.18  it/s)
 </code></pre></div>
 <p>See <a href="http://code.google.com/p/python-progressbar/">the package progressbar on Google
 code</a>. Run the

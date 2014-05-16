@@ -41,7 +41,7 @@
 </blockquote>
 
 <p>Here is the basic workflow to created a Silex application</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">composer create-project fabpot/Silex-Skeleton myapp
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">composer create-project fabpot/Silex-Skeleton myapp
 <span class="nb">cd </span>myapp
 git init
 git add .
@@ -52,14 +52,14 @@ git commit -am <span class="s2">&quot;Initial commit&quot;</span>
 <h3>Set the environment variables</h3>
 
 <p>You set those in your web server. If you use Apache, you declare them in the VirtualHost section.</p>
-<div class="highlight"><pre><code class="apache language-apache" data-lang="apache"><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+<div class="highlight"><pre><code class="language-apache" data-lang="apache"><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
     ...
     <span class="nb">SetEnv</span> MYAPP_DATABASE_USER qpleple
     <span class="nb">SetEnv</span> MYAPP_DATABASE_PASSWORD mySuperPassword
 <span class="nt">&lt;/VirtualHost&gt;</span>
 </code></pre></div>
 <p>If you use Nginx, declare them in the Nginx config file.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">fastcgi_param MYAPP_DB_USER qpleple
+<div class="highlight"><pre><code class="language-text" data-lang="text">fastcgi_param MYAPP_DB_USER qpleple
 fastcgi_param MMYAPP_DB_PASSWORD mySuperPassword
 </code></pre></div>
 <h3>Get them in Silex</h3>
@@ -74,8 +74,7 @@ fastcgi_param MMYAPP_DB_PASSWORD mySuperPassword
   <span class="s1">&#39;host&#39;</span>     <span class="o">=&gt;</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">&#39;MYAPP_DB_HOST&#39;</span><span class="p">)</span>     <span class="o">?:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
   <span class="s1">&#39;user&#39;</span>     <span class="o">=&gt;</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">&#39;MYAPP_DB_USER&#39;</span><span class="p">)</span>     <span class="o">?:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
   <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">&#39;MYAPP_DB_PASSWORD&#39;</span><span class="p">)</span> <span class="o">?:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-<span class="p">);</span>
-</code></pre></div>
+<span class="p">);</span></code></pre></div>
 
     </div>
 

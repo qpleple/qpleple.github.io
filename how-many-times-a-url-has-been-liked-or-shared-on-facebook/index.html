@@ -67,11 +67,10 @@ App Secret that we will be using.</p>
 <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;method&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;fql.query&#39;</span><span class="p">,</span>
     <span class="s1">&#39;query&#39;</span> <span class="o">=&gt;</span> <span class="nv">$fql</span><span class="p">,</span>
-<span class="p">));</span>
-</code></pre></div>
+<span class="p">));</span></code></pre></div>
 
 <p>The <code>$result</code> array contains all the info you need, and even more :</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">Array (
+<div class="highlight"><pre><code class="language-text" data-lang="text">Array (
     [0] =&gt; Array (
         [url] =&gt; http://stackoverflow.com
         [share_count] =&gt; 1356

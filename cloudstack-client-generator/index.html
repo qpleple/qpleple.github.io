@@ -82,13 +82,12 @@ method is:</p>
         <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">,</span>
         <span class="s1">&#39;forced&#39;</span> <span class="o">=&gt;</span> <span class="nv">$forced</span><span class="p">,</span>
     <span class="p">));</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>Usage</h3>
 
 <p>Just run the script, it will generate all the methods.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">php generate.php class
+<div class="highlight"><pre><code class="language-text" data-lang="text">php generate.php class
 </code></pre></div>
 <p>Output:</p>
 
@@ -111,13 +110,12 @@ method is:</p>
     <span class="p">}</span>
 
     <span class="o">...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>Configuration</h3>
 
 <p>The configuration is set in <code>config.yml</code> with the Yaml format:</p>
-<div class="highlight"><pre><code class="yaml language-yaml" data-lang="yaml"><span class="c1"># URL of the API reference table of contents</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># URL of the API reference table of contents</span>
 <span class="l-Scalar-Plain">api_ref_toc_url</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">http://download.cloud.com/releases/2.2.0/api_2.2.4/TOC_User.html</span>
 
 <span class="c1"># Configuration for the PHP generated code</span>
@@ -162,10 +160,10 @@ understand and tweak it.</p>
 <p>This command is great to debug a change in the URL pattern of the online
 documentation. It should output all the links that are on the table of
 contents (the URL is in the config file):</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">php generate.php dump-links
+<div class="highlight"><pre><code class="language-text" data-lang="text">php generate.php dump-links
 </code></pre></div>
 <p>Example:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ php generate.php dump-links
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ php generate.php dump-links
 user/deployVirtualMachine.html
 user/destroyVirtualMachine.html
 user/rebootVirtualMachine.html
@@ -178,7 +176,7 @@ user/resetPasswordForVirtualMachine.html
 
 <p>This command shows what data is fetched from the page of one method.
 Example:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ php generate.php dump-method-data stopVirtualMachine
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ php generate.php dump-method-data stopVirtualMachine
 Array
 (
     [name] =&gt; stopVirtualMachine
@@ -207,7 +205,7 @@ Array
 
 <p>This command generates the PHP code for that method. The following
 example will output the code given at the begin of the README:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">php generate.php method stopVirtualMachine
+<div class="highlight"><pre><code class="language-text" data-lang="text">php generate.php method stopVirtualMachine
 </code></pre></div>
     </div>
 

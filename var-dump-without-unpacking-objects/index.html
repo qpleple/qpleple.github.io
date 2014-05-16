@@ -41,7 +41,7 @@
 </blockquote>
 
 <p>To collapse an object, we replace it by a string with its classname:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">&quot;Object(Symfony\Component\HttpFoundation\Request)&quot;
+<div class="highlight"><pre><code class="language-text" data-lang="text">&quot;Object(Symfony\Component\HttpFoundation\Request)&quot;
 </code></pre></div>
 <p>We recursively traverse the data structure, replacing each object by a string.</p>
 
@@ -59,13 +59,11 @@
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="nv">$data</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>Then, calling <code>var_dump</code> on the data structure with collapsed objects will produce a more readable output:</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">var_dump</span><span class="p">(</span><span class="nx">collapse_objects</span><span class="p">(</span><span class="nv">$myObject</span><span class="p">));</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="php"><span class="nb">var_dump</span><span class="p">(</span><span class="nx">collapse_objects</span><span class="p">(</span><span class="nv">$myObject</span><span class="p">));</span></code></pre></div>
 
     </div>
 

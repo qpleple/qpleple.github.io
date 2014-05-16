@@ -95,7 +95,7 @@ Just put this file in your project folder.</p>
 <p>Here is the <code>login.php</code> file, it will be the page that the user willl be
 redirected to after having given his credentials and authorization to
 Google. This code retrieve and display the personal data of the user:</p>
-<div class="highlight"><pre><code class="php language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="c1">// login.php</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="c1">// login.php</span>
 <span class="k">require_once</span> <span class="s1">&#39;openid.php&#39;</span><span class="p">;</span>
 <span class="nv">$openid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LightOpenID</span><span class="p">(</span><span class="s2">&quot;my-domain.com&quot;</span><span class="p">);</span>
 
@@ -127,7 +127,7 @@ user changes his Google profile.</p>
 <p>And last step, the code to render the button, let&#39;s say on the home
 page, <code>index.php</code>. It will call a Google window and it will tell this
 window to redirect to your site after.</p>
-<div class="highlight"><pre><code class="php language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="c1">// index.php</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="c1">// index.php</span>
 <span class="k">require_once</span> <span class="s1">&#39;openid.php&#39;</span><span class="p">;</span>
 <span class="nv">$openid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LightOpenID</span><span class="p">(</span><span class="s2">&quot;my-domain.com&quot;</span><span class="p">);</span>
 
@@ -152,8 +152,7 @@ the PHP page. Once again, make sure to replace <code>my-domain.com</code> by you
 <p>When you have the user&#39;s data, you can authenticate him in your application</p>
 
 <div class="highlight"><pre><code class="php"><span class="nb">session_start</span><span class="p">();</span>
-<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$email</span><span class="p">;</span>
-</code></pre></div>
+<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$email</span><span class="p">;</span></code></pre></div>
 
 <p>To test if the user is logged in your application or not:</p>
 
@@ -162,14 +161,12 @@ the PHP page. Once again, make sure to replace <code>my-domain.com</code> by you
     <span class="c1">// user logged in</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="c1">// user not logged in</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>To logout the user, just destroy the session:</p>
 
 <div class="highlight"><pre><code class="php"><span class="nb">session_start</span><span class="p">();</span>
-<span class="nb">session_destroy</span><span class="p">();</span>
-</code></pre></div>
+<span class="nb">session_destroy</span><span class="p">();</span></code></pre></div>
 
 <h3>Other OpenID providers</h3>
 

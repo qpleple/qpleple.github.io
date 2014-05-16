@@ -60,12 +60,11 @@ github</a>). Here is how you do that :</p>
     <span class="c1">// you have to send him to $facebook-&gt;getLoginUrl()</span>
     <span class="nv">$user</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">}</span> <span class="c1">// else : the user is not logged in</span>
-</code></pre></div>
+<span class="p">}</span> <span class="c1">// else : the user is not logged in</span></code></pre></div>
 
 <p>After that, if <code>$user</code> is not <code>null</code>, it means that the user is
 authenticated. So here is what you can display on your page :</p>
-<div class="highlight"><pre><code class="php language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span><span class="x"></span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span><span class="x"></span>
 <span class="x">    &lt;a href=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">getLogoutUrl</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="x">&quot;&gt;</span>
 <span class="x">        Logout of Facebook</span>
 <span class="x">    &lt;/a&gt;</span>
@@ -78,8 +77,7 @@ authenticated. So here is what you can display on your page :</p>
 <p>When the user is authenticated, you can make API calls with his access
 token (stored in <code>$facebook</code>) :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span></code></pre></div>
 
 <p>For the complete flow, you can see <a href="https://github.com/facebook/php-sdk/blob/master/examples/example.php">the example of the Facebook PHP
 SDK</a>

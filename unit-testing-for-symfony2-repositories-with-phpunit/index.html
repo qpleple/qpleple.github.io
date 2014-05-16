@@ -75,8 +75,7 @@ that query the database and return the results:</p>
             <span class="o">-&gt;</span><span class="na">getResult</span><span class="p">()</span>
         <span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>2. Write the test structure test class</h3>
 
@@ -87,8 +86,7 @@ that query the database and return the results:</p>
 
 <span class="k">class</span> <span class="nc">PostRespositoryTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span> <span class="p">{</span>
     <span class="c1">// ...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>But we want to be able to instantiate <code>PostRepository</code> and for that we
 need the Entity Manager and a kernel (that we don&#39;t have by default). So
@@ -109,8 +107,7 @@ let&#39;s add <code>setUp()</code> that will be executed before the tests:</p>
             <span class="o">-&gt;</span><span class="na">getRepository</span><span class="p">(</span><span class="s1">&#39;AcmeBlogBundle:Post&#39;</span><span class="p">)</span>
         <span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>We add our tests:</p>
 
@@ -128,8 +125,7 @@ going to write</li>
     <span class="p">);</span>
 
     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertNotEquals</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span><span class="o">-&gt;</span><span class="na">getMostSeen</span><span class="p">()));</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>You can add your tests on either the query or the results.</p>
 
@@ -137,22 +133,22 @@ going to write</li>
 
 <p>Let&#39;s write the DQL step by step testing each step with
 the console. Here, we get all the posts:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">app/console doctrine:query:dql --max-result<span class="o">=</span>5 <span class="s2">&quot;SELECT p.title FROM Acme\BlogBundle\Entity\Post p&quot;</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">app/console doctrine:query:dql --max-result<span class="o">=</span>5 <span class="s2">&quot;SELECT p.title FROM Acme\BlogBundle\Entity\Post p&quot;</span>
 </code></pre></div>
 <p>then we add one by one parts of our query, testing on our database to
 check the result every time. A left join to get all the visits:</p>
-<div class="highlight"><pre><code class="mysql language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">id</span>
+<div class="highlight"><pre><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">id</span>
 <span class="k">FROM</span> <span class="n">Acme</span><span class="err">\</span><span class="n">BlogBundle</span><span class="err">\</span><span class="n">Entity</span><span class="err">\</span><span class="n">Post</span> <span class="n">p</span>
 <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">p</span><span class="p">.</span><span class="n">visits</span> <span class="n">v</span>
 </code></pre></div>
 <p>then we add the visit count:</p>
-<div class="highlight"><pre><code class="mysql language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">AS</span> <span class="n">visit_count</span>
+<div class="highlight"><pre><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">AS</span> <span class="n">visit_count</span>
 <span class="k">FROM</span> <span class="n">Acme</span><span class="err">\</span><span class="n">BlogBundle</span><span class="err">\</span><span class="n">Entity</span><span class="err">\</span><span class="n">Post</span> <span class="n">p</span>
 <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">p</span><span class="p">.</span><span class="n">visits</span> <span class="n">v</span>
 <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span>
 </code></pre></div>
 <p>and we order by visit count:</p>
-<div class="highlight"><pre><code class="mysql language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">AS</span> <span class="n">visit_count</span>
+<div class="highlight"><pre><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nf">COUNT</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">AS</span> <span class="n">visit_count</span>
 <span class="k">FROM</span> <span class="n">Acme</span><span class="err">\</span><span class="n">BlogBundle</span><span class="err">\</span><span class="n">Entity</span><span class="err">\</span><span class="n">Post</span> <span class="n">p</span>
 <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">p</span><span class="p">.</span><span class="n">visits</span> <span class="n">v</span>
 <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">p</span><span class="p">.</span><span class="n">title</span>
@@ -167,8 +163,7 @@ check the result every time. A left join to get all the visits:</p>
 <div class="highlight"><pre><code class="php"><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span>
     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span><span class="o">-&gt;</span><span class="na">qbMostSeen</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getDql</span><span class="p">(),</span>
     <span class="s2">&quot;SELECT p.title, COUNT(v) AS visit_count FROM Acme\BlogBundle\Entity\Post p LEFT JOIN p.visits v GROUP BY p.title ORDER BY visit_count DESC&quot;</span>
-<span class="p">);</span>
-</code></pre></div>
+<span class="p">);</span></code></pre></div>
 
 <h3>5. Write the query in the repository</h3>
 
@@ -194,17 +189,16 @@ check the result every time. A left join to get all the visits:</p>
             <span class="o">-&gt;</span><span class="na">getResult</span><span class="p">()</span>
         <span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <h3>Pro tip</h3>
 
 <p>You might want to add the alias <code>dql</code> to your shell environment
 (<code>.bash_profile</code>, <code>.zsh/zshaliases</code> or whatever):</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nb">alias </span><span class="nv">dql</span><span class="o">=</span><span class="s2">&quot;app/console doctrine:query:dql&quot;</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">alias </span><span class="nv">dql</span><span class="o">=</span><span class="s2">&quot;app/console doctrine:query:dql&quot;</span>
 </code></pre></div>
 <p>so you can just run in your shell:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">dql <span class="s2">&quot;SELECT p.title FROM Acme\BlogBundle\Entity\Post p&quot;</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">dql <span class="s2">&quot;SELECT p.title FROM Acme\BlogBundle\Entity\Post p&quot;</span>
 </code></pre></div>
     </div>
 

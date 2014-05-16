@@ -43,14 +43,14 @@
 <h3>The problem</h3>
 
 <p>If you followed the instruction to get <a href="https://developers.facebook.com/docs/reference/plugins/like/">the Facebook loke button</a> or <a href="https://developers.facebook.com/docs/reference/plugins/comments/">the Facebook comments plugin</a> working on your website, you must have something like:</p>
-<div class="highlight"><pre><code class="html language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fb-like&quot;</span> <span class="na">data-href=</span><span class="s">&quot;http://my-website.com/my-page&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fb-like&quot;</span> <span class="na">data-href=</span><span class="s">&quot;http://my-website.com/my-page&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
 </code></pre></div>
 <p>For Facebook comments, you will have <code>fb-comments</code> instead of <code>fb-like</code>, but it&#39;s the same problem. You generate dynamically such piece of HTML with Twig in order to have:</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fb-like&quot;</span> <span class="na">data-href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">app.request.uri</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fb-like&quot;</span> <span class="na">data-href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">app.request.uri</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span>
 </code></pre></div>
 <p>But you may want to avoid GET parameters (for instance Google analytics
 parameters) like these ones:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">http://my-website.com/my-page?utm_source=email&amp;utm_campaign=blahblah
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://my-website.com/my-page?utm_source=email&amp;utm_campaign=blahblah
 </code></pre></div>
 <p>As comments and likes counts are for one unique URL, you will end up scattering your like count and comments accross all the URLs displaying the same page.</p>
 
@@ -58,7 +58,7 @@ parameters) like these ones:</p>
 
 <p>Here is the trick to get the current URL without the GET parameters,
 enjoy!</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fb-comments&quot;</span> <span class="na">data-href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">app.request.getUriForPath</span><span class="o">(</span><span class="nv">app.request.pathInfo</span><span class="o">)</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fb-comments&quot;</span> <span class="na">data-href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">app.request.getUriForPath</span><span class="o">(</span><span class="nv">app.request.pathInfo</span><span class="o">)</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span>
 </code></pre></div>
     </div>
 

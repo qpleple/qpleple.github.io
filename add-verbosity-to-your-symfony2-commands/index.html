@@ -59,7 +59,7 @@ maybe send an email), otherwise you don&#39;t want any output</li>
 
 <p>Symfony2&#39;s command component has a built-in verbose option for command
 that you can find with <code>list</code> commande</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ app/console list
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ app/console list
 Symfony version 2.0.0 - app/dev/debug
 
 Usage:
@@ -75,14 +75,13 @@ with no need declare it in <code>configure()</code>:</p>
 
 <div class="highlight"><pre><code class="php"><span class="k">if</span> <span class="p">(</span><span class="nv">$input</span><span class="o">-&gt;</span><span class="na">getOption</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">))</span> <span class="p">{</span>
     <span class="nv">$output</span><span class="o">-&gt;</span><span class="na">writeln</span><span class="p">(</span><span class="s2">&quot;blah blah&quot;</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>So you can call your command with the verbose option:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">app/console acme:mycommand --verbose
+<div class="highlight"><pre><code class="language-text" data-lang="text">app/console acme:mycommand --verbose
 </code></pre></div>
 <p>Or even with the shortcut given by Symfony2:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">app/console acme:mycommand -v
+<div class="highlight"><pre><code class="language-text" data-lang="text">app/console acme:mycommand -v
 </code></pre></div>
     </div>
 

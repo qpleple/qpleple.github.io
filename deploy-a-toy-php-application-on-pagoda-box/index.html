@@ -39,26 +39,26 @@
         <p>Yesterday I published a post about how to <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">deploy a toy PHP application on AppFog</a>, today it is the turn of <a href="pagodabox.com">Pagoda Box</a>. <a href="https://dashboard.pagodabox.com/account/register">Create an account on Pagoda Box</a> and <a href="http://help.pagodabox.com/customer/portal/articles/200927#add-ssh-pagoda">add your SSH key to your account</a>,
 we will be pushing through SSH. Finish the initial setup by installing
 Pagoda&#39;s command line tool:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>gem install pagoda
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>gem install pagoda
 </code></pre></div>
 <p>Create your PHP app:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>mkdir coffee
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkdir coffee
 <span class="nv">$ </span><span class="nb">cd </span>coffee
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;&lt;?php echo &#39;Drink coffee&#39;; ?&gt;&quot;</span> &gt; index.php
-</code></pre></div><div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>git init
+</code></pre></div><div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git init
 <span class="nv">$ </span>git add .
 <span class="nv">$ </span>git commit -am <span class="s2">&quot;Initial commit&quot;</span>
 </code></pre></div>
 <p>Then create and deploy</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>pagoda create coffee
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>pagoda create coffee
 </code></pre></div>
 <p>This will create a remote git repository named <code>pagoda</code>. Just push to
 that remote to deploy or update.</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>git push pagoda --all
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git push pagoda --all
 </code></pre></div>
 <p>You can see you app at <code>http://&lt;yourapp&gt;.pagodabox.com/</code> To update your
 app, git commit your changes and git push them the same way:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>git push pagoda --all
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git push pagoda --all
 </code></pre></div>
     </div>
 

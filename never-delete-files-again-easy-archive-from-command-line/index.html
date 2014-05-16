@@ -45,11 +45,11 @@ we apply the same idea to files ? By providing an easy way to archives
 files, this script will help you to keep your files organized and not
 being distracted or lost into tons of old files. In any directory, just
 type :</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">archive my_file.txt
+<div class="highlight"><pre><code class="language-text" data-lang="text">archive my_file.txt
 </code></pre></div>
 <p>to archive <code>my_file.txt</code> into the sub-directory <code>Archives/</code>. If
 <code>Archives/</code> does not exist, il will be created.</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="c">#!/usr/bin/env bash</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/env bash</span>
 
 <span class="c"># stop on error</span>
 <span class="nb">set</span> -e
@@ -57,17 +57,17 @@ type :</p>
 <span class="nv">CURRENT_PATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
 <span class="nv">ARCHIVES_PATH</span><span class="o">=</span><span class="s2">&quot;$CURRENT_PATH/Archives&quot;</span>
 
-<span class="k">if</span> <span class="o">[</span> ! -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">if</span> <span class="o">[</span> ! -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
 <span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;No file or directory to archive.&quot;</span>
     <span class="nb">exit </span>1
 <span class="k">fi</span>
 
 <span class="c"># Creates the archive directory if doesn&#39;t exists</span>
-<span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&quot;$ARCHIVES_PATH&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&quot;$ARCHIVES_PATH&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
 <span class="k">    </span>mkdir <span class="nv">$ARCHIVES_PATH</span>
 <span class="k">fi</span>
 
-<span class="k">for </span>file in <span class="s2">&quot;$@&quot;</span>; <span class="k">do</span>
+<span class="k">for </span>file in <span class="s2">&quot;$@&quot;</span><span class="p">;</span> <span class="k">do</span>
 <span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Archiving $file&quot;</span>
     tar cfz <span class="k">${</span><span class="nv">ARCHIVES_PATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">file</span><span class="k">}</span>.tar.gz <span class="nv">$file</span>
     rm -rf <span class="nv">$file</span>
@@ -79,7 +79,7 @@ type :</p>
 is in your <code>$PATH</code> environment variable. If you don&#39;t have such
 directory for your personal script, you can add one by doing something
 like :</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>mkdir ~/bin
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkdir ~/bin
 <span class="nv">$ </span><span class="nb">cd</span> ~/bin
 <span class="nv">$ </span>vim archive
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;export PATH=~/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc

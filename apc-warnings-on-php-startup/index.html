@@ -43,7 +43,7 @@
 <h3>The problem</h3>
 
 <p>The following line gets printed everytime PHP starts (either in your log, in the command line, etc.):</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">PHP Warning:  PHP Startup: apc.shm_size now uses M/G suffixes, please update your ini files in Unknown on line 0
+<div class="highlight"><pre><code class="language-text" data-lang="text">PHP Warning:  PHP Startup: apc.shm_size now uses M/G suffixes, please update your ini files in Unknown on line 0
 </code></pre></div>
 <p>It means that in your <code>php.ini</code> file, the value of the key <code>apc.shm_size</code> doesn&#39;t have a unit suffix: <code>M</code> for megabyte or <code>G</code> for gigabyte.</p>
 
@@ -52,24 +52,24 @@
 <p>Locate your <code>php.ini</code> file. You may have two of them: one for the web server, the other for the command line (CLI).</p>
 
 <p>First, for the web server. If you don&#39;t know where it is, you can make a phpinfo page</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s2">&quot;&lt;?php phpinfo();&quot;</span> &gt; /var/www/phpinfo.php
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s2">&quot;&lt;?php phpinfo();&quot;</span> &gt; /var/www/phpinfo.php
 </code></pre></div>
 <p>Then visit it at http://localhost/phpinfo.php and look for the string <code>php.ini</code> in the page.</p>
 
 <p>Then, for the command line <code>php.ini</code>, the equivalent of <code>phpinfo()</code> is <code>php -i</code>:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ php -i | grep ini
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ php -i | grep ini
 Loaded Configuration File =&gt; /etc/php5/cli/php.ini
 Scan this dir for additional .ini files =&gt; /etc/php5/cli/conf.d
 ...
 </code></pre></div>
 <p>Look for <code>apc</code> keys in both <code>php.ini</code>. If you can&#39;t find it, PHP scans a directory (you can find which with <code>phpinfo()</code> or <code>php -i</code>) for addtional <code>.ini</code> files.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">$ grep apc /etc/php5/cli/conf.d/*
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ grep apc /etc/php5/cli/conf.d/*
 /etc/php5/cli/conf.d/apc.ini:extension=apc.so
 /etc/php5/cli/conf.d/apc.ini:apc.enabled=1
 /etc/php5/cli/conf.d/apc.ini:apc.shm_size=30
 </code></pre></div>
 <p>Then edit the key <code>apc.shm_size</code> to add the <code>M</code> size suffix:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">apc.shm_size=30M
+<div class="highlight"><pre><code class="language-text" data-lang="text">apc.shm_size=30M
 </code></pre></div>
     </div>
 

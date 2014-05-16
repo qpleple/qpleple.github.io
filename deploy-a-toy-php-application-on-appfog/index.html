@@ -53,21 +53,21 @@ very easy or quite a pain. Good luck!</p>
 <h3>PHP app</h3>
 
 <p>Once you have <code>af</code> installed, log in by</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>af login
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>af login
 Attempting login to <span class="o">[</span>https://api.appfog.com<span class="o">]</span>
 Email: quentin.pleple@gmail.com
 Password: *********
 Successfully logged into <span class="o">[</span>https://api.appfog.com<span class="o">]</span>
 </code></pre></div>
 <p>Create your PHP app:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>mkdir drink-coffee
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkdir drink-coffee
 <span class="nv">$ </span><span class="nb">cd </span>drink-coffee
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;&lt;?php echo &quot;Drink coffee!&quot;; ?&gt;&#39;</span> &gt; index.php
 </code></pre></div>
 <h3>Deploying</h3>
 
 <p>Then deploy! (Default values are all good)</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>af push drink-coffee
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>af push drink-coffee
 Would you like to deploy from the current directory? <span class="o">[</span>Yn<span class="o">]</span>:
 Detected a PHP Application, is this correct? <span class="o">[</span>Yn<span class="o">]</span>:
 1: AWS US East - Virginia
@@ -105,7 +105,7 @@ Starting Application <span class="s1">&#39;drink-coffee&#39;</span>: OK
 <h3>Updating</h3>
 
 <p>Updating your application is easy as well.</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;&lt;?php echo &quot;Go drink coffee!&quot;; ?&gt;&#39;</span> &gt; index.php
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;&lt;?php echo &quot;Go drink coffee!&quot;; ?&gt;&#39;</span> &gt; index.php
 <span class="nv">$ </span>af update drink-coffee
 Uploading Application:
   Checking <span class="k">for </span>available resources: OK

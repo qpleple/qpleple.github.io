@@ -45,7 +45,7 @@
 <h3>The problem</h3>
 
 <p>If you are working with a framework like Symfony2, the front controller <code>index.php</code> is not in your app root directory:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">/path/to/my-website   &lt;-- root directory
+<div class="highlight"><pre><code class="language-text" data-lang="text">/path/to/my-website   &lt;-- root directory
 +- src/
 +- vendor/
 +- web/               &lt;-- document directory
@@ -54,14 +54,14 @@
 </code></pre></div>
 <p>And we don&#39;t want to have to include the <code>web/</code> directory in all the
 adresses like:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">http://www.my-website.com/web/index.php
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://www.my-website.com/web/index.php
 </code></pre></div>
 <p>We want adresses like:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">http://www.my-website.com/index.php
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://www.my-website.com/index.php
 </code></pre></div>
 <p>Usually, we achieve that goal by setting the document root to be <code>web/</code>
 in the Apache virtual host configuration:</p>
-<div class="highlight"><pre><code class="apache language-apache" data-lang="apache"><span class="nb">ServerName</span> www.my-website.com
+<div class="highlight"><pre><code class="language-apache" data-lang="apache"><span class="nb">ServerName</span> www.my-website.com
 <span class="nb">DocumentRoot</span> <span class="sx">/path/to/my-website/web</span>
 </code></pre></div>
 <p>But in AppFog, we can&#39;t edit the virtual host configuration.</p>
@@ -72,7 +72,7 @@ in the Apache virtual host configuration:</p>
 uses URL rewriting. Let&#39;s add a <code>.htaccess</code> in the root directory
 <code>/path/to/my-website</code> to set the document root. Maybe you already have
 one in <code>web/</code>, it doesn&#39;t matter, it&#39;s a different one.</p>
-<div class="highlight"><pre><code class="apache language-apache" data-lang="apache"><span class="nb">RewriteEngine</span> <span class="k">on</span>
+<div class="highlight"><pre><code class="language-apache" data-lang="apache"><span class="nb">RewriteEngine</span> <span class="k">on</span>
 <span class="nb">RewriteCond</span> %{REQUEST_URI} !web/
 <span class="nb">RewriteRule</span> (.*) <span class="sx">/web/</span>$1 [L]
 </code></pre></div>
@@ -92,7 +92,7 @@ condition if true: prepend <code>web/</code>.</li>
 
 <p>AppFog proposes this configuration file adding two <code>RewriteCond</code>
 directives to check the domain names:</p>
-<div class="highlight"><pre><code class="apache language-apache" data-lang="apache"><span class="nb">RewriteEngine</span> <span class="k">on</span>
+<div class="highlight"><pre><code class="language-apache" data-lang="apache"><span class="nb">RewriteEngine</span> <span class="k">on</span>
 <span class="nb">RewriteCond</span> %{HTTP_HOST} ^my-website.com$ [NC,OR]
 <span class="nb">RewriteCond</span> %{HTTP_HOST} ^www.my-website.com$
 <span class="nb">RewriteCond</span> %{REQUEST_URI} !web/

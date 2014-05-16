@@ -51,7 +51,7 @@ access logs.</p>
 <code>http://myserver/smiley.jpeg</code>.</p></li>
 <li><p>Prepare your message in a HTML document with the smiley in it. Like this
 message:</p>
-<div class="highlight"><pre><code class="html language-html" data-lang="html">See you tomorrow ! <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://myserver/smiley.jpeg&quot;</span> <span class="nt">/&gt;</span>
+<div class="highlight"><pre><code class="language-html" data-lang="html">See you tomorrow ! <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://myserver/smiley.jpeg&quot;</span> <span class="nt">/&gt;</span>
 </code></pre></div></li>
 <li><p>Open it in your browser, copy the whole page and paste it in a new mail
 in Gmail that you send to the person you want to track.</p>
@@ -64,7 +64,7 @@ that his browser will send a request for the image to your web server
 and that request will be logged into a file. If you use Apache, that
 file will be something like <code>/var/log/apache2/access.log</code>. You will see
 a line like this one :</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">myserver.com:80 66.78.236.243 - - [28/Apr/2011:19:00:05 +0200] &quot;GET /smiley.jpeg HTTP/1.1&quot; 304 - &quot;-&quot; &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24&quot;
+<div class="highlight"><pre><code class="language-text" data-lang="text">myserver.com:80 66.78.236.243 - - [28/Apr/2011:19:00:05 +0200] &quot;GET /smiley.jpeg HTTP/1.1&quot; 304 - &quot;-&quot; &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24&quot;
 </code></pre></div></li>
 </ol>
 

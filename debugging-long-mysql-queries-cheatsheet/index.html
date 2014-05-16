@@ -39,7 +39,7 @@
         <h2>See running queries</h2>
 
 <p>To see list of running queries use the command <code>SHOW FULL PROCESSLIST</code>.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">mysql&gt; SHOW FULL PROCESSLIST;
+<div class="highlight"><pre><code class="language-text" data-lang="text">mysql&gt; SHOW FULL PROCESSLIST;
 +-------+------+-----------------+-------+---------+------+-------+-----------------------+
 | Id    | User | Host            | db    | Command | Time | State | Info                  |
 +-------+------+-----------------+-------+---------+------+-------+-----------------------+
@@ -58,7 +58,7 @@
 <h2>Locking and Mutex Information</h2>
 
 <p>To get a some useful information about locks, use the command <code>SHOW ENGINE INNODB STATUS</code>.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">mysql&gt; SHOW ENGINE INNODB STATUS;
+<div class="highlight"><pre><code class="language-text" data-lang="text">mysql&gt; SHOW ENGINE INNODB STATUS;
 *************************** 1. row ***************************
   Type: InnoDB
   Name:
@@ -78,7 +78,7 @@ RW-shared spins 722142, OS waits 211221; RW-excl spins 787046, OS waits 39353
 <h2>Timeout value</h2>
 
 <p>Here is how you inspect the value for query timeout:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">mysql&gt; show variables like &#39;innodb_lock_wait_timeout&#39;;
+<div class="highlight"><pre><code class="language-text" data-lang="text">mysql&gt; show variables like &#39;innodb_lock_wait_timeout&#39;;
 +--------------------------+-------+
 | Variable_name            | Value |
 +--------------------------+-------+
@@ -86,7 +86,7 @@ RW-shared spins 722142, OS waits 211221; RW-excl spins 787046, OS waits 39353
 +--------------------------+-------+
 </code></pre></div>
 <p>You can change this value in <code>/etc/mysql/my.cnf</code> by adding or editing the line:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">innodb_lock_wait_timeout = 200
+<div class="highlight"><pre><code class="language-text" data-lang="text">innodb_lock_wait_timeout = 200
 </code></pre></div>
     </div>
 

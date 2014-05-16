@@ -37,17 +37,17 @@
     
     <div id="post-content">
         <p>Here is a trick to compare two dates in Twig. Convert them as string with the <code>date</code> filter, with first the year, then the month and finally the day:</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">myDate|date<span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">myDate<span class="p">|</span>date<span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span>
 </code></pre></div>
 <p>Then, you can compare strings because the chronological order is the
 same than the lexicographical order:</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="nv">date1</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="nv">date1</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="cp">%}</span>
     ...
 <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 </code></pre></div>
 <p><strong>Tip.</strong> If you want to get the current date, you can give the string
 <code>now</code> to the <code>date</code> filter:</p>
-<div class="highlight"><pre><code class="html+jinja language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;now&quot;</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;now&quot;</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="cp">%}</span>
     ...
 <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 </code></pre></div>

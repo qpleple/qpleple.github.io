@@ -46,7 +46,7 @@ use AppFog. If not, read my other post on how to <a href="/deploy-a-toy-php-appl
 <h3>Get the code</h3>
 
 <p>First, download Wordpress</p>
-<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="nv">$ </span>wget http://wordpress.org/latest.zip
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>wget http://wordpress.org/latest.zip
 <span class="nv">$ </span>unzip latest.zip
 <span class="nv">$ </span><span class="nb">cd </span>wordpress
 </code></pre></div>
@@ -57,7 +57,7 @@ a service, so you don&#39;t know the database parameters (host, user,
 password) before deploying. However, AppFog will feed the environment
 variable <code>VCAP_SERVICES</code> on the server with a JSON hash, including the
 database parameters, like this one:</p>
-<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span><span class="nt">&quot;mysql-5.1&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="nt">&quot;mysql-5.1&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
     <span class="nt">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;d6d665aa69817406d8901cd1345e05e3c6&quot;</span><span class="p">,</span>
       <span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="s2">&quot;mysql-node02.us-east-1.aws.af.cm&quot;</span><span class="p">,</span>
@@ -73,32 +73,22 @@ database parameters, like this one:</p>
 </code></pre></div>
 <p>You can read a environment variable in PHP with</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">getenv</span><span class="p">(</span><span class="s2">&quot;VCAP_SERVICES&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="php"><span class="nb">getenv</span><span class="p">(</span><span class="s2">&quot;VCAP_SERVICES&quot;</span><span class="p">)</span></code></pre></div>
+
+<p>and decode a JSON string to an associative array with</p>
+
+<div class="highlight"><pre><code class="php"><span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json_string</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span></code></pre></div>
+
+<p>We need to configure Wordpress to use a MySQL database. Create a
+configuration file from the example given:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cp wp-config-sample.php wp-config.php
 </code></pre></div>
-
-
-and decode a JSON string to an associative array with
-
-
-<div class="highlight"><pre><code class="php"><span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json_string</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span>
-</code></pre></div>
-
-
-We need to configure Wordpress to use a MySQL database. Create a
-configuration file from the example given:
-
-```bash
-cp wp-config-sample.php wp-config.php
-```
-
-Then in `wp-config.php`, look for the lines with the database parameters
-
+<p>Then in <code>wp-config.php</code>, look for the lines with the database parameters</p>
 
 <div class="highlight"><pre><code class="php"><span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_NAME&#39;</span><span class="p">,</span>     <span class="s1">&#39;database_name_here&#39;</span><span class="p">);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_USER&#39;</span><span class="p">,</span>     <span class="s1">&#39;username_here&#39;</span><span class="p">);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_PASSWORD&#39;</span><span class="p">,</span> <span class="s1">&#39;password_here&#39;</span><span class="p">);</span>
-<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_HOST&#39;</span><span class="p">,</span>     <span class="s1">&#39;localhost&#39;</span><span class="p">);</span>
-</code></pre></div>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_HOST&#39;</span><span class="p">,</span>     <span class="s1">&#39;localhost&#39;</span><span class="p">);</span></code></pre></div>
 
 
 and instead of setting manually those values, we are going to read the
@@ -114,8 +104,7 @@ here, so replace the previous lines by
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_USER&#39;</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_PASSWORD&#39;</span><span class="p">,</span> <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_HOST&#39;</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">&quot;hostname&quot;</span><span class="p">]);</span>
-<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_PORT&#39;</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]);</span>
-</code></pre></div>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_PORT&#39;</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]);</span></code></pre></div>
 
 
 ### Deploy to AppFog
