@@ -42,7 +42,7 @@
 
 <p>To get the list of online friends in PHP, first you need to <a href="/authenticate-users-with-their-facebook-account">authenticate users with their Facebook account</a> asking for the permission <code>friends_online_presence</code>. This is done using the Facebook PHP SDK (<a href="http://github.com/facebook/php-sdk">see on github</a>) adding <code>friends_online_presence</code> to the scope while generating the login link:</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
 <span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;appId&#39;</span>  <span class="o">=&gt;</span> <span class="nx">YOUR_APP_ID</span><span class="p">,</span>
     <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="nx">YOUR_APP_SECRET</span><span class="p">,</span>
@@ -66,7 +66,7 @@
 
 <p>Then, if the user is logged in, you can make the request:</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$fql</span> <span class="o">=</span> <span class="s2">&quot;SELECT uid, name, pic_square, online_presence</span>
 <span class="s2">            FROM user</span>
 <span class="s2">            WHERE online_presence IN (&#39;active&#39;, &#39;idle&#39;)</span>

@@ -40,7 +40,7 @@
 side flow with the Facebook PHP SDK (<a href="http://github.com/facebook/php-sdk">see on
 github</a>). Here is how you do that :</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
 <span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;appId&#39;</span>  <span class="o">=&gt;</span> <span class="nx">YOUR_APP_ID</span><span class="p">,</span>
     <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="nx">YOUR_APP_SECRET</span><span class="p">,</span>
@@ -77,7 +77,7 @@ authenticated. So here is what you can display on your page :</p>
 <p>When the user is authenticated, you can make API calls with his access
 token (stored in <code>$facebook</code>) :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span></code></pre></div>
 
 <p>For the complete flow, you can see <a href="https://github.com/facebook/php-sdk/blob/master/examples/example.php">the example of the Facebook PHP
 SDK</a>

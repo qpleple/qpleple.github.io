@@ -73,11 +73,11 @@ database parameters, like this one:</p>
 </code></pre></div>
 <p>You can read a environment variable in PHP with</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">getenv</span><span class="p">(</span><span class="s2">&quot;VCAP_SERVICES&quot;</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">getenv</span><span class="p">(</span><span class="s2">&quot;VCAP_SERVICES&quot;</span><span class="p">)</span></code></pre></div>
 
 <p>and decode a JSON string to an associative array with</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json_string</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json_string</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span></code></pre></div>
 
 <p>We need to configure Wordpress to use a MySQL database. Create a
 configuration file from the example given:</p>
@@ -85,7 +85,7 @@ configuration file from the example given:</p>
 </code></pre></div>
 <p>Then in <code>wp-config.php</code>, look for the lines with the database parameters</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_NAME&#39;</span><span class="p">,</span>     <span class="s1">&#39;database_name_here&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_NAME&#39;</span><span class="p">,</span>     <span class="s1">&#39;database_name_here&#39;</span><span class="p">);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_USER&#39;</span><span class="p">,</span>     <span class="s1">&#39;username_here&#39;</span><span class="p">);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_PASSWORD&#39;</span><span class="p">,</span> <span class="s1">&#39;password_here&#39;</span><span class="p">);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DB_HOST&#39;</span><span class="p">,</span>     <span class="s1">&#39;localhost&#39;</span><span class="p">);</span></code></pre></div>
@@ -96,7 +96,7 @@ environment variable `VCAP_SERVICES` and feed the parameters directly
 here, so replace the previous lines by
 
 
-<div class="highlight"><pre><code class="php"><span class="nv">$services</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s2">&quot;VCAP_SERVICES&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$services</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s2">&quot;VCAP_SERVICES&quot;</span><span class="p">);</span>
 <span class="nv">$services_json</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$services</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
 <span class="nv">$mysql_config</span> <span class="o">=</span> <span class="nv">$services_json</span><span class="p">[</span><span class="s2">&quot;mysql-5.1&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;credentials&quot;</span><span class="p">];</span>
 

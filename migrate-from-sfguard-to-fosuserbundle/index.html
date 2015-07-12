@@ -79,7 +79,7 @@ interface EncoderAwareInterface and the function <code>User::getEncoderName</co
 has to return the name of the encoder to use. For instance, you can add
 a field <code>algorithm</code> like this.</p>
 
-<div class="highlight"><pre><code class="php"><span class="c1">// src/Acme/SiteBundle/Entity/User.php</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="c1">// src/Acme/SiteBundle/Entity/User.php</span>
 <span class="k">class</span> <span class="nc">User</span> <span class="k">implements</span> <span class="nx">EncoderAwareInterface</span>
 <span class="p">{</span>
   <span class="c1">// ...</span>
@@ -111,7 +111,7 @@ names.</p>
 <p>You may now write your script reading the sfGuard users and writing
 FOSUserBundle users. It will probably look like that:</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
 <span class="nv">$um</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;fos_user.user_manager&#39;</span><span class="p">);</span>
 
 <span class="nv">$mysqli</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\mysqli</span><span class="p">(</span><span class="nv">$dbHost</span><span class="p">,</span> <span class="nv">$dbUser</span><span class="p">,</span> <span class="nv">$dbPassword</span><span class="p">,</span> <span class="nv">$dbName</span><span class="p">,</span> <span class="nv">$dbPort</span><span class="p">);</span>
@@ -132,7 +132,7 @@ FOSUserBundle users. It will probably look like that:</p>
 
 <p>If so, you will have to add the method <code>setSalt()</code> to your <code>User</code> entity:</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">setSalt</span><span class="p">(</span><span class="nv">$salt</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">setSalt</span><span class="p">(</span><span class="nv">$salt</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">salt</span> <span class="o">=</span> <span class="nv">$salt</span><span class="p">;</span>
 <span class="p">}</span></code></pre></div>
 

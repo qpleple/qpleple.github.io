@@ -58,17 +58,17 @@ type :</p>
 <span class="nv">ARCHIVES_PATH</span><span class="o">=</span><span class="s2">&quot;$CURRENT_PATH/Archives&quot;</span>
 
 <span class="k">if</span> <span class="o">[</span> ! -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;No file or directory to archive.&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;No file or directory to archive.&quot;</span>
     <span class="nb">exit </span>1
 <span class="k">fi</span>
 
 <span class="c"># Creates the archive directory if doesn&#39;t exists</span>
 <span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&quot;$ARCHIVES_PATH&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-<span class="k">    </span>mkdir <span class="nv">$ARCHIVES_PATH</span>
+    mkdir <span class="nv">$ARCHIVES_PATH</span>
 <span class="k">fi</span>
 
-<span class="k">for </span>file in <span class="s2">&quot;$@&quot;</span><span class="p">;</span> <span class="k">do</span>
-<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Archiving $file&quot;</span>
+<span class="k">for</span> file in <span class="s2">&quot;$@&quot;</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Archiving $file&quot;</span>
     tar cfz <span class="k">${</span><span class="nv">ARCHIVES_PATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">file</span><span class="k">}</span>.tar.gz <span class="nv">$file</span>
     rm -rf <span class="nv">$file</span>
 <span class="k">done</span>

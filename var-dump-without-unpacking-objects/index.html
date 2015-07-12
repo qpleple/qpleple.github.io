@@ -45,7 +45,7 @@
 </code></pre></div>
 <p>We recursively traverse the data structure, replacing each object by a string.</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">function</span> <span class="nf">collapse_objects</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">function</span> <span class="nf">collapse_objects</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">is_object</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s2">&quot;Object(%s)&quot;</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span><span class="nv">$data</span><span class="p">));</span>
     <span class="p">}</span>
@@ -63,7 +63,7 @@
 
 <p>Then, calling <code>var_dump</code> on the data structure with collapsed objects will produce a more readable output:</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">var_dump</span><span class="p">(</span><span class="nx">collapse_objects</span><span class="p">(</span><span class="nv">$myObject</span><span class="p">));</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">var_dump</span><span class="p">(</span><span class="nx">collapse_objects</span><span class="p">(</span><span class="nv">$myObject</span><span class="p">));</span></code></pre></div>
 
     </div>
 

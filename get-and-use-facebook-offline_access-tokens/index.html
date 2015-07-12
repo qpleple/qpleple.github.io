@@ -49,7 +49,7 @@ generate the login URL. Here is how you do that.</p>
 
 <p>First you check if the user is logged in or not :</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
 <span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;appId&#39;</span>  <span class="o">=&gt;</span> <span class="nx">YOUR_APP_ID</span><span class="p">,</span>
     <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="nx">YOUR_APP_SECRET</span><span class="p">,</span>
@@ -69,27 +69,27 @@ generate the login URL. Here is how you do that.</p>
 <p>If he is not, you generate the &quot;Login with Facebook&quot; URL asking for the
 <code>offline_access</code> permission :</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$args</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;scope&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;offline_access&#39;</span><span class="p">);</span>
     <span class="nv">$loginUrl</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">getLoginUrl</span><span class="p">(</span><span class="nv">$args</span><span class="p">);</span>
 <span class="p">}</span></code></pre></div>
 
 <p>And then display the link in your template :</p>
 
-<div class="highlight"><pre><code class="php"><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span><span class="x"></span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span><span class="x"></span>
 <span class="x">    &lt;a href=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$loginUrl</span> <span class="cp">?&gt;</span><span class="x">&quot;&gt;Login with Facebook&lt;/a&gt;</span>
 <span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
 
 <p>Then you can retrieve the offline access token and store it. To get it,
 call :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">getAccessToken</span><span class="p">()</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">getAccessToken</span><span class="p">()</span></code></pre></div>
 
 <h3>Use the offline access token</h3>
 
 <p>To use the offline access token when the user is not logged in :</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
 <span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;appId&#39;</span>  <span class="o">=&gt;</span> <span class="nx">YOUR_APP_ID</span><span class="p">,</span>
     <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="nx">YOUR_APP_SECRET</span><span class="p">,</span>
@@ -99,7 +99,7 @@ call :</p>
 
 <p>And now you can make API calls for this user :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span></code></pre></div>
 
 <p>I wrote this page after <a href="http://stackoverflow.com/questions/6123859/how-to-login-with-offline-access-using-the-new-facebook-php-sdk-3-0-0/6159270#6159270">an answer I made on
 Stackoverflow</a>.</p>

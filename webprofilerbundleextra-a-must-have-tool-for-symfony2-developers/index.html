@@ -44,7 +44,7 @@
 
 <p>When I started with Symfony2, I was confused by these kind of things I could read :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
 <span class="nv">$request</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span></code></pre></div>
 
 
@@ -86,7 +86,7 @@ been defined in your applications. You can access parameters in your
 controller by adding that it implements the interface
 <code>ContainerAwareInterface</code> :</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">use</span> <span class="nx">Symfony\Component\DependencyInjection\ContainerAwareInterface</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">use</span> <span class="nx">Symfony\Component\DependencyInjection\ContainerAwareInterface</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">PostController</span> <span class="k">extends</span> <span class="nx">Controller</span> <span class="k">implements</span> <span class="nx">ContainerAwareInterface</span> <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">indexAction</span><span class="p">()</span> <span class="p">{</span>
@@ -107,7 +107,7 @@ container.
 
 <p>To access one service in a controller :</p>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span></code></pre></div>
 
 <h3>Routing</h3>
 

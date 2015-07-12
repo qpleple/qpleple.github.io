@@ -66,7 +66,7 @@ to the autoloader, subscribing it in the kernel and adding routing
 rules. It has already a default controller with a basic function that
 you can start to play with:</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">class</span> <span class="nc">DefaultController</span> <span class="k">extends</span> <span class="nx">Controller</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">class</span> <span class="nc">DefaultController</span> <span class="k">extends</span> <span class="nx">Controller</span>
 <span class="p">{</span>
     <span class="sd">/**</span>
 <span class="sd">     * @Route(&quot;/hello/{name}&quot;)</span>
@@ -91,7 +91,7 @@ files in <code>MyBundle/Entity</code>, just run the command:</p>
 want. The script will generate all the code for you. Here is an example
 of the code generated with only one field <code>name</code>:</p>
 
-<div class="highlight"><pre><code class="php"><span class="sd">/**</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="sd">/**</span>
 <span class="sd"> * Acme\Bundle\BlogBundle\Entity\Post</span>
 <span class="sd"> * @ORM\Table()</span>
 <span class="sd"> * @ORM\Entity(repositoryClass=&quot;Acme\Bundle\BlogBundle\Entity\PostRepository&quot;)</span>
@@ -140,7 +140,7 @@ of the code generated with only one field <code>name</code>:</p>
 repository for this entity if you say <code>yes</code> during when you are asked
 the question:</p>
 
-<div class="highlight"><pre><code class="php"><span class="k">namespace</span> <span class="nx">Acme\Bundle\BlogBundle\Entity</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">namespace</span> <span class="nx">Acme\Bundle\BlogBundle\Entity</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Doctrine\ORM\EntityRepository</span><span class="p">;</span>
 
 <span class="sd">/**</span>
@@ -161,7 +161,7 @@ etc.) and it will generate a new controller with all the method to deal
 with this entity and the corresponding templates. Here is for example
 the <code>update</code> action for my entity that the script just generated:</p>
 
-<div class="highlight"><pre><code class="php"><span class="sd">/**</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="sd">/**</span>
 <span class="sd"> * Edits an existing Post entity.</span>
 <span class="sd"> *</span>
 <span class="sd"> * @Route(&quot;/{id}/update&quot;, name=&quot;post_update&quot;)</span>

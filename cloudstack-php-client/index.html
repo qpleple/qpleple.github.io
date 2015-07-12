@@ -48,7 +48,7 @@
 
 <h3>Initialization</h3>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$cloudstack</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CloudStackClient</span><span class="p">(</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$cloudstack</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CloudStackClient</span><span class="p">(</span>
     <span class="nx">API_ENDPOINT</span><span class="p">,</span>
     <span class="nx">API_KEY</span><span class="p">,</span>
     <span class="nx">SECRET_KEY</span>
@@ -56,14 +56,14 @@
 
 <h3>Lists</h3>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$vms</span> <span class="o">=</span> <span class="nv">$cloudstack</span><span class="o">-&gt;</span><span class="na">listVirtualMachines</span><span class="p">();</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$vms</span> <span class="o">=</span> <span class="nv">$cloudstack</span><span class="o">-&gt;</span><span class="na">listVirtualMachines</span><span class="p">();</span>
 <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vms</span> <span class="k">as</span> <span class="nv">$vm</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{</span><span class="nv">$vm</span><span class="o">-&gt;</span><span class="na">id</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="nv">$vm</span><span class="o">-&gt;</span><span class="na">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nv">$vm</span><span class="o">-&gt;</span><span class="na">state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span>
 <span class="p">}</span></code></pre></div>
 
 <h3>Asynchronous tasks</h3>
 
-<div class="highlight"><pre><code class="php"><span class="nv">$job</span> <span class="o">=</span> <span class="nv">$cloudstack</span><span class="o">-&gt;</span><span class="na">deployVirtualMachine</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">259</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$job</span> <span class="o">=</span> <span class="nv">$cloudstack</span><span class="o">-&gt;</span><span class="na">deployVirtualMachine</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">259</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 <span class="k">echo</span><span class="p">(</span><span class="s2">&quot;VM being deployed. Job id = </span><span class="si">{</span><span class="nv">$job</span><span class="o">-&gt;</span><span class="na">jobid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span>
 
 <span class="k">echo</span><span class="p">(</span><span class="s2">&quot;All jobs :&quot;</span><span class="p">);</span>

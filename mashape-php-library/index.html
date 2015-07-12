@@ -51,7 +51,7 @@ stable, this is just a proof of concept.</p>
 
 <p>Declare your API and routing pattern right into your PHP code:</p>
 
-<div class="highlight"><pre><code class="php"><span class="sd">/**</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="sd">/**</span>
 <span class="sd"> * @GET</span>
 <span class="sd"> * @Route(&quot;/hello/{name}&quot;)</span>
 <span class="sd"> * @Result({&quot;text&quot;, &quot;author&quot; = {&quot;id&quot;, &quot;email&quot;, &quot;password&quot;}})</span>
@@ -68,7 +68,7 @@ this version, the front controller is <code>index.php</code> and the user does n
 need to open or edit it. He only has to edit <code>api.php</code> which can not be
 more simple:</p>
 
-<div class="highlight"><pre><code class="php"><span class="nb">define</span><span class="p">(</span><span class="s2">&quot;SERVER_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;the-server-key&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">define</span><span class="p">(</span><span class="s2">&quot;SERVER_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;the-server-key&quot;</span><span class="p">);</span>
 
 <span class="k">class</span> <span class="nc">ComponentAPI</span> <span class="k">extends</span> <span class="nx">MashapeRestAPI</span> <span class="p">{</span>
     <span class="sd">/**</span>
