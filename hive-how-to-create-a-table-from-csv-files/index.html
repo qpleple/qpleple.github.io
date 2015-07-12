@@ -76,6 +76,14 @@ LOCATION &#39;s3://my-bucket/files/&#39;;
 aws s3 cp s3://my-bucket/$root/$dir/$filename s3://my-bucket/flatten-structure/$filename; \
 end
 </code></pre></div>
+<h3>Replace an existing table</h3>
+
+<p>If the table already exists, there will be an error when trying to create it:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. AlreadyExistsException(message:Table my_table already exists)
+</code></pre></div>
+<p>To delete a table if it exists:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">DROP TABLE IF EXISTS my_table;
+</code></pre></div>
     </div>
 
     <div id="card-post">
