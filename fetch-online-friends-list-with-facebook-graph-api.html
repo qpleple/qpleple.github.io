@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Fetch Online Friends List With Facebook Graph Api</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-18013119-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+    
+    <h1>Fetch Online Friends List With Facebook Graph Api</h1>
+    
+    <div id="post-content">
+        <blockquote>
+<p>This article is a step-by-step PHP tutorial explaining how to use the Facebook PHP SDK to get the list of the online friends of the current user.</p>
+</blockquote>
+
+<p>To get the list of online friends in PHP, first you need to <a href="/authenticate-users-with-their-facebook-account">authenticate users with their Facebook account</a> asking for the permission <code>friends_online_presence</code>. This is done using the Facebook PHP SDK (<a href="http://github.com/facebook/php-sdk">see on github</a>) adding <code>friends_online_presence</code> to the scope while generating the login link:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">&quot;facebook.php&quot;</span><span class="p">;</span>
+<span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;appId&#39;</span>  <span class="o">=&gt;</span> <span class="nx">YOUR_APP_ID</span><span class="p">,</span>
+    <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="nx">YOUR_APP_SECRET</span><span class="p">,</span>
+<span class="p">));</span>
+
+<span class="nv">$user</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">getUser</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">FacebookApiException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$user</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$args</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;friends_online_presence&#39;</span><span class="p">;</span>
+    <span class="nv">$loginUrl</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">getLoginUrl</span><span class="p">(</span><span class="nv">$args</span><span class="p">);</span>
+    
+    <span class="c1">// display login link</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Then, if the user is logged in, you can make the request:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$fql</span> <span class="o">=</span> <span class="s2">&quot;SELECT uid, name, pic_square, online_presence</span>
+<span class="s2">            FROM user</span>
+<span class="s2">            WHERE online_presence IN (&#39;active&#39;, &#39;idle&#39;)</span>
+<span class="s2">            AND uid IN (</span>
+<span class="s2">                SELECT uid2 FROM friend WHERE uid1 = </span><span class="si">$user</span><span class="s2"></span>
+<span class="s2">            )&quot;</span><span class="p">;</span>
+
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;method&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;fql.query&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;query&#39;</span> <span class="o">=&gt;</span> <span class="nv">$fql</span><span class="p">,</span>
+    <span class="p">));</span>
+    
+    <span class="c1">// read results</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The results will be like:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Array(
+    [0] =&gt; Array(
+        [uid] =&gt; 1536397056
+        [name] =&gt; Quentin Pleplé
+        [pic_square] =&gt; http://...jpg
+        [online_presence] =&gt; active
+    )
+    [1] =&gt; ...
+    [2] =&gt; ...
+    ...
+)
+</code></pre></div>
+<p>The <code>online_presence</code> property can take 4 values: <code>active</code>, <code>idle</code>,
+<code>offline</code>, or <code>error</code>.</p>
+
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            September 2011
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>
