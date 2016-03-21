@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Le Hello World des Data Sciences</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    
+        
+    
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-18013119-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+ 
+<div class="container">
+  <div id="page" style="position: relative">
+    
+    
+    <h1>Le Hello World des Data Sciences</h1>
+    
+    <div id="post-content">
+        <p>Même si pour devenir un bon Data Scientist il vous faudra acquérir de bonnes connaissances en maths et dans divers langage de programmation, son approche est à la portée de tous. Voyons ensemble pour fixer les idées un exemple très simple d’algorithme de Machine Learning qui apprend sur des données et est capable de faire des prédictions.</p>
+
+<h3>Jeu de données du Titanic</h3>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-6">
+        On part du jeu de données classique des <a href="https://www.kaggle.com/c/titanic" target="_blank">données historiques</a> réelles des passagers du Titanic : un tableau (au format CSV) avec une ligne par passager et ses caractéristiques en colonne : s’il a survécu ou pas (1 survivant, 0 non survivant), son sexe (1 homme, 0 femme), la classe de son billet (1, 2 ou 3), son âge, le nombre de membres de sa famille à bord, le prix de son ticket en dollars.
+    </div>
+
+    <div class="col-md-6">
+        <img src="/img/post-big-data/titanic1.jpg" class="img-responsive center-block" />
+    </div>
+    
+</div>
+
+<table class="table">
+    <thead>
+        <tr><th>Survivant</th><th>Classe</th><th>Sexe</th><th>Age</th><th>Famille</th><th>Prix</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>0</td><td>3</td><td>1</td><td>22</td><td>1</td><td>7.3</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>38</td><td>1</td><td>71.3</td></tr>
+        <tr><td>1</td><td>3</td><td>0</td><td>26</td><td>0</td><td>7.9</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>35</td><td>1</td><td>53.1</td></tr>
+        <tr><td>0</td><td>3</td><td>1</td><td>35</td><td>0</td><td>8.1</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>54</td><td>0</td><td>51.9</td></tr>
+        <tr><td>0</td><td>3</td><td>1</td><td>2</td><td>4</td><td>21.1</td></tr>
+        <tr><td>1</td><td>3</td><td>0</td><td>27</td><td>2</td><td>11.1</td></tr>
+        <tr><td>1</td><td>2</td><td>0</td><td>14</td><td>1</td><td>30.1</td></tr>
+        <tr><td>1</td><td>3</td><td>0</td><td>4</td><td>2</td><td>16.7</td></tr>
+    </tbody>
+</table>
+
+<h3>Classification binaire</h3>
+
+<p>La tâche est de créer un algorithme qui apprend à prédire la 1ère colonne à partir des autres, c’est-à-dire à classer les passagers du Titanic en 2 groupes, les survivants et ceux qui n&#39;ont pas survécu, en fonction des caractéristiques des passagers.</p>
+
+<p>L’algorithme va apprendre, pour chaque passager, sur le fichier CSV les liens qu’il y a entre les différentes caractéristiques du passager et le fait qu’il ait survécu ou non. Ensuite, étant donné les informations d’un nouveau passager, l’algorithme pourra prédire s’il va survivre ou non.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="c"># lecture du fichier CSV</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&quot;data.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="p">)</span>
+<span class="c"># on isole la 1ère colonne &quot;Survivant&quot; des données dans y, le reste dans X</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c"># instanciation du modèle</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+<span class="c"># apprentissage du modèle sur les données</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c"># prédiction pour une femme de 50 ans, en 1ère classe,</span>
+<span class="c"># ayant payé sa place 70$ et ayant 2 membres de sa famille avec elle</span>
+<span class="k">print</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
+<span class="c"># output &gt;&gt;&gt; 1</span>
+<span class="c"># le modèle prédit qu’elle va survivre</span>
+
+<span class="c"># prédiction pour une homme de 25 ans, en 3ème classe,</span>
+<span class="c"># ayant payé sa place 6$ et étant seul de sa famille à bord</span>
+<span class="k">print</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="c"># output &gt;&gt;&gt; 0</span>
+<span class="c"># le modèle prédit qu’il ne va pas survivre</span>
+</code></pre></div>
+    </div>
+
+    <div id="card-post">
+        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
+        <a href="/">Quentin Pleplé</a> <br>
+        <span class="muted">
+            February 2016
+        </span>
+    </div>
+
+</div>
+
+<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</body>
+</html>
