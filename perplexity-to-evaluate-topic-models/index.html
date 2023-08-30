@@ -26,12 +26,16 @@
     
   
     
-      <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
-        });
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
       </script>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
     
   
   
@@ -64,32 +68,30 @@
   <span class="post-date">15 May 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p>The most common way to evaluate a probabilistic model is to measure the log-likelihood of a held-out test set.</p>
-</blockquote>
 
-<p>This is usually done by splitting the dataset into two parts: one for training, the other for testing. For LDA, a test set is a collection of unseen documents $\boldsymbol w_d$, and the model is described by the topic matrix $\boldsymbol \Phi$ and the hyperparameter $\alpha$ for topic-distribution of documents. The LDA parameters $\boldsymbol \Theta$ is not taken into consideration as it represents the topic-distributions for the documents of the training set, and can therefore be ignored to compute the likelihood of unseen documents. Therefore, we need to evaluate the log-likelihood
-    \(\mathcal L (\boldsymbol w)
-    = \log p(\boldsymbol w | \boldsymbol \Phi, \alpha)
-    = \sum\_d \log p(\boldsymbol w\_d | \boldsymbol \Phi, \alpha).\)
-of a set of unseen documents $\boldsymbol w_d$ given the topics $\boldsymbol \Phi$ and the hyperparameter $\alpha$ for topic-distribution $\boldsymbol \theta_d$ of documents. Likelihood of unseen documents can be used to compare models; higher likelihood implying a better model.</p>
+<p>This is usually done by splitting the dataset into two parts: one for training, the other for testing. For LDA, a test set is a collection of unseen documents $\boldsymbol w_d$, and the model is described by the topic matrix $\boldsymbol \Phi$ and the hyperparameter $\alpha$ for topic-distribution of documents. The LDA parameters $\boldsymbol \Theta$ is not taken into consideration as it represents the topic-distributions for the documents of the training set, and can therefore be ignored to compute the likelihood of unseen documents. Therefore, we need to evaluate the log-likelihood</p>
 
-<p>The measure traditionally used for topic models is the \textit{perplexity} of held-out documents $\boldsymbol w_d$ defined as
-    \(\text{perplexity}(\text{test set } \boldsymbol w) =
-        \exp \left\\{
-        - \frac{\mathcal L(\boldsymbol w)}{\text{count of tokens}}
-        \right\\}\)
-which is a decreasing function of the log-likelihood $\mathcal L(\boldsymbol w)$ of the unseen documents $\boldsymbol w_d$; the lower the perplexity, the better the model.</p>
+\[\mathcal L (\boldsymbol w)
+= \log p(\boldsymbol w | \boldsymbol \Phi, \alpha)
+= \sum_d \log p(\boldsymbol w_d | \boldsymbol \Phi, \alpha).\]
 
-<table>
-  <tbody>
-    <tr>
-      <td>However, the likelihood $p(\boldsymbol w_d</td>
-      <td>\boldsymbol \Phi, \alpha)$ of one document is intractable, which makes the evaluation of $\mathcal L(\boldsymbol w)$, and therefore the perplexity, intractable as well. [<a href="/bib#Wallach09a">Wallach09a</a>] derive various sampling methods to approximate this probability.</td>
-    </tr>
-  </tbody>
-</table>
+<p>of a set of unseen documents $\boldsymbol w_d$ given the topics $\boldsymbol \Phi$ and the hyperparameter $\alpha$ for topic-distribution $\boldsymbol \theta_d$ of documents. Likelihood of unseen documents can be used to compare models; higher likelihood implying a better model.</p>
+
+<p>The measure traditionally used for topic models is the <em>perplexity</em> of held-out documents $\boldsymbol w_d$ defined as</p>
+
+\[\text{perplexity}(\text{test set } \boldsymbol w) =
+    \exp \left\{
+    - \frac{\mathcal L(\boldsymbol w)}{\text{count of tokens}}
+    \right\}\]
+
+<p>which is a decreasing function of the log-likelihood $\mathcal L(\boldsymbol w)$ of the unseen documents $\boldsymbol w_d$; the lower the perplexity, the better the model.</p>
+
+<p>However,
+the likelihood $p(\boldsymbol w_d | \boldsymbol \Phi, \alpha)$ of one document is intractable, which makes the evaluation of $\mathcal L(\boldsymbol w)$, and therefore the perplexity, intractable as well. [<a href="/bib#Wallach09a">Wallach09a</a>] derive various sampling methods to approximate this probability.</p>
 
 <h3 id="perplexity-is-not-strongly-correlated-to-human-judgment">Perplexity is not strongly correlated to human judgment</h3>
 
@@ -101,14 +103,8 @@ For each topic, they took the top five words (ordered by frequency $p(w|k) = \ph
 <p>If every participant could identify the intruder, then we could conclude that the topic is good at describing an idea.
 If on the other hand, many people identified one of the topic top five word as the intruder, it means that they could not see the logic in the association of words, and we can conclude the topic was not good enough.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>It’s important to understand what this experiment is proving. The result proves that, given a topic, the five words that have the largest frequency $p(w</td>
-      <td>k) = \phi_{kw}$ withing their topic are usually not good at describing one coherent idea; at least not good enough to be able to recognize an intruder.</td>
-    </tr>
-  </tbody>
-</table>
+<p>It’s important to understand what this experiment is proving.
+The result proves that, given a topic, the five words that have the largest frequency $p(w|k) = \phi_{kw}$ withing their topic are usually not good at describing one coherent idea; at least not good enough to be able to recognize an intruder.</p>
 
 </div>
       </div>

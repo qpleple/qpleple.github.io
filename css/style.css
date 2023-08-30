@@ -36,7 +36,11 @@ ul li::marker {
     color:firebrick;
 }
 
-b {
+b, strong {
     font-weight: 400;
 }
 
+.message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+}

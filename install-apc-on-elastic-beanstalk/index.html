@@ -56,11 +56,9 @@
 
   
 
-  <h3 id="install">Install</h3>
+  <h2 id="install">Install</h2>
 
-<p>APC can be installed as a package on Amazon Linux AMIs.</p>
-
-<p>It’s enough to just add it to the package to be installed in one of your <code class="language-plaintext highlighter-rouge">.config</code> file in <code class="language-plaintext highlighter-rouge">.ebextensions</code></p>
+<p>APC can be installed as a package on Amazon Linux AMIs. It is enough to just add it to the package to be installed in one of your <code class="language-plaintext highlighter-rouge">.config</code> file in <code class="language-plaintext highlighter-rouge">.ebextensions</code></p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .ebextensions/myapp.config</span>
 <span class="na">packages</span><span class="pi">:</span>
@@ -70,19 +68,17 @@
 
 <p>See <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html#customize-containers-format-packages">Amazon’s documentation</a> for more info.</p>
 
-<h3 id="troubleshooting">Troubleshooting</h3>
+<h2 id="troubleshooting">Troubleshooting</h2>
 
-<h4 id="logs">Logs</h4>
+<h3 id="logs">Logs</h3>
 
-<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>.</p>
-
-<p>You should see something like</p>
+<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>. You should see something like:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[DEBUG] Installing/updating [u'php55-pecl-apc'] via yum
 [INFO] Yum installed [u'php55-pecl-apc']
 </code></pre></div></div>
 
-<h4 id="wrong-package">Wrong package</h4>
+<h3 id="wrong-package">Wrong package</h3>
 
 <p>To search for APC packages:</p>
 

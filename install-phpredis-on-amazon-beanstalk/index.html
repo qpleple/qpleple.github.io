@@ -63,30 +63,29 @@
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># these commands run before the application and web server are</span>
 <span class="c1"># set up and the application version file is extracted.</span>
 <span class="na">commands</span><span class="pi">:</span>
-    <span class="na">01_redis_install</span><span class="pi">:</span>
-        <span class="c1"># run this command from /tmp directory</span>
-        <span class="na">cwd</span><span class="pi">:</span> <span class="s">/tmp</span>
-        <span class="c1"># don't run the command if phpredis is already installed (file /etc/php.d/redis.ini exists)</span>
-        <span class="na">test</span><span class="pi">:</span> <span class="s1">'</span><span class="s">[</span><span class="nv"> </span><span class="s">!</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/etc/php.d/redis.ini</span><span class="nv"> </span><span class="s">]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">"redis</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">installed"'</span>
-        <span class="c1"># executed only if test command succeeds</span>
-        <span class="na">command</span><span class="pi">:</span> <span class="pi">|</span>
-            <span class="s">wget https://github.com/nicolasff/phpredis/zipball/master -O phpredis.zip \</span>
-            <span class="s">&amp;&amp; unzip -o phpredis.zip \</span>
-            <span class="s">&amp;&amp; cd nicolasff-phpredis-* \</span>
-            <span class="s">&amp;&amp; phpize \</span>
-            <span class="s">&amp;&amp; ./configure \</span>
-            <span class="s">&amp;&amp; make \</span>
-            <span class="s">&amp;&amp; make install \</span>
-            <span class="s">&amp;&amp; echo extension=redis.so &gt; /etc/php.d/redis.ini</span>
+  <span class="na">01_redis_install</span><span class="pi">:</span>
+    <span class="c1"># run this command from /tmp directory</span>
+    <span class="na">cwd</span><span class="pi">:</span> <span class="s">/tmp</span>
+    <span class="c1"># don't run the command if phpredis is already installed</span>
+    <span class="c1"># (file /etc/php.d/redis.ini exists)</span>
+    <span class="na">test</span><span class="pi">:</span> <span class="s1">'</span><span class="s">[</span><span class="nv"> </span><span class="s">!</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/etc/php.d/redis.ini</span><span class="nv"> </span><span class="s">]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">"redis</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">installed"'</span>
+    <span class="c1"># executed only if test command succeeds</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">|</span>
+      <span class="s">wget https://github.com/nicolasff/phpredis/zipball/master -O phpredis.zip \</span>
+      <span class="s">&amp;&amp; unzip -o phpredis.zip \</span>
+      <span class="s">&amp;&amp; cd nicolasff-phpredis-* \</span>
+      <span class="s">&amp;&amp; phpize \</span>
+      <span class="s">&amp;&amp; ./configure \</span>
+      <span class="s">&amp;&amp; make \</span>
+      <span class="s">&amp;&amp; make install \</span>
+      <span class="s">&amp;&amp; echo extension=redis.so &gt; /etc/php.d/redis.ini</span>
 </code></pre></div></div>
 
 <p>See <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html#customize-containers-format-commands">Amazon’s documentation</a> for more info.</p>
 
 <h3 id="troubleshooting">Troubleshooting</h3>
 
-<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>.</p>
-
-<p>You should see something like</p>
+<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>. You should see something like this:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[DEBUG] Running command 01_redis_install
 [DEBUG] Running test for command 01_redis_install
