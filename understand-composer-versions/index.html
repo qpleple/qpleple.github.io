@@ -1,52 +1,76 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Understand Composer Versions</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Understand Composer Versions &middot; Quentin Pleplé
     
+  </title>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  
+  <link rel="canonical" href="https://qpleple.com/understand-composer-versions/">
+  
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
-    
-    
-    <h1>Understand Composer Versions</h1>
-    
-    <div id="post-content">
-        <p>Here are some extracts from Composer&#39;s documentation reorganized to better understand how package versions and stability work.</p>
 
-<h2>Versions of a package</h2>
 
-<h3>Format <a href="https://getcomposer.org/doc/04-schema.md#version">(doc)</a></h3>
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Understand Composer Versions</h1>
+  <span class="post-date">15 Apr 2014</span>
+
+  
+
+  <p>Here are some extracts from Composer’s documentation reorganized to better understand how package versions and stability work.</p>
+
+<h2 id="versions-of-a-package">Versions of a package</h2>
+
+<h3 id="format-doc">Format <a href="https://getcomposer.org/doc/04-schema.md#version">(doc)</a></h3>
+<blockquote>
+  <p>[Versions] follow the format of <code class="language-plaintext highlighter-rouge">X.Y.Z</code> or <code class="language-plaintext highlighter-rouge">vX.Y.Z</code> with an optional suffix of <code class="language-plaintext highlighter-rouge">-dev</code>, <code class="language-plaintext highlighter-rouge">-patch</code>, <code class="language-plaintext highlighter-rouge">-alpha</code>, <code class="language-plaintext highlighter-rouge">-beta</code> or <code class="language-plaintext highlighter-rouge">-RC</code>. The patch, alpha, beta and RC suffixes can also be followed by a number.</p>
+</blockquote>
 
 <blockquote>
-<p>[Versions] follow the format of <code>X.Y.Z</code> or <code>vX.Y.Z</code> with an optional suffix of <code>-dev</code>, <code>-patch</code>, <code>-alpha</code>, <code>-beta</code> or <code>-RC</code>. The patch, alpha, beta and RC suffixes can also be followed by a number.</p>
+  <p>Examples:</p>
+</blockquote>
 
-<p>Examples:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1.0.0
+<blockquote>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.0.0
 1.0.2
 1.1.0
 0.2.5
@@ -54,68 +78,79 @@
 1.0.0-alpha3
 1.0.0-beta2
 1.0.0-RC5
-</code></pre></div></blockquote>
+</code></pre></div>  </div>
+</blockquote>
 
-<h3>Versions from git tags <a href="https://getcomposer.org/doc/02-libraries.md#tags">(doc)</a></h3>
-
+<h3 id="versions-from-git-tags-doc">Versions from git tags <a href="https://getcomposer.org/doc/02-libraries.md#tags">(doc)</a></h3>
 <blockquote>
-<p>For every tag that looks like a version, a package version of that tag will be created. It should match <code>X.Y.Z</code> or <code>vX.Y.Z</code>, with an optional suffix of <code>-patch</code>, <code>-alpha</code>, <code>-beta</code> or <code>-RC</code>. The suffixes can also be followed by a number.</p>
+  <p>For every tag that looks like a version, a package version of that tag will be created. It should match <code class="language-plaintext highlighter-rouge">X.Y.Z</code> or <code class="language-plaintext highlighter-rouge">vX.Y.Z</code>, with an optional suffix of <code class="language-plaintext highlighter-rouge">-patch</code>, <code class="language-plaintext highlighter-rouge">-alpha</code>, <code class="language-plaintext highlighter-rouge">-beta</code> or <code class="language-plaintext highlighter-rouge">-RC</code>. The suffixes can also be followed by a number.</p>
 
-<p>Here are a few examples of valid tag names:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1.0.0
+  <p>Here are a few examples of valid tag names:</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.0.0
 v1.0.0
 1.10.5-RC1
 v4.4.4beta2
 v2.0.0-alpha
 v2.0.4-p1
-</code></pre></div>
-<p><strong>Note</strong>: Even if your tag is prefixed with <code>v</code>, a version constraint in a require statement has to be specified without prefix (e.g. tag <code>v1.0.0</code> will result in version <code>1.0.0</code>).</p>
+</code></pre></div>  </div>
+
+  <p><strong>Note</strong>: Even if your tag is prefixed with <code class="language-plaintext highlighter-rouge">v</code>, a version constraint in a require statement has to be specified without prefix (e.g. tag <code class="language-plaintext highlighter-rouge">v1.0.0</code> will result in version <code class="language-plaintext highlighter-rouge">1.0.0</code>).</p>
 </blockquote>
 
-<h3>Versions from git branches <a href="https://getcomposer.org/doc/02-libraries.md#branches">(doc)</a></h3>
+<h3 id="versions-from-git-branches-doc">Versions from git branches <a href="https://getcomposer.org/doc/02-libraries.md#branches">(doc)</a></h3>
 
 <blockquote>
-<p>For every branch, a package development version will be created. If the branch name looks like a version, the version will be <code>{branchname}-dev</code>. For example a branch <code>2.0</code> will get a version <code>2.0.x-dev</code> (the <code>.x</code> is added for technical reasons, to make sure it is recognized as a branch, a <code>2.0.x</code> branch would also be valid and be turned into <code>2.0.x-dev</code> as well. If the branch does not look like a version, it will be <code>dev-{branchname}</code>. <code>master</code> results in a <code>dev-master</code> version.</p>
+  <p>For every branch, a package development version will be created. If the branch name looks like a version, the version will be <code class="language-plaintext highlighter-rouge">{branchname}-dev</code>. For example a branch <code class="language-plaintext highlighter-rouge">2.0</code> will get a version <code class="language-plaintext highlighter-rouge">2.0.x-dev</code> (the <code class="language-plaintext highlighter-rouge">.x</code> is added for technical reasons, to make sure it is recognized as a branch, a <code class="language-plaintext highlighter-rouge">2.0.x</code> branch would also be valid and be turned into <code class="language-plaintext highlighter-rouge">2.0.x-dev</code> as well. If the branch does not look like a version, it will be <code class="language-plaintext highlighter-rouge">dev-{branchname}</code>. <code class="language-plaintext highlighter-rouge">master</code> results in a <code class="language-plaintext highlighter-rouge">dev-master</code> version.</p>
 
-<p>Here are some examples of version branch names:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">1.x
+  <p>Here are some examples of version branch names:</p>
+</blockquote>
+
+<blockquote>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.x
 1.0 (equals 1.0.x)
 1.1.x
-</code></pre></div>
-<p><strong>Note</strong>: When you install a development version, it will be automatically pulled from its source. See the install command for more details.</p>
+</code></pre></div>  </div>
 </blockquote>
-
-<h2>Referencing to a version</h2>
-
-<h3>Package links <a href="https://getcomposer.org/doc/04-schema.md#package-links">(doc)</a></h3>
 
 <blockquote>
-<p>An object which maps package names to version constraints. [...]</p>
-
-<p><code>require</code> additionally support stability flags (root-only). These allow you to further restrict or expand the stability of a package beyond the scope of the minimum-stability setting. You can apply them to a constraint, or just apply them to an empty constraint if you want to allow unstable packages of a dependency for example.</p>
-
-<p>Example:</p>
+  <p><strong>Note</strong>: When you install a development version, it will be automatically pulled from its source. See the install command for more details.</p>
 </blockquote>
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
- <span class="nt">&quot;require&quot;</span><span class="p">:</span> <span class="p">{</span>
-     <span class="nt">&quot;monolog/monolog&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.*@beta&quot;</span><span class="p">,</span>    <span class="err">&lt;-- @beta applied to a constraint</span>
-     <span class="nt">&quot;acme/foo&quot;</span><span class="p">:</span> <span class="s2">&quot;@dev&quot;</span>                  <span class="err">&lt;-- @dev applied to an empty constraint</span>
- <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+
+<h2 id="referencing-to-a-version">Referencing to a version</h2>
+
+<h3 id="package-links-doc">Package links <a href="https://getcomposer.org/doc/04-schema.md#package-links">(doc)</a></h3>
 <blockquote>
-<p>If one of your dependencies has a dependency on an unstable package you need to explicitly require it as well, along with its sufficient stability flag.</p>
+  <p>An object which maps package names to version constraints. […]</p>
 
-<p>Example:</p>
+  <p><code class="language-plaintext highlighter-rouge">require</code> additionally support stability flags (root-only). These allow you to further restrict or expand the stability of a package beyond the scope of the minimum-stability setting. You can apply them to a constraint, or just apply them to an empty constraint if you want to allow unstable packages of a dependency for example.</p>
+
+  <p>Example:</p>
 </blockquote>
-<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span>
- <span class="nt">&quot;require&quot;</span><span class="p">:</span> <span class="p">{</span>
-     <span class="nt">&quot;doctrine/doctrine-fixtures-bundle&quot;</span><span class="p">:</span> <span class="s2">&quot;dev-master&quot;</span><span class="p">,</span>
-     <span class="nt">&quot;doctrine/data-fixtures&quot;</span><span class="p">:</span> <span class="s2">&quot;@dev&quot;</span>
- <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3>Version constraints <a href="https://getcomposer.org/doc/01-basic-usage.md#package-versions">(doc)</a></h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+ </span><span class="nl">"require"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"monolog/monolog"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.*@beta"</span><span class="p">,</span><span class="w">    </span><span class="err">&lt;-- @beta applied to a constraint</span><span class="w">
+     </span><span class="nl">"acme/foo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@dev"</span><span class="w">                  </span><span class="err">&lt;-- @dev applied to an empty constraint</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>If one of your dependencies has a dependency on an unstable package you need to explicitly require it as well, along with its sufficient stability flag.</p>
+
+  <p>Example:</p>
+</blockquote>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+ </span><span class="nl">"require"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"doctrine/doctrine-fixtures-bundle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dev-master"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"doctrine/data-fixtures"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@dev"</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="version-constraints-doc">Version constraints <a href="https://getcomposer.org/doc/01-basic-usage.md#package-versions">(doc)</a></h3>
 
 <table class="table">
 <thead>
@@ -130,142 +165,123 @@ v2.0.4-p1
 </tr>
 <tr>
 <td>Range</td>
-<td><code>>=1.0</code> <code>>=1.0,<2.0</code> <code>>=1.0,<1.1 &#124; >=1.2</code></td>
-<td> By using comparison operators you can specify ranges of valid versions. Valid operators are <code>></code>, <code>></code> <code>=</code>, <code><</code>, <code><=</code>, <code>!=</code>.You can define multiple ranges, separated by a comma, which will be treated as a logical AND. A pipe symbol &#124; will be treated as a logical OR. AND has higher precedence than OR.</td>
+<td><code>&gt;=1.0</code> <code>&gt;=1.0,&lt;2.0</code> <code>&gt;=1.0,&lt;1.1 &#124; &gt;=1.2</code></td>
+<td> By using comparison operators you can specify ranges of valid versions. Valid operators are <code>&gt;</code>, <code>&gt;</code> <code>=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>!=</code>.You can define multiple ranges, separated by a comma, which will be treated as a logical AND. A pipe symbol &#124; will be treated as a logical OR. AND has higher precedence than OR.</td>
 </tr>
 <tr>
 <td>Wildcard</td>
 <td><code>1.0.*</code></td>
-<td>You can specify a pattern with a <code>*</code> wildcard. <code>1.0.*</code> is the equivalent of <code>>=1.0,<1.1</code>.</td>
+<td>You can specify a pattern with a <code>*</code> wildcard. <code>1.0.*</code> is the equivalent of <code>&gt;=1.0,&lt;1.1</code>.</td>
 </tr>
 <tr>
 <td>Tilde Operator</td>
 <td><code>~1.2</code></td>
-<td>Very useful for projects that follow semantic versioning. <code>~1.2</code> is equivalent to <code>>=1.2,<2.0</code>. For more details, read the next section below.</td>
+<td>Very useful for projects that follow semantic versioning. <code>~1.2</code> is equivalent to <code>&gt;=1.2,&lt;2.0</code>. For more details, read the next section below.</td>
 </tr>
-</table>
+&lt;/table&gt;
 
-<h3>Next Significant Release (Tilde Operator) <a href="https://getcomposer.org/doc/01-basic-usage.md#next-significant-release-tilde-operator-">(doc)</a></h3>
+### Next Significant Release (Tilde Operator) [(doc)](https://getcomposer.org/doc/01-basic-usage.md#next-significant-release-tilde-operator-)
 
-<blockquote>
-<p>The <code>~</code> operator is best explained by example: <code>~1.2</code> is equivalent to <code>&gt;=1.2,&lt;2.0</code>, while <code>~1.2.3</code> is equivalent to <code>&gt;=1.2.3,&lt;1.3</code>. As you can see it is mostly useful for projects respecting semantic versioning. A common usage would be to mark the minimum minor version you depend on, like <code>~1.2</code> (which allows anything up to, but not including, <code>2.0</code>). Since in theory there should be no backwards compatibility breaks until <code>2.0</code>, that works well. Another way of looking at it is that using <code>~</code> specifies a minimum version, but allows the last digit specified to go up.</p>
+&gt; The `~` operator is best explained by example: `~1.2` is equivalent to `&gt;=1.2,&lt;2.0`, while `~1.2.3` is equivalent to `&gt;=1.2.3,&lt;1.3`. As you can see it is mostly useful for projects respecting semantic versioning. A common usage would be to mark the minimum minor version you depend on, like `~1.2` (which allows anything up to, but not including, `2.0`). Since in theory there should be no backwards compatibility breaks until `2.0`, that works well. Another way of looking at it is that using `~` specifies a minimum version, but allows the last digit specified to go up.
 
-<p><strong>Note</strong>: Though <code>2.0-beta.1</code> is strictly before <code>2.0</code>, a version constraint like <code>~1.2</code> would not install it. As said above <code>~1.2</code> only means the <code>.2</code> can change but the <code>1.</code> part is fixed.</p>
-</blockquote>
+&gt; **Note**: Though `2.0-beta.1` is strictly before `2.0`, a version constraint like `~1.2` would not install it. As said above `~1.2` only means the `.2` can change but the `1.` part is fixed.
 
-<h2>Stability</h2>
 
-<h3>Default <a href="https://getcomposer.org/doc/01-basic-usage.md#stability">(doc)</a></h3>
+## Stability
 
-<blockquote>
-<p>By default only stable releases are taken into consideration. If you would like to also get RC, beta, alpha or dev versions of your dependencies you can do so using stability flags. To change that for all packages instead of doing per dependency you can also use the minimum-stability setting.</p>
-</blockquote>
+### Default [(doc)](https://getcomposer.org/doc/01-basic-usage.md#stability)
+&gt; By default only stable releases are taken into consideration. If you would like to also get RC, beta, alpha or dev versions of your dependencies you can do so using stability flags. To change that for all packages instead of doing per dependency you can also use the minimum-stability setting.
 
-<h3>Minimum stability <a href="https://getcomposer.org/doc/04-schema.md#minimum-stability">(doc)</a></h3>
+### Minimum stability [(doc)](https://getcomposer.org/doc/04-schema.md#minimum-stability)
 
-<blockquote>
-<p>This defines the default behavior for filtering packages by stability. This defaults to <code>stable</code>, so if you rely on a <code>dev</code> package, you should specify it in your file to avoid surprises.</p>
+&gt; This defines the default behavior for filtering packages by stability. This defaults to `stable`, so if you rely on a `dev` package, you should specify it in your file to avoid surprises.
+&gt;
+&gt; All versions of each package are checked for stability, and those that are less stable than the `minimum-stability` setting will be ignored when resolving your project dependencies. Specific changes to the stability requirements of a given package can be done in require [...].
+&gt;
+&gt; Available options (in order of stability) are `dev`, `alpha`, `beta`, `RC`, and `stable`.
 
-<p>All versions of each package are checked for stability, and those that are less stable than the <code>minimum-stability</code> setting will be ignored when resolving your project dependencies. Specific changes to the stability requirements of a given package can be done in require [...].</p>
+# Commands
 
-<p>Available options (in order of stability) are <code>dev</code>, <code>alpha</code>, <code>beta</code>, <code>RC</code>, and <code>stable</code>.</p>
-</blockquote>
+### Install [(doc)](https://getcomposer.org/doc/03-cli.md#install)
 
-<h1>Commands</h1>
+&gt; The `install` command reads the `composer.json` file from the current directory, resolves the dependencies, and installs them into `vendor`.
 
-<h3>Install <a href="https://getcomposer.org/doc/03-cli.md#install">(doc)</a></h3>
+&gt; If there is a `composer.lock` file in the current directory, it will use the exact versions from there instead of resolving them. This ensures that everyone using the library will get the same versions of the dependencies.
 
-<blockquote>
-<p>The <code>install</code> command reads the <code>composer.json</code> file from the current directory, resolves the dependencies, and installs them into <code>vendor</code>.</p>
+&gt; If there is no `composer.lock` file, composer will create one after dependency resolution.
 
-<p>If there is a <code>composer.lock</code> file in the current directory, it will use the exact versions from there instead of resolving them. This ensures that everyone using the library will get the same versions of the dependencies.</p>
+### Update [(doc)](https://getcomposer.org/doc/03-cli.md#update)
 
-<p>If there is no <code>composer.lock</code> file, composer will create one after dependency resolution.</p>
-</blockquote>
+&gt; Will resolve all dependencies of the project and write the exact versions into `composer.lock`. [...]
 
-<h3>Update <a href="https://getcomposer.org/doc/03-cli.md#update">(doc)</a></h3>
+&gt; To update a few packages and not all:
 
-<blockquote>
-<p>Will resolve all dependencies of the project and write the exact versions into <code>composer.lock</code>. [...]</p>
+&gt;     composer update vendor/package vendor/package2
 
-<p>To update a few packages and not all:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">composer update vendor/package vendor/package2
-</code></pre></div></blockquote>
 
-<h3>Show <a href="https://getcomposer.org/doc/03-cli.md#show">(doc)</a></h3>
+### Show [(doc)](https://getcomposer.org/doc/03-cli.md#show)
+To see all existing packages:
 
-<p>To see all existing packages:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show
-absolvent/phpunit-symfony
-acid/symfony
-admafa/proyecto-final-symfony
-...
-</code></pre></div>
-<p>To see the details of one package:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">composer show vendor/package
-</code></pre></div>
-<p>To see the details of a specific version of one package</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">composer show vendor/package 1.0.2
-</code></pre></div>
-<p>To see all installed package with versions:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show -i
-alexandresalome/php-selenium     1.0.1      PHP Library for Selenium
-behat/behat                      v2.5.0     Scenario-oriented BDD framework for ...
-behat/common-contexts            v1.2.0     Commonly used contexts for Behat
-...
-</code></pre></div>
-<p>To see what composer understood from the <code>composer.json</code> file:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show -s
-...
-requires
-php &gt;=5.4.0
-symfony/symfony 2.3.*
-symfony/assetic-bundle 2.3.*
-symfony/swiftmailer-bundle 2.3.*
-symfony/monolog-bundle 2.3.*
-...
-</code></pre></div>
-<h2>Troubleshooting</h2>
+    $ composer show
+    absolvent/phpunit-symfony
+    acid/symfony
+    admafa/proyecto-final-symfony
+    ...
 
-<p>See what composer understood from the <code>composer.json</code> file:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">composer show -s | grep doctrine-migrations-bundle
-</code></pre></div>
-<p>See what version is installed:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">composer show -i | grep doctrine-migrations-bundle
-</code></pre></div>
-<p>See if there exists some stable version for a package (here no):</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ composer show doctrine/doctrine-migrations-bundle
-...
-versions : * dev-master, 2.1.x-dev, 2.0.x-dev,
-1.0.0-BETA4, 1.0.0-BETA3, 1.0.0-BETA2, v1.0.0-beta1
-...
-</code></pre></div>
-    </div>
+To see the details of one package:
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            April 2014
-        </span>
-    </div>
+    composer show vendor/package
+
+To see the details of a specific version of one package
+
+    composer show vendor/package 1.0.2
+
+To see all installed package with versions:
+
+    $ composer show -i
+    alexandresalome/php-selenium     1.0.1      PHP Library for Selenium
+    behat/behat                      v2.5.0     Scenario-oriented BDD framework for ...
+    behat/common-contexts            v1.2.0     Commonly used contexts for Behat
+    ...
+
+To see what composer understood from the `composer.json` file:
+
+    $ composer show -s
+    ...
+    requires
+    php &gt;=5.4.0
+    symfony/symfony 2.3.*
+    symfony/assetic-bundle 2.3.*
+    symfony/swiftmailer-bundle 2.3.*
+    symfony/monolog-bundle 2.3.*
+    ...
+
+
+## Troubleshooting
+
+See what composer understood from the `composer.json` file:
+
+    composer show -s | grep doctrine-migrations-bundle
+
+See what version is installed:
+
+    composer show -i | grep doctrine-migrations-bundle
+
+See if there exists some stable version for a package (here no):
+
+    $ composer show doctrine/doctrine-migrations-bundle
+    ...
+    versions : * dev-master, 2.1.x-dev, 2.0.x-dev,
+    1.0.0-BETA4, 1.0.0-BETA3, 1.0.0-BETA2, v1.0.0-beta1
+    ...
+</tbody></thead></table>
 
 </div>
+      </div>
+    </div>
 
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

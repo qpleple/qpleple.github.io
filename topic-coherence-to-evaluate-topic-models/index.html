@@ -1,138 +1,137 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Topic Coherence To Evaluate Topic Models</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Topic Coherence To Evaluate Topic Models &middot; Quentin Pleplé
     
-        
-            <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
-            });
-            </script>
-            <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-            </script>
-        
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/topic-coherence-to-evaluate-topic-models/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
     
+  
+    
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
+        });
+      </script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
-    
-    
-    <h1>Topic Coherence To Evaluate Topic Models</h1>
-    
-    <div id="post-content">
-        <p>Human judgment not being correlated to perplexity (or likelihood of unseen documents) is the motivation for more work trying to model the human judgment. This is by itself a hard task as human judgment is not clearly defined; for example, two experts can disagree on the usefulness of a topic.</p>
 
-<p>One can classify the methods addressing this problem into two categories. \textit{Intrinsic} methods that do not use any external source or task from the dataset, whereas \textit{extrinsic} methods use the discovered topics for external tasks, such as information retrieval [<a href="/bib#Wei06">Wei06</a>], or use external statistics to evaluate topics.</p>
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Topic Coherence To Evaluate Topic Models</h1>
+  <span class="post-date">16 May 2013</span>
+
+  
+
+  <p>Human judgment not being correlated to perplexity (or likelihood of unseen documents) is the motivation for more work trying to model the human judgment. This is by itself a hard task as human judgment is not clearly defined; for example, two experts can disagree on the usefulness of a topic.</p>
+
+<p>One can classify the methods addressing this problem into two categories. <em>Intrinsic</em> methods that do not use any external source or task from the dataset, whereas <em>extrinsic</em> methods use the discovered topics for external tasks, such as information retrieval [<a href="/bib#Wei06">Wei06</a>], or use external statistics to evaluate topics.</p>
 
 <p>As an early intrinsic method, [<a href="/bib#Alsumait09">Alsumait09</a>] define measures based on three prototypes of junk and insignificant topics. The three prototypes for junk topics are the uniform word-distribution, the empirical corpus word-distribution, and the uniform document-distribution:
-    $$
-        p(w | \text{topic}) \propto 1
+    \(p(w | \text{topic}) \propto 1
         \qquad
         p(w | \text{topic}) \propto \text{count}(w \text{ in corpus})
         \qquad
-        p(d | \text{topic}) \propto 1
-    $$
+        p(d | \text{topic}) \propto 1\)
 Then a topic significance score is computed from various dissimilarities and similarities (KL divergence, cosine, and correlation) to these three prototypes. However, the significance score is a complicated function with free parameters, that seem to be arbitrarily chosen, so the risk of overfitting the two datasets used for experiments is high.</p>
 
-<h3>Topic coherence</h3>
+<h3 id="topic-coherence">Topic coherence</h3>
 
 <p>The state-of-the-art in terms of topic coherence are the intrinsic measure UMass and the extrinsic measure UCI, both based on the same high level idea. Both measure compute the sum
-    $$ \text{Coherence} = \sum_{i \lt j} \text{score}(w_i, w_j) $$
-of pairwise scores on the words $w_1$, ..., $w_n$ used to describe the topic, usually the top $n$ words by frequency $p(w|k)$. This measure can be seen as the sum of all edges on complete graph.</p>
+    \(\text{Coherence} = \sum\_{i \lt j} \text{score}(w\_i, w\_j)\)
+of pairwise scores on the words $w_1$, …, $w_n$ used to describe the topic, usually the top $n$ words by frequency $p(w|k)$. This measure can be seen as the sum of all edges on complete graph.</p>
 
 <div class="text-center" style="margin: 20px 0">
     <img src="/img/thesis/complete-graph.png" style="height: 350px" />
     <p class="img-legend">Both topic coherence measures UCI and UMass are based on the sum $\sum_{i \lt j} \text{score}(w_i, w_j)$ of the pairwise scores of the $n$ top words $w_1$, ..., $w_n$ of the topic.</p>
 </div>
 
-<p><em>Notation.</em> Let&#39;s define $D(w_i)$ as the count of documents containing the word $w_i$, $D(w_i, w_j)$ the count of documents containing both words $w_i$ and $w_j$, and $D$ the total number or documents in the corpus. The corpus used to compute the counts is specified in a subscript of symbol $D$. For example, $D_{\text{Wikipedia}}(w_i)$ it the count of documents of the Wikipedia corpus containing the word $w_i$. When no subscript is specified, the corpus used is the corpus on which the model have been trained.</p>
+<p><em>Notation.</em> Let’s define $D(w_i)$ as the count of documents containing the word $w_i$, $D(w_i, w_j)$ the count of documents containing both words $w_i$ and $w_j$, and $D$ the total number or documents in the corpus. The corpus used to compute the counts is specified in a subscript of symbol $D$. For example, $D_{\text{Wikipedia}}(w_i)$ it the count of documents of the Wikipedia corpus containing the word $w_i$. When no subscript is specified, the corpus used is the corpus on which the model have been trained.</p>
 
-<h3>Extrinsic UCI measure</h3>
-
+<h3 id="extrinsic-uci-measure">Extrinsic UCI measure</h3>
 <p>The UCI measure introduced by [<a href="/bib#Newman10a">Newman10a</a>] uses as pairwise score function the Pointwise Mutual Information (PMI)
-    $$ \text{score}_{\text{UCI}}(w_i, w_j)  = \log \frac{p(w_i, w_j)}{p(w_i)p(w_j)}$$
+    \(\text{score}\_{\text{UCI}}(w\_i, w\_j)  = \log \frac{p(w\_i, w\_j)}{p(w\_i)p(w\_j)}\)
 where $p(w)$ represents the probability of seeing $w_i$ in a random document, and $p(w_i, w_j)$ the probability of seeing both $w_i$ and $w_j$ co-occurring in a random document. Those probabilities are empirically estimated from an external dataset such as Wikipedia:
-    $$
-    p(w_i) = \frac{D_{\text{Wikipedia}}(w_i)}{D_{\text{Wikipedia}}}
+    \(p(w\_i) = \frac{D\_{\text{Wikipedia}}(w\_i)}{D\_{\text{Wikipedia}}}
     \qquad
     \text{and}
     \qquad
-    p(w_i, w_j) = \frac{D_{\text{Wikipedia}}(w_i, w_j)}{D_{\text{Wikipedia}}}.
-    $$</p>
+    p(w\_i, w\_j) = \frac{D\_{\text{Wikipedia}}(w\_i, w\_j)}{D\_{\text{Wikipedia}}}.\)</p>
 
 <p>Given the score function, we are free to choose the corpus to compute the empirical probabilities.
-[<a href="/bib#Newman10a">Newman10a</a>] chose three external corpus to evaluate them (Wikipedia, Google 2-grams, and Medline) but not the corpus that generated the topics. The argument given is that using the same dataset would reinforce noise or unusual word statistics. However, some intrinsic topic coherence measures have been developed since, that are also better correlated to human judgment than perplexity <a href="see%20next%20section"><a href="/bib#Mimno11a">Mimno11a</a></a>.
+[<a href="/bib#Newman10a">Newman10a</a>] chose three external corpus to evaluate them (Wikipedia, Google 2-grams, and Medline) but not the corpus that generated the topics. The argument given is that using the same dataset would reinforce noise or unusual word statistics. However, some intrinsic topic coherence measures have been developed since, that are also better correlated to human judgment than perplexity [<a href="/bib#Mimno11a">Mimno11a</a>] (see next section).
 It may be worth comparing intrinsic and extrinsic PMI-based measures.</p>
 
-<h3>Intrinsic UMass measure</h3>
-
+<h3 id="intrinsic-umass-measure">Intrinsic UMass measure</h3>
 <p>The UMass measure introduced by [<a href="/bib#Mimno11a">Mimno11a</a>] uses as pairwise score function
-    $$
-    \text{score}_{\text{UMass}}(w_i, w_j) =
+    \(\text{score}\_{\text{UMass}}(w\_i, w\_j) =
     \log
-    \frac{D(w_i, w_j) + 1}{D(w_i)}
-    $$
-which is the empirical conditional log-probability $\log p(w_j|w_i) = \log \frac{p(w_i, w_j)}{p(w_j)}$ smoothed by adding one to $D(w_i, w_j)$.</p>
+    \frac{D(w\_i, w\_j) + 1}{D(w\_i)}\)
+which is the empirical conditional log-probability $\log p(w_j|w_i) = \log \frac{p(w_i, w_j)}{p(w_i)}$ smoothed by adding one to $D(w_i, w_j)$.</p>
 
-<p>The score function is not symmetric as it is an increasing function of the empirical probability $p(w_j|w_i)$, where $w_i$ is more common than $w_j$, words being ordered by decreasing frequency $p(w|k)$. So this score measures how much, within the words used to describe a topic, a common word is in average a good predictor for a less common word.</p>
+<table>
+  <tbody>
+    <tr>
+      <td>The score function is not symmetric as it is an increasing function of the empirical probability $p(w_j</td>
+      <td>w_i)$, where $w_i$ is more common than $w_j$, words being ordered by decreasing frequency $p(w</td>
+      <td>k)$. So this score measures how much, within the words used to describe a topic, a common word is in average a good predictor for a less common word.</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>As the pairwise score used by the UMass measure is not symmetric, the order of the arguments matters.
 UMass measure is computing $p(\text{rare word } | \text{ common word})$, how much a common word triggers a rarer word.
 However, in human word association, high frequency words are more likely to be used as response words than low frequency words [<a href="/bib#Steyvers06">Steyvers06</a>].
 It would be interesting to understand the effect of this choice by doing more experiments and comparing the two options.</p>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            May 2013
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

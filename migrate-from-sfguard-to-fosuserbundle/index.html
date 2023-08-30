@@ -1,42 +1,62 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Migrate from sfGuard to FOSUserBundle</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Migrate from sfGuard to FOSUserBundle &middot; Quentin Pleplé
     
+  </title>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  
+  <link rel="canonical" href="https://qpleple.com/migrate-from-sfguard-to-fosuserbundle/">
+  
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Migrate from sfGuard to FOSUserBundle</h1>
-    
-    <div id="post-content">
-        <p><img class="pull-right" style="width: 100px" src="/img/logos/symfony2.png" /></p>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Migrate from sfGuard to FOSUserBundle</h1>
+  <span class="post-date">16 Aug 2011</span>
+
+  
+
+  <p><img class="pull-right" style="width: 100px" src="/img/logos/symfony2.png" /></p>
 
 <p>Passwords are not stored the same way by sfGuard (symfony 1) and
 FOSUserBundle (Symfony2). You will not be able to check with
@@ -44,146 +64,130 @@ FOSUserBundle the password created with sfGuard for two reasons (if you
 keep default values):</p>
 
 <ul>
-<li><strong>hashing algorithm</strong>: sfGuard uses sha1 to hash passwords whereas FOSUserBundle uses sha512.</li>
-<li><strong>password and salt merging</strong>: sfGuard is doing <code>$salt . $password</code> whereas FOSUserBundle is doing <code>$password . &#39;{&#39; . $salt . &#39;}&#39;</code>.</li>
+  <li><strong>hashing algorithm</strong>: sfGuard uses sha1 to hash passwords whereas FOSUserBundle uses sha512.</li>
+  <li><strong>password and salt merging</strong>: sfGuard is doing <code class="language-plaintext highlighter-rouge">$salt . $password</code> whereas FOSUserBundle is doing <code class="language-plaintext highlighter-rouge">$password . '{' . $salt . '}'</code>.</li>
 </ul>
 
 <p>I will show you how to change default in your new Symfony2 application
 to deal with passwords the way sfGuard do.</p>
 
-<h3>Hashing Algorithm</h3>
+<h3 id="hashing-algorithm">Hashing Algorithm</h3>
 
 <p>The bundle FOSAdvancedEncoderBundle allows you to use different encoders
 on a per-instance basis, whereas Symfony security component uses
 encoders on a per-class basis.</p>
 
-<p>Install <a href="https://github.com/FriendsOfSymfony/FOSAdvancedEncoderBundle">FOSAdvancedEncoderBundle</a> following the instructions in the bundle documentation. Then, specify in <code>config.yml</code> the two encoders you want to use.</p>
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># app/config/config.yml</span>
-<span class="l-Scalar-Plain">fos_advanced_encoder</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">encoders</span><span class="p-Indicator">:</span>
+<p>Install <a href="https://github.com/FriendsOfSymfony/FOSAdvancedEncoderBundle">FOSAdvancedEncoderBundle</a> following the instructions in the bundle documentation. Then, specify in <code class="language-plaintext highlighter-rouge">config.yml</code> the two encoders you want to use.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/config/config.yml</span>
+<span class="na">fos_advanced_encoder</span><span class="pi">:</span>
+  <span class="na">encoders</span><span class="pi">:</span>
     <span class="c1"># default values for FOSUserBundle (Symfony2)</span>
     <span class="c1"># see http://symfony.com/doc/current/reference/configuration/security.html</span>
-    <span class="l-Scalar-Plain">default</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">algorithm</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sha512</span>
-      <span class="l-Scalar-Plain">iterations</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5000</span>
-      <span class="l-Scalar-Plain">encode_as_base64</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+    <span class="na">default</span><span class="pi">:</span>
+      <span class="na">algorithm</span><span class="pi">:</span> <span class="s">sha512</span>
+      <span class="na">iterations</span><span class="pi">:</span> <span class="m">5000</span>
+      <span class="na">encode_as_base64</span><span class="pi">:</span> <span class="kc">true</span>
     <span class="c1"># legacy encoder used by sfGuard (symfony 1)</span>
-    <span class="l-Scalar-Plain">legacy</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">algorithm</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sha1</span>
-      <span class="l-Scalar-Plain">iterations</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
-      <span class="l-Scalar-Plain">encode_as_base64</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">false</span>
-</code></pre></div>
+    <span class="na">legacy</span><span class="pi">:</span>
+      <span class="na">algorithm</span><span class="pi">:</span> <span class="s">sha1</span>
+      <span class="na">iterations</span><span class="pi">:</span> <span class="m">1</span>
+      <span class="na">encode_as_base64</span><span class="pi">:</span> <span class="kc">false</span>
+</code></pre></div></div>
+
 <p>Then, you have to tell your application which encoder use for which
-instance of your entity <code>User</code>. For that, make <code>User</code> implement the
-interface EncoderAwareInterface and the function <code>User::getEncoderName</code>
+instance of your entity <code class="language-plaintext highlighter-rouge">User</code>. For that, make <code class="language-plaintext highlighter-rouge">User</code> implement the
+interface EncoderAwareInterface and the function <code class="language-plaintext highlighter-rouge">User::getEncoderName</code>
 has to return the name of the encoder to use. For instance, you can add
-a field <code>algorithm</code> like this.</p>
+a field <code class="language-plaintext highlighter-rouge">algorithm</code> like this.</p>
 
 <figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="c1">// src/Acme/SiteBundle/Entity/User.php</span>
-<span class="k">class</span> <span class="nc">User</span> <span class="k">implements</span> <span class="nx">EncoderAwareInterface</span>
+<span class="kd">class</span> <span class="nc">User</span> <span class="kd">implements</span> <span class="nc">EncoderAwareInterface</span>
 <span class="p">{</span>
   <span class="c1">// ...</span>
 
-  <span class="sd">/** @ORM\Column(type=&quot;string&quot;, length=255) */</span>
-  <span class="k">protected</span> <span class="nv">$algorithm</span> <span class="o">=</span> <span class="s1">&#39;sha512&#39;</span><span class="p">;</span>
+  <span class="cd">/** @ORM\Column(type="string", length=255) */</span>
+  <span class="k">protected</span> <span class="nv">$algorithm</span> <span class="o">=</span> <span class="s1">'sha512'</span><span class="p">;</span>
 
-  <span class="k">public</span> <span class="k">function</span> <span class="nf">getEncoderName</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">algorithm</span> <span class="o">==</span> <span class="s1">&#39;sha1&#39;</span> <span class="o">?</span> <span class="s1">&#39;legacy&#39;</span> <span class="o">:</span> <span class="s1">&#39;default&#39;</span><span class="p">;</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="n">getEncoderName</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">algorithm</span> <span class="o">==</span> <span class="s1">'sha1'</span> <span class="o">?</span> <span class="s1">'legacy'</span> <span class="o">:</span> <span class="s1">'default'</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<h3>Password and salt merging</h3>
+<h3 id="password-and-salt-merging">Password and salt merging</h3>
 
 <p>We are going to overwrite the method used to merge passwords. Create a
-new folder <code>Security/</code> in your bundle and add the file
-<code>MessageDigestPasswordEncoder.php</code>:</p>
+new folder <code class="language-plaintext highlighter-rouge">Security/</code> in your bundle and add the file
+<code class="language-plaintext highlighter-rouge">MessageDigestPasswordEncoder.php</code>:</p>
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">namespace</span> <span class="nx">Acme\SiteBundle\Security</span><span class="p">;</span>
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="kn">namespace</span> <span class="nn">Acme\SiteBundle\Security</span><span class="p">;</span>
 
-<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder</span> <span class="k">as</span> <span class="nx">BaseEncoder</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder</span> <span class="k">as</span> <span class="nc">BaseEncoder</span><span class="p">;</span>
 
-<span class="k">class</span> <span class="nc">MessageDigestPasswordEncoder</span> <span class="k">extends</span> <span class="nx">BaseEncoder</span>
+<span class="kd">class</span> <span class="nc">MessageDigestPasswordEncoder</span> <span class="kd">extends</span> <span class="nc">BaseEncoder</span>
 <span class="p">{</span>
     <span class="c1">// overwritting</span>
-    <span class="k">protected</span> <span class="k">function</span> <span class="nf">mergePasswordAndSalt</span><span class="p">(</span><span class="nv">$password</span><span class="p">,</span> <span class="nv">$salt</span><span class="p">)</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="n">mergePasswordAndSalt</span><span class="p">(</span><span class="nv">$password</span><span class="p">,</span> <span class="nv">$salt</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">return</span> <span class="nv">$salt</span> <span class="o">.</span> <span class="nv">$password</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$salt</span> <span class="mf">.</span> <span class="nv">$password</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="k">protected</span> <span class="k">function</span> <span class="nf">demergePasswordAndSalt</span><span class="p">(</span><span class="nv">$mergedPasswordSalt</span><span class="p">)</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="n">demergePasswordAndSalt</span><span class="p">(</span><span class="nv">$mergedPasswordSalt</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;This method should not have been called: demerging password and salt impossible (they have been merged by concatenation)&quot;</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nc">Exception</span><span class="p">(</span><span class="s2">"This method should not have been called: demerging password and salt impossible (they have been merged by concatenation)"</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Don&#39;t forget to change <code>Acme\SiteBundle</code> according to your names. Then add to your config file this line telling your app that we want to use that class instead of the
+<p>Don’t forget to change <code class="language-plaintext highlighter-rouge">Acme\SiteBundle</code> according to your names. Then add to your config file this line telling your app that we want to use that class instead of the
 default one:</p>
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">security.encoder.digest.class</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Acme\SiteBundle\Security\MessageDigestPasswordEncoder</span>
-</code></pre></div>
-<p>Don&#39;t forget, here again, to change <code>Acme\SiteBundle</code> according to your
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">parameters</span><span class="pi">:</span>
+    <span class="na">security.encoder.digest.class</span><span class="pi">:</span> <span class="s">Acme\SiteBundle\Security\MessageDigestPasswordEncoder</span>
+</code></pre></div></div>
+
+<p>Don’t forget, here again, to change <code class="language-plaintext highlighter-rouge">Acme\SiteBundle</code> according to your
 names.</p>
 
-<h3>That&#39;s it</h3>
+<h3 id="thats-it">That’s it</h3>
 
 <p>You may now write your script reading the sfGuard users and writing
 FOSUserBundle users. It will probably look like that:</p>
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;doctrine.orm.entity_manager&#39;</span><span class="p">);</span>
-<span class="nv">$um</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;fos_user.user_manager&#39;</span><span class="p">);</span>
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'doctrine.orm.entity_manager'</span><span class="p">);</span>
+<span class="nv">$um</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'fos_user.user_manager'</span><span class="p">);</span>
 
-<span class="nv">$mysqli</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\mysqli</span><span class="p">(</span><span class="nv">$dbHost</span><span class="p">,</span> <span class="nv">$dbUser</span><span class="p">,</span> <span class="nv">$dbPassword</span><span class="p">,</span> <span class="nv">$dbName</span><span class="p">,</span> <span class="nv">$dbPort</span><span class="p">);</span>
-<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$mysqli</span><span class="o">-&gt;</span><span class="na">query</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM sf_guard_user&#39;</span><span class="p">);</span>
-<span class="nv">$userSfGuard</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="na">fetch_object</span><span class="p">();</span>
+<span class="nv">$mysqli</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">\mysqli</span><span class="p">(</span><span class="nv">$dbHost</span><span class="p">,</span> <span class="nv">$dbUser</span><span class="p">,</span> <span class="nv">$dbPassword</span><span class="p">,</span> <span class="nv">$dbName</span><span class="p">,</span> <span class="nv">$dbPort</span><span class="p">);</span>
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$mysqli</span><span class="o">-&gt;</span><span class="nf">query</span><span class="p">(</span><span class="s1">'SELECT * FROM sf_guard_user'</span><span class="p">);</span>
+<span class="nv">$userSfGuard</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">fetch_object</span><span class="p">();</span>
 
-<span class="k">while</span> <span class="p">(</span><span class="nv">$userSfGuard</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="na">fetch_object</span><span class="p">())</span> <span class="p">{</span>
-    <span class="nv">$userFOS</span> <span class="o">=</span> <span class="nv">$um</span><span class="o">-&gt;</span><span class="na">createUser</span><span class="p">();</span>
+<span class="k">while</span> <span class="p">(</span><span class="nv">$userSfGuard</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="nf">fetch_object</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$userFOS</span> <span class="o">=</span> <span class="nv">$um</span><span class="o">-&gt;</span><span class="nf">createUser</span><span class="p">();</span>
 
-    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="na">setUsername</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="na">nickname</span><span class="p">);</span>
-    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="na">setEmail</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="na">username</span><span class="p">);</span>
-    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="na">setPassword</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="na">password</span><span class="p">);</span>
-    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="na">setSalt</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="na">salt</span><span class="p">);</span>
+    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="nf">setUsername</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="n">nickname</span><span class="p">);</span>
+    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="nf">setEmail</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="n">username</span><span class="p">);</span>
+    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="nf">setPassword</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="n">password</span><span class="p">);</span>
+    <span class="nv">$userFOS</span><span class="o">-&gt;</span><span class="nf">setSalt</span><span class="p">(</span><span class="nv">$userSfGuard</span><span class="o">-&gt;</span><span class="n">salt</span><span class="p">);</span>
 
-    <span class="nv">$em</span><span class="o">-&gt;</span><span class="na">persist</span><span class="p">(</span><span class="nv">$userFOS</span><span class="p">);</span>
+    <span class="nv">$em</span><span class="o">-&gt;</span><span class="nf">persist</span><span class="p">(</span><span class="nv">$userFOS</span><span class="p">);</span>
 <span class="p">}</span>
-<span class="nv">$em</span><span class="o">-&gt;</span><span class="na">flush</span><span class="p">();</span></code></pre></figure>
+<span class="nv">$em</span><span class="o">-&gt;</span><span class="nb">flush</span><span class="p">();</span></code></pre></figure>
 
-<p>If so, you will have to add the method <code>setSalt()</code> to your <code>User</code> entity:</p>
+<p>If so, you will have to add the method <code class="language-plaintext highlighter-rouge">setSalt()</code> to your <code class="language-plaintext highlighter-rouge">User</code> entity:</p>
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">setSalt</span><span class="p">(</span><span class="nv">$salt</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">salt</span> <span class="o">=</span> <span class="nv">$salt</span><span class="p">;</span>
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="n">setSalt</span><span class="p">(</span><span class="nv">$salt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">salt</span> <span class="o">=</span> <span class="nv">$salt</span><span class="p">;</span>
 <span class="p">}</span></code></pre></figure>
 
-<h3>Having some problems?</h3>
+<h3 id="having-some-problems">Having some problems?</h3>
 
-<p>If you are having trouble, <a href="http://www.folliked.com/sf2/migrer-sfdoctrineguardplugin-vers-fosuserbundle">try the parameters for the encoder in this post</a> (it&#39;s in French, but just look for the Symfony2 config file).</p>
-
-    </div>
-
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            August 2011
-        </span>
-    </div>
+<p>If you are having trouble, <a href="http://www.folliked.com/sf2/migrer-sfdoctrineguardplugin-vers-fosuserbundle">try the parameters for the encoder in this post</a> (it’s in French, but just look for the Symfony2 config file).</p>
 
 </div>
+      </div>
+    </div>
 
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

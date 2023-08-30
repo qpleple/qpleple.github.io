@@ -1,241 +1,279 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Divide and Conquer</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Divide and Conquer &middot; Quentin Pleplé
     
-        
-            <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
-            });
-            </script>
-            <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-            </script>
-        
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/divide-and-conquer/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
     
+  
+    
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
+        });
+      </script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Divide and Conquer</h1>
-    
-    <div id="post-content">
-        <blockquote>
-<p>This article is a tutorial on how to analyse Divide and Conquer algorithms.</p>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Divide and Conquer</h1>
+  <span class="post-date">03 Jun 2013</span>
+
+  
+
+  <blockquote>
+  <p>This article is a tutorial on how to analyse Divide and Conquer algorithms.</p>
 </blockquote>
 
-<h3>Startegy</h3>
+<h3 id="startegy">Startegy</h3>
 
 <p>The idea of Divide and Conquer is to solve the problem recursively on smaller versions of the problem. Analyzing Divide and Conquer algorithms always include the following steps.</p>
 
 <ol>
-<li><p>Understand the algorithm and how the recursion works.</p>
+  <li>
+    <p>Understand the algorithm and how the recursion works.</p>
 
-<p><em>Example: The algorithm divides the problem into five subproblems of half the size, recursively solving each subproblem, and then combining the solutions in linear time.</em></p></li>
-<li><p>From this formulation, derive the time complexity recurrence.</p>
+    <p><em>Example: The algorithm divides the problem into five subproblems of half the size, recursively solving each subproblem, and then combining the solutions in linear time.</em></p>
+  </li>
+  <li>
+    <p>From this formulation, derive the time complexity recurrence.</p>
 
-<p><em>Example: $T(n) = 5 T \left( \frac n 2 \right)  + O(n)$</em></p></li>
-<li><p>Draw the recursion tree to understand the recursion structure.</p></li>
-<li><p>From the tree, sum up the overhead that you spend at each node to find the final complexity $T(n)$:
-$$
-T(n) =
-\sum_{\text{level } k = 0}^{\text{# levels}}
-(\text{number of nodes at level }k)
-\times
-(\text{overhead per node at level }k)
-$$</p></li>
+    <p><em>Example: $T(n) = 5 T \left( \frac n 2 \right)  + O(n)$</em></p>
+  </li>
+  <li>
+    <p>Draw the recursion tree to understand the recursion structure.</p>
+  </li>
+  <li>
+    <p>From the tree, sum up the overhead that you spend at each node to find the final complexity $T(n)$:
+\(T(n) =
+ \sum_{\text{level } k = 0}^{\text{\# levels}}
+ (\text{number of nodes at level }k)
+ \times
+ (\text{overhead per node at level }k)\)</p>
+  </li>
 </ol>
 
-<h3>Fast exponentiation</h3>
-
-<h4>Naive algorithm</h4>
-
+<h3 id="fast-exponentiation">Fast exponentiation</h3>
+<h4 id="naive-algorithm">Naive algorithm</h4>
 <p>To compute $a^n$, repeat $n$ times multiplying by $a$.</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
   <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">a</span>
-  <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span>
-</code></pre></div>
+  <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="nc">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span>
+</code></pre></div></div>
+
 <p>If $T(n)$ is the number of multiplication needed to compute $a^n$, here $T(n) = O(n)$.</p>
 
-<h4>Efficient algorithm</h4>
-
+<h4 id="efficient-algorithm">Efficient algorithm</h4>
 <p>The idea is to square $a^{n/2}$ to get $a^n$ (one multiplication) and when $n$ is odd, evaluate $a^{n-1}$ the same way and then multiply it by $a$ (one multiplication).</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
   <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">a</span>
   <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="n">even</span><span class="p">:</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="nc">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span>
-  <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="nc">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
 <p>Here again, let $T(n)$ be the number of multiplications. For the time analysis, we suppose without loss of generality that $n$ is power of 2. At each step $n$ is divided by 2.
-    $$ T(n) = T \left( \frac n 2 \right)  + 1 $$
+    \(T(n) = T \left( \frac n 2 \right)  + 1\)
 Drawing the recursion tree gives us
-$$ T(n) = \sum_{k=0}^{\log n} 1 = O(\log n) $$</p>
+\(T(n) = \sum_{k=0}^{\log n} 1 = O(\log n)\)</p>
 
-<h3>Tower of Hanoi</h3>
+<h3 id="tower-of-hanoi">Tower of Hanoi</h3>
 
-<p>The goal of the game is to move the tower to another rod. You can move only one disk at a time, and you can&#39;t place a disk on top of a smaller one.</p>
+<p>The goal of the game is to move the tower to another rod. You can move only one disk at a time, and you can’t place a disk on top of a smaller one.</p>
 
-<h4>Recursive algorithm</h4>
+<h4 id="recursive-algorithm">Recursive algorithm</h4>
+<p>To move a pile of $n$ disk to another rod, first recursively move a pile of $n-1$ to the last rod, then move the largest disk, then move back the $n-1$ on top of the largest.</p>
 
-<p>To move a pile of $n$ disk to another rod, first recursively move a pile of $n-1$ to the last rod, then move the largest disk, then move back the $n-1$ on top of the largest. </p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
-        <span class="n">MoveOne</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
-        <span class="n">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
-</code></pre></div>
-<p>Let&#39;s analyze the time complexity. Let $T(n)$ be the number of moves. Then the code gives us
-    $$ T(n) = 2T(n-1) + 1 $$
+        <span class="nc">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="nc">MoveOne</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="nc">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Let’s analyze the time complexity. Let $T(n)$ be the number of moves. Then the code gives us
+    \(T(n) = 2T(n-1) + 1\)
 Drawing the recursion tree allow us to conclude
-    $$ T(n) = \sum_{k=0}^{n-1} 2^k \times 1 = \cdots = O(2^n) $$</p>
+    \(T(n) = \sum_{k=0}^{n-1} 2^k \times 1 = \cdots = O(2^n)\)</p>
 
-<h3>Comparison of algorithms</h3>
-
-<p>You are product manager at Facebook and three engineers from your team come up with these three algorithms to detect fake Facebook accounts in the list of $n = 1$ billion Facebook accounts. </p>
+<h3 id="comparison-of-algorithms">Comparison of algorithms</h3>
+<p>You are product manager at Facebook and three engineers from your team come up with these three algorithms to detect fake Facebook accounts in the list of $n = 1$ billion Facebook accounts.</p>
 
 <ul>
-<li><p>Rakesh solves problems by dividing them into five subproblems of half the size, recursively solving each subproblem, and then combining the solutions in linear time.</p></li>
-<li><p>Chris solves problems of size $n$ by recursively solving two subproblems of size $n-1$ and then combining the solutions in constant time.</p></li>
-<li><p>Matus solves problems of size $n$ by dividing them into nine subproblems of size $n=3$, recursively solving each subproblem, and then combining the solutions in $O(n^2)$ time</p></li>
+  <li>
+    <p>Rakesh solves problems by dividing them into five subproblems of half the size, recursively solving each subproblem, and then combining the solutions in linear time.</p>
+  </li>
+  <li>
+    <p>Chris solves problems of size $n$ by recursively solving two subproblems of size $n-1$ and then combining the solutions in constant time.</p>
+  </li>
+  <li>
+    <p>Matus solves problems of size $n$ by dividing them into nine subproblems of size $n=3$, recursively solving each subproblem, and then combining the solutions in $O(n^2)$ time</p>
+  </li>
 </ul>
 
 <p><em>Examples from Algorithms, Dasgupta, Papadimitriou, and Vazirani.</em></p>
 
-<h4>Time analysis</h4>
+<h4 id="time-analysis">Time analysis</h4>
 
 <ul>
-<li><p>Rakesh:
-$$ \displaystyle T(n) = 5T \left( \frac n 2 \right) + O(n) \to \text{(draw the tree)} \to \text{(sum the nodes)} \to T(n) = O\left(n^{\log 5}\right)$$ </p></li>
-<li><p>Chris: $$ \displaystyle T(n) = 2T(n-1)  + C \to \text{(draw the tree)} \to \text{(sum the nodes)} \to T(n) = O\left(2^n\right)$$ </p></li>
-<li><p>Matus: $$ \displaystyle T(n) = 9T \left( \frac n 3 \right) + O(n^2) \to \text{(draw the tree)} \to \text{(sum the nodes)} \to T(n) = O\left(n^2 \log n\right)$$ </p></li>
+  <li>
+    <p>Rakesh:
+\(\displaystyle T(n) = 5T \left( \frac n 2 \right) + O(n) \to \text{(draw the tree)} \to \text{(sum the nodes)} \to T(n) = O\left(n^{\log 5}\right)\)</p>
+  </li>
+  <li>
+    <p>Chris: \(\displaystyle T(n) = 2T(n-1)  + C \to \text{(draw the tree)} \to \text{(sum the nodes)} \to T(n) = O\left(2^n\right)\)</p>
+  </li>
+  <li>
+    <p>Matus: \(\displaystyle T(n) = 9T \left( \frac n 3 \right) + O(n^2) \to \text{(draw the tree)} \to \text{(sum the nodes)} \to T(n) = O\left(n^2 \log n\right)\)</p>
+  </li>
 </ul>
 
-<h3>Finding a fixed point</h3>
-
-<p>Given a sorted array $a[1...n]$, design an algorithm that finds if there is an element such that $a[i] = i$.<br>
+<h3 id="finding-a-fixed-point">Finding a fixed point</h3>
+<p>Given a sorted array $a[1…n]$, design an algorithm that finds if there is an element such that $a[i] = i$.<br />
 <em>From Algorithms, Dasgupta, Papadimitriou, and Vazirani.</em></p>
 
-<h4>Naive algorithm</h4>
-
+<h4 id="naive-algorithm-1">Naive algorithm</h4>
 <p>The naive approach is just to check all elements. The time complexity is linear.</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">NaiveFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">.</span><span class="n">n</span><span class="p">]):</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">..</span><span class="n">n</span><span class="p">:</span>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">NaiveFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="p">.</span><span class="n">n</span><span class="p">]):</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">..</span><span class="n">n</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">:</span> <span class="k">return</span> <span class="bp">True</span>
   <span class="k">return</span> <span class="bp">False</span>
-</code></pre></div>
-<h4>Efficient algorithm</h4>
+</code></pre></div></div>
 
-<p>We didn&#39;t use the fact it is sorted in the previous idea. We look at the middle element of the array. Because the array is sorted, if the element is strictly larger than its index, then we know for sure that if an element being equal to its index exists, then it has to be in the right side of the array. Same idea for the opposite situation.</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">..</span><span class="n">n</span><span class="p">]):</span>
+<h4 id="efficient-algorithm-1">Efficient algorithm</h4>
+<p>We didn’t use the fact it is sorted in the previous idea. We look at the middle element of the array. Because the array is sorted, if the element is strictly larger than its index, then we know for sure that if an element being equal to its index exists, then it has to be in the right side of the array. Same idea for the opposite situation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="p">..</span><span class="n">n</span><span class="p">]):</span>
   <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="n">empty</span><span class="p">:</span> <span class="k">return</span> <span class="bp">False</span>
   <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span>
   <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">:</span> <span class="k">return</span> <span class="bp">True</span>
-  <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span> <span class="k">return</span> <span class="n">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="o">..</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-  <span class="k">return</span> <span class="n">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mf">1.</span><span class="o">..</span><span class="n">n</span><span class="p">])</span>
-</code></pre></div>
-<p>At every step, we get rid of half the array, so we can guess it&#39;s going to be a logarithmic algorithmic algorithm. Let&#39;s check. Define $T(n)$ the number of comparison needed to answer the question in the worst case. Then
-    $$ T(n) \leq T(n/2) + 2 $$</p>
+  <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span> <span class="k">return</span> <span class="nc">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="p">..</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+  <span class="k">return</span> <span class="nc">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mf">1.</span><span class="p">..</span><span class="n">n</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>At every step, we get rid of half the array, so we can guess it’s going to be a logarithmic algorithmic algorithm. Let’s check. Define $T(n)$ the number of comparison needed to answer the question in the worst case. Then
+    \(T(n) \leq T(n/2) + 2\)</p>
 
 <p>Drawing the recursive tree allow us to find
-    $$ T(n) \leq \sum_{k=1}^{\log n} 1 \times 2 = \cdots = O(\log n)  $$</p>
+    \(T(n) \leq \sum_{k=1}^{\log n} 1 \times 2 = \cdots = O(\log n)\)</p>
 
-<h3>Practice problem: Master Theorem</h3>
-
+<h3 id="practice-problem-master-theorem">Practice problem: Master Theorem</h3>
 <p>Suppose you have a recurrence of the form
-    $$ T(n) = aT \left( \frac n b \right)  + O(n^d)$$
+    \(T(n) = aT \left( \frac n b \right)  + O(n^d)\)
 with $a$, $b$ and $d$ constants. Draw the recurrence tree (numbering levels from zero) and answer the following questions.</p>
 
 <ol>
-<li><p>How many nodes are they at level 2?</p></li>
-<li><p>... at some level $k$?</p></li>
-<li><p>What is the size input at level 2?</p></li>
-<li><p>... at some level $k$?</p></li>
-<li><p>How many levels are there in the tree?</p></li>
-<li><p>What is the time overhead at each node of level 2?</p></li>
-<li><p>... at each node of level $k$?</p></li>
-<li><p>Apply the formula given in the introduction and derive
-$$ T(n) = O \left( n^d \sum_{k=0}^{\log_b n} \left( \frac{a}{b^d} \right)^k  \right) $$</p></li>
-<li><p>Use the geometric series formula
-$$ q^0 + q^1 + q^2 + \cdots + q^{m}
-=  \frac{q^{m+1} - 1}{q-1} \quad \text{if } q \neq 1$$
+  <li>
+    <p>How many nodes are they at level 2?</p>
+  </li>
+  <li>
+    <p>… at some level $k$?</p>
+  </li>
+  <li>
+    <p>What is the size input at level 2?</p>
+  </li>
+  <li>
+    <p>… at some level $k$?</p>
+  </li>
+  <li>
+    <p>How many levels are there in the tree?</p>
+  </li>
+  <li>
+    <p>What is the time overhead at each node of level 2?</p>
+  </li>
+  <li>
+    <p>… at each node of level $k$?</p>
+  </li>
+  <li>
+    <p>Apply the formula given in the introduction and derive
+\(T(n) = O \left( n^d \sum\_{k=0}^{\log\_b n} \left( \frac{a}{b^d} \right)^k  \right)\)</p>
+  </li>
+  <li>
+    <p>Use the geometric series formula
+\(q^0 + q^1 + q^2 + \cdots + q^{m}
+=  \frac{q^{m+1} - 1}{q-1} \quad \text{if } q \neq 1\)
 to derive
-$$ T(n) =
-\left\{
+\(T(n) =
+\left\\{
 \begin{array}{ll}
-O \left( n^d \log n \right)  &amp; \text{if } \frac{a}{b^d} - 1 = 0\\
-O \left( n^d \right)  &amp; \text{if } \frac{a}{b^d} -1 &lt; 0\\
-O \left( n^d \left( \frac{a}{b^d} \right)^{\log_b n} \right)  &amp; \text{if } \frac{a}{b^d} -1 &gt; 0
+O \left( n^d \log n \right)  &amp; \text{if } \frac{a}{b^d} - 1 = 0\\\\
+O \left( n^d \right)  &amp; \text{if } \frac{a}{b^d} -1 &lt; 0\\\\
+O \left( n^d \left( \frac{a}{b^d} \right)^{\log\_b n} \right)  &amp; \text{if } \frac{a}{b^d} -1 &gt; 0
 \end{array}
-\right.
-$$
-Be sure to have the three cases.</p></li>
-<li><p>Prove using logarithmic and exponential rules this small property
-$$ \left( \frac{a}{b^d} \right)^{\log_b n} = n^{\log_b \left( \frac{a}{b^d} \right) } $$</p></li>
-<li><p>Use this property to derive the final form
-$$ T(n) =
-\left\{
+\right.\)
+Be sure to have the three cases.</p>
+  </li>
+  <li>
+    <p>Prove using logarithmic and exponential rules this small property
+\(\left( \frac{a}{b^d} \right)^{\log\_b n} = n^{\log\_b \left( \frac{a}{b^d} \right) }\)</p>
+  </li>
+  <li>
+    <p>Use this property to derive the final form
+\(T(n) =
+\left\\{
 \begin{array}{ll}
-O \left( n^d \log n \right)  &amp; \text{if } b^d = a\\
-O \left( n^d \right)  &amp; \text{if } b^d &gt; a\\
-O \left( n^{\log_b a} \right)  &amp; \text{if } b^d &lt; a
+ O \left( n^d \log n \right)  &amp; \text{if } b^d = a\\\\
+ O \left( n^d \right)  &amp; \text{if } b^d &gt; a\\\\
+ O \left( n^{\log\_b a} \right)  &amp; \text{if } b^d &lt; a
 \end{array}
-\right.
-$$</p></li>
+\right.\)</p>
+  </li>
 </ol>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            June 2013
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

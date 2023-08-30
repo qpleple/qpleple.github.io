@@ -1,82 +1,89 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Compare Dates With Twig</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Compare Dates With Twig &middot; Quentin Pleplé
     
+  </title>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  
+  <link rel="canonical" href="https://qpleple.com/compare-dates-with-twig/">
+  
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Compare Dates With Twig</h1>
-    
-    <div id="post-content">
-        <p>Here is a trick to compare two dates in Twig. Convert them as string with the <code>date</code> filter, with first the year, then the month and finally the day:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">myDate<span class="p">|</span>date<span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span>
-</code></pre></div>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Compare Dates With Twig</h1>
+  <span class="post-date">27 Sep 2011</span>
+
+  
+
+  <p>Here is a trick to compare two dates in Twig. Convert them as string with the <code class="language-plaintext highlighter-rouge">date</code> filter, with first the year, then the month and finally the day:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myDate|date<span class="o">(</span><span class="s1">'Y-m-d'</span><span class="o">)</span>
+</code></pre></div></div>
+
 <p>Then, you can compare strings because the chronological order is the
 same than the lexicographical order:</p>
-<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="nv">date1</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+
+<pre><code class="language-html+jinja">{% if date1|date('Y-m-d') &gt; date2|date('Y-m-d') %}
     ...
-<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-</code></pre></div>
+{% endif %}
+</code></pre>
+
 <p><strong>Tip.</strong> If you want to get the current date, you can give the string
-<code>now</code> to the <code>date</code> filter:</p>
-<div class="highlight"><pre><code class="language-html+jinja" data-lang="html+jinja"><span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;now&quot;</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="o">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+<code class="language-plaintext highlighter-rouge">now</code> to the <code class="language-plaintext highlighter-rouge">date</code> filter:</p>
+
+<pre><code class="language-html+jinja">{% if "now"|date('Y-m-d') &gt; date2|date('Y-m-d') %}
     ...
-<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-</code></pre></div>
-    </div>
+{% endif %}
+</code></pre>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            September 2011
-        </span>
-    </div>
 
 </div>
+      </div>
+    </div>
 
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

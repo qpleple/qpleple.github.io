@@ -1,43 +1,63 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Archive Your Files Instead Of Deleting Them</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Archive Your Files Instead Of Deleting Them &middot; Quentin Pleplé
     
+  </title>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  
+  <link rel="canonical" href="https://qpleple.com/never-delete-files-again-easy-archive-from-command-line/">
+  
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Archive Your Files Instead Of Deleting Them</h1>
-    
-    <div id="post-content">
-        <blockquote>
-<p>A command-line tool to archive files instead of deleting them.</p>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Archive Your Files Instead Of Deleting Them</h1>
+  <span class="post-date">15 Jul 2011</span>
+
+  
+
+  <blockquote>
+  <p>A command-line tool to archive files instead of deleting them.</p>
 </blockquote>
 
 <p>We hate deleting. This is why Gmail invites users to archive emails instead of deleting them. What if
@@ -45,74 +65,60 @@ we apply the same idea to files ? By providing an easy way to archives
 files, this script will help you to keep your files organized and not
 being distracted or lost into tons of old files. In any directory, just
 type :</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">archive my_file.txt
-</code></pre></div>
-<p>to archive <code>my_file.txt</code> into the sub-directory <code>Archives/</code>. If
-<code>Archives/</code> does not exist, il will be created.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/env bash</span>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>archive my_file.txt
+</code></pre></div></div>
+
+<p>to archive <code class="language-plaintext highlighter-rouge">my_file.txt</code> into the sub-directory <code class="language-plaintext highlighter-rouge">Archives/</code>. If
+<code class="language-plaintext highlighter-rouge">Archives/</code> does not exist, il will be created.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
 
 <span class="c"># stop on error</span>
-<span class="nb">set</span> -e
+<span class="nb">set</span> <span class="nt">-e</span>
 
 <span class="nv">CURRENT_PATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
-<span class="nv">ARCHIVES_PATH</span><span class="o">=</span><span class="s2">&quot;$CURRENT_PATH/Archives&quot;</span>
+<span class="nv">ARCHIVES_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CURRENT_PATH</span><span class="s2">/Archives"</span>
 
-<span class="k">if</span> <span class="o">[</span> ! -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-    <span class="nb">echo</span> <span class="s2">&quot;No file or directory to archive.&quot;</span>
+<span class="k">if</span> <span class="o">[</span> <span class="o">!</span> <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"No file or directory to archive."</span>
     <span class="nb">exit </span>1
 <span class="k">fi</span>
 
-<span class="c"># Creates the archive directory if doesn&#39;t exists</span>
-<span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&quot;$ARCHIVES_PATH&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-    mkdir <span class="nv">$ARCHIVES_PATH</span>
-<span class="k">fi</span>
+<span class="c"># Creates the archive directory if doesn't exists</span>
+<span class="k">if</span> <span class="o">[</span> <span class="o">!</span> <span class="nt">-d</span> <span class="s2">"</span><span class="nv">$ARCHIVES_PATH</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">mkdir</span> <span class="nv">$ARCHIVES_PATH</span>
+<span class="k">fi
 
-<span class="k">for</span> file in <span class="s2">&quot;$@&quot;</span><span class="p">;</span> <span class="k">do</span>
-    <span class="nb">echo</span> <span class="s2">&quot;Archiving $file&quot;</span>
-    tar cfz <span class="k">${</span><span class="nv">ARCHIVES_PATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">file</span><span class="k">}</span>.tar.gz <span class="nv">$file</span>
-    rm -rf <span class="nv">$file</span>
+for </span>file <span class="k">in</span> <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+    </span><span class="nb">echo</span> <span class="s2">"Archiving </span><span class="nv">$file</span><span class="s2">"</span>
+    <span class="nb">tar </span>cfz <span class="k">${</span><span class="nv">ARCHIVES_PATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">file</span><span class="k">}</span>.tar.gz <span class="nv">$file</span>
+    <span class="nb">rm</span> <span class="nt">-rf</span> <span class="nv">$file</span>
 <span class="k">done</span>
-</code></pre></div>
-<h3>Installing</h3>
+</code></pre></div></div>
+
+<h3 id="installing">Installing</h3>
 
 <p>Make it accessible from everywhere by placing it into a directory that
-is in your <code>$PATH</code> environment variable. If you don&#39;t have such
+is in your <code class="language-plaintext highlighter-rouge">$PATH</code> environment variable. If you don’t have such
 directory for your personal script, you can add one by doing something
 like :</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkdir ~/bin
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> ~/bin
 <span class="nv">$ </span><span class="nb">cd</span> ~/bin
 <span class="nv">$ </span>vim archive
-<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;export PATH=~/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc
-</code></pre></div>
-<p>Instead of <code>.bashrc</code> it can be <code>.bash_profile</code>, <code>.zsh/zshexport</code> or else
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'export PATH=~/bin:$PATH'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+</code></pre></div></div>
+
+<p>Instead of <code class="language-plaintext highlighter-rouge">.bashrc</code> it can be <code class="language-plaintext highlighter-rouge">.bash_profile</code>, <code class="language-plaintext highlighter-rouge">.zsh/zshexport</code> or else
 depending on the shell you are using.</p>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            July 2011
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

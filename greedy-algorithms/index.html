@@ -1,127 +1,132 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Greedy Algorithms</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Greedy Algorithms &middot; Quentin Pleplé
     
-        
-            <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
-            });
-            </script>
-            <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-            </script>
-        
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/greedy-algorithms/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
     
+  
+    
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
+        });
+      </script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Greedy Algorithms</h1>
-    
-    <div id="post-content">
-        <blockquote>
-<p>This article presents the two most common startegies to prove the correctness of Greedy algorithms.</p>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Greedy Algorithms</h1>
+  <span class="post-date">03 Jun 2013</span>
+
+  
+
+  <blockquote>
+  <p>This article presents the two most common startegies to prove the correctness of Greedy algorithms.</p>
 </blockquote>
 
-<h3>Exchange argument for Greedy algorithms</h3>
-
+<h3 id="exchange-argument-for-greedy-algorithms">Exchange argument for Greedy algorithms</h3>
 <p>The Greedy solution $\text{Gr}$ makes a sequence of choices, and an optimal solution $\text{OPT}_0$ makes another sequence of choices.</p>
 
-<p>$$
-\left\{
+\[\left\\{
 \begin{array}{ll}
-    \text{Gr} &amp; = C_1, C_2, ... \\
-    \text{OPT}_0 &amp; = C_1&#39;, C_2&#39;, ...
+    \text{Gr} &amp; = C\_1, C\_2, ... \\\\
+    \text{OPT}\_0 &amp; = C\_1', C\_2', ...
 \end{array}
-\right.
-$$</p>
+\right.\]
 
 <p>We are going to build by induction a sequence of optimal solutions where the last one agrees with $\text{Gr}$ on all the choices (proving that $\text{Gr}$ is optimal)
-    $$ \text{OPT}_0 \to \text{OPT}_1 \to ... \to \text{OPT}_n = \text{Gr} $$
+    \(\text{OPT}\_0 \to \text{OPT}\_1 \to ... \to \text{OPT}\_n = \text{Gr}\)
 and $\text{OPT}_i$ agrees with $\text{Gr}$ up to the $i$th choice:</p>
 
-<p>$$
-\left\{
+\[\left\\{
 \begin{array}{ll}
-    \text{Gr} &amp; = C_1, C_2, ..., C_i, C_{i+1},... \\
-    \text{OPT}_i &amp; = C_1, C_2, ..., C_i, C_{i+1}&#39;,...
+    \text{Gr} &amp; = C\_1, C\_2, ..., C\_i, C\_{i+1},... \\\\
+    \text{OPT}\_i &amp; = C\_1, C\_2, ..., C\_i, C\_{i+1}',...
 \end{array}
-\right.
-$$</p>
+\right.\]
 
 <ul>
-<li><p><strong>Base case.</strong> $\text{OPT}_0$ agrees with $\text{Gr}$ up to choice zero (vacuously true).</p></li>
-<li><p><strong>Inductive step.</strong> Suppose we have an optimal solution $\text{OPT}_i$ agreeing with $\text{Gr}$ up to choice $i$. We need to transform $\text{OPT}_i \to \text{OPT}_{i+1}$ such that it agrees also on choice $i+1$ and it is still optimal.<br>
-Here, it is problem specific.</p></li>
-<li><p><strong>Conclusion.</strong> We have built an optimal solution $\text{OPT}_n$ agreeing with $\text{Gr}$ on all choices. Therefore, $\text{Gr} = \text{OPT}_n$ is optimal.</p></li>
+  <li>
+    <p><strong>Base case.</strong> $\text{OPT}_0$ agrees with $\text{Gr}$ up to choice zero (vacuously true).</p>
+  </li>
+  <li>
+    <p><strong>Inductive step.</strong> Suppose we have an optimal solution $\text{OPT}_i$ agreeing with $\text{Gr}$ up to choice $i$. We need to transform $\text{OPT}_i \to \text{OPT}_{i+1}$ such that it agrees also on choice $i+1$ and it is still optimal.<br />
+Here, it is problem specific.</p>
+  </li>
+  <li>
+    <p><strong>Conclusion.</strong> We have built an optimal solution $\text{OPT}_n$ agreeing with $\text{Gr}$ on all choices. Therefore, $\text{Gr} = \text{OPT}_n$ is optimal.</p>
+  </li>
 </ul>
 
-<h3>Greedy stays ahead</h3>
-
+<h3 id="greedy-stays-ahead">Greedy stays ahead</h3>
 <p>The method is good when there is a value that we are maximizing (or minimizing). We show that the Greedy algorithm produces, at each step of the algorithm, a larger (or lower) value than any other algorithm.</p>
 
-<p>Let $V_0 = 0, V_1, V_2, ...$ the values of the Greedy algorithm after each choice, and $V_0&#39; = 0, V_1&#39;, V_2&#39;, ...$ the values of any other algorithm. Let&#39;s prove by induction on $i$, that after each choice $i$, $V_i \geq V_i&#39;$.</p>
+<p>Let $V_0 = 0, V_1, V_2, …$ the values of the Greedy algorithm after each choice, and $V_0’ = 0, V_1’, V_2’, …$ the values of any other algorithm. Let’s prove by induction on $i$, that after each choice $i$, $V_i \geq V_i’$.</p>
 
 <ul>
-<li><p><strong>Base case.</strong> $V_0 = 0 = V_0&#39;$ so Greedy is ahead before any choice.</p></li>
-<li><p><strong>Inductive step.</strong> Assume $V_i \geq V_i&#39;$ (Greedy was ahead before the choice $i+1$). We need to show that $V_{i+1} \geq V_{i+1}&#39;$ (Greedy is ahead after the choice $i+1$)<br>
-Here, it is problem specific.</p></li>
-<li><p><strong>Conclusion.</strong> Because Greedy is ahead after each choice, Greedy is ahead at the end of the algorithm, and therefore produces an optimal solution.</p></li>
+  <li>
+    <p><strong>Base case.</strong> $V_0 = 0 = V_0’$ so Greedy is ahead before any choice.</p>
+  </li>
+  <li>
+    <p><strong>Inductive step.</strong> Assume $V_i \geq V_i’$ (Greedy was ahead before the choice $i+1$). We need to show that $V_{i+1} \geq V_{i+1}’$ (Greedy is ahead after the choice $i+1$)<br />
+Here, it is problem specific.</p>
+  </li>
+  <li>
+    <p><strong>Conclusion.</strong> Because Greedy is ahead after each choice, Greedy is ahead at the end of the algorithm, and therefore produces an optimal solution.</p>
+  </li>
 </ul>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            June 2013
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

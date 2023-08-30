@@ -1,67 +1,81 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Bayesian Inference</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Bayesian Inference &middot; Quentin Pleplé
     
-        
-            <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
-            });
-            </script>
-            <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-            </script>
-        
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/bayesian-inference/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
     
+  
+    
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
+        });
+      </script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
-    
-    
-    <h1>Bayesian Inference</h1>
-    
-    <div id="post-content">
-        <p>Suppose we have a probabilistic model with observations $\boldsymbol x$ and hidden variables $\boldsymbol z$. We want to infer the hidden variables $\boldsymbol z$ that can best explain the observations $\boldsymbol x$. In the Bayesian framework, we treat parameters as hidden random variables as well.</p>
 
-<h3>Maximum Likelihood</h3>
 
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Bayesian Inference</h1>
+  <span class="post-date">15 Apr 2013</span>
+
+  
+
+  <p>Suppose we have a probabilistic model with observations $\boldsymbol x$ and hidden variables $\boldsymbol z$. We want to infer the hidden variables $\boldsymbol z$ that can best explain the observations $\boldsymbol x$. In the Bayesian framework, we treat parameters as hidden random variables as well.</p>
+
+<h3 id="maximum-likelihood">Maximum Likelihood</h3>
 <p>The common way to perform inference is to compute the Maximum Likelihood estimate
-$$
-    \hat{\boldsymbol z}_{\text{ML}}
-    = \mathop{\arg\!\max}_{\boldsymbol z} p(\boldsymbol x | \boldsymbol z)
-$$
+\(\hat{\boldsymbol z}\_{\text{ML}}
+    = \mathop{\arg\\!\max}\_{\boldsymbol z} p(\boldsymbol x | \boldsymbol z)\)
 which is the set of hidden variables that maximizes the likelihood $p(\boldsymbol x | \boldsymbol z)$ of the observed data.</p>
 
-<h3>Maximum a posteriori</h3>
-
+<h3 id="maximum-a-posteriori">Maximum a posteriori</h3>
 <p>A Bayesian approach will assume some prior knowledge about the hidden variables: a distribution $p(\boldsymbol z)$ over the space of hidden variables $\boldsymbol z$. The likelihood $p(\boldsymbol x | \boldsymbol z)$ gets weighted by the prior knowledge $p(\boldsymbol z)$ to give the posterior $p(\boldsymbol z | \boldsymbol x)$:
-    $$
-        \text{posterior} \ \propto \ \text{likelihood} \ \times \ \text{prior}
+    \(\text{posterior} \ \propto \ \text{likelihood} \ \times \ \text{prior}
         \qquad
         \text{or here}
         \qquad
@@ -69,57 +83,39 @@ which is the set of hidden variables that maximizes the likelihood $p(\boldsymbo
         \ \propto \
         p(\boldsymbol x | \boldsymbol z)
         \ \times \
-        p(\boldsymbol z).
-    $$
+        p(\boldsymbol z).\)
 The maximum a posteriori (MAP) estimate
-    $$
-        \hat{\boldsymbol z}_{\text{MAP}}
-        = \mathop{\arg\!\max}_z p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
-        = \mathop{\arg\!\max}_z p(\boldsymbol z | \boldsymbol x)
-    $$
-is the set of hidden variables that maximizes the posterior. The main advantage of this approach is that in order to maximize $p(\boldsymbol z | \boldsymbol x)$, we don&#39;t need to compute the normalizing constant 
-    $$
-        p(\boldsymbol x)
-        = \int_{\boldsymbol z}
+    \(\hat{\boldsymbol z}\_{\text{MAP}}
+        = \mathop{\arg\\!\max}\_z p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
+        = \mathop{\arg\\!\max}\_z p(\boldsymbol z | \boldsymbol x)\)
+is the set of hidden variables that maximizes the posterior. The main advantage of this approach is that in order to maximize $p(\boldsymbol z | \boldsymbol x)$, we don’t need to compute the normalizing constant 
+    \(p(\boldsymbol x)
+        = \int\_{\boldsymbol z}
         p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
-        \text{d}\boldsymbol z
-    $$
-whereas it is needed for the full Bayesian approach, as we will see in the next paragraph. This normalizer can become intractable when models get complicated. The MAP method is therefore sometimes described as poor man&#39;s Bayesian inference [<a href="/bib#Tzikas08">Tzikas08</a>] as this is a way of including prior knowledge without having to pay the expensive price of computing $p(\boldsymbol x)$. </p>
+        \text{d}\boldsymbol z\)
+whereas it is needed for the full Bayesian approach, as we will see in the next paragraph. This normalizer can become intractable when models get complicated. The MAP method is therefore sometimes described as poor man’s Bayesian inference [<a href="/bib#Tzikas08">Tzikas08</a>] as this is a way of including prior knowledge without having to pay the expensive price of computing $p(\boldsymbol x)$.</p>
 
-<h3>Full Bayesian approach</h3>
+<h3 id="full-bayesian-approach">Full Bayesian approach</h3>
 
-<p>In the full Bayesian approach, we don&#39;t only want one estimate $\hat{\boldsymbol z}$ of the hidden variables, but the entire distribution over them, the posterior distribution $p(\boldsymbol z | \boldsymbol x)$.</p>
+<table>
+  <tbody>
+    <tr>
+      <td>In the full Bayesian approach, we don’t only want one estimate $\hat{\boldsymbol z}$ of the hidden variables, but the entire distribution over them, the posterior distribution $p(\boldsymbol z</td>
+      <td>\boldsymbol x)$.</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>Every time we pick one specific value for a parameter in a model, we are making an approximation. As we compose models, approximations get amplified at every layer of the model. Feeding the entire parameters distribution in the next layer, instead of a point estimate, will increase the added value of this layer to the model.</p>
 
 <p>In this approach, the normalizer $p(\boldsymbol x)$ becomes intractable as the model gets more complex, making it impossible to compute the posterior distribution. Often, the best we can do is approximate the posterior.</p>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            April 2013
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

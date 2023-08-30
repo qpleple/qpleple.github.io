@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Le Big Data &middot; Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/le-big-data/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="message">Chapitre publié dans <a href="https://www.fnac.com/a12607017/Ametix-Le-livre-du-CTO" target="_blank">Le Livre Du CTO</a>, Éditions Edilivre, 2018</div>
+
+<h1 id="le-big-data">Le Big Data</h1>
+
+<h2 id="quest-ce-quest-le-big-data-au-juste-">Qu’est ce qu’est le Big Data au juste ?</h2>
+
+<p>Big Data est un grand mot parapluie qui désigne aujourd’hui tout ce qui touche de près ou de loin à la data dans l’entreprise. Il couvre bien sûr le Machine Learning (algorithmes qui apprennent tout seul à partir des données) mais aussi le Business Intelligence (analyser les données pour mieux comprendre le business) et le Data Management (gestion des base de données et des flux de données).</p>
+
+<div style="margin: 20px 0" class="text-center">
+    <img src="/img/post-big-data/trends.png" class="img-responsive center-block img-thumbnail" />
+    
+    <small class="text-muted">L’utilisation du terme “Big Data” (en bleu) et du terme “Machine Learning” (en rouge) d’après Google Trends.<br />Quasi-inexistant avant 2012, le terme “Big Data” a explosé sur 2013-2014 pour se stabiliser en 2015.</small>
+</div>
+
+<p>
+    Une bonne manière de comprendre ce qu’est le Big Data est de regarder de plus près les métiers qui s’y rattachent. Le Big Data regroupe en fait 3 métiers qui intéragissent ensemble mais qui ont des missions bien différentes.
+</p>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-3">
+        <img src="/img/post-big-data/data-analyst.jpg" class="img-responsive" />
+    </div>
+    <div class="col-md-9">
+        Le <strong>Data Analyst</strong> est orienté métier. Il cherche dans les données des insights pertinentes, il creuse, fouille, explique le business à partir de stats. Des exemples de questions auxquelles il doit répondre à partir des données : pourquoi a-t-on vendu moins de chaussettes le trimestre dernier ? quels sont les profils de nos visiteurs ? quelle est la meilleure visualisation de cette stat pour le client ?
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-3">
+        <img src="/img/post-big-data/data-scientist.jpg" class="img-responsive" />
+    </div>
+    <div class="col-md-9">
+        Le <strong>Data Scientist</strong> est orienté maths et algorithmes. Il code des algorithmes de Machine Learning qui répondent à des questions précises, comme par exemple : ce mail est-il du spam ? ce client va-t-il se désabonner du service ? qu’est ce que cet utilisateur peut avoir envie d’acheter ? Il utilise des maths avancées pour construire, évaluer et optimiser ses algorithmes.
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-3">
+        <img src="/img/post-big-data/data-engineer.jpg" class="img-responsive" />
+    </div>
+    <div class="col-md-9">
+        Le <strong>Data Engineer</strong> est orienté infrastructure. Il est l’architecte des flux de données, des serveurs et des bases de données. Il peut être exposé à des problématiques comme : quelle base de données utiliser pour stocker ces données ? comment créer une infrastructure de calcul distribuée dans le cloud ? comment déplacer les données du serveur du client à mon data lake (gros dépôt de données en vrac) ?
+    </div>
+</div>
+
+<h2 id="la-définition-tarte-à-la-crème--les-3-v-du-big-data">La définition tarte à la crème : les 3 V du Big Data</h2>
+
+<p>La définition du Big Data scolaire, ultra commune et à côté de laquelle on ne peut pas passer, est celle des 3 V du consultant <a href="http://blogs.gartner.com/doug-laney/files/2012/01/ad949-3D-Data-Management-Controlling-Data-Volume-Velocity-and-Variety.pdf" target="_blank">Doug Laney</a> : Volume, Variété et Vélocité.</p>
+
+<p><img src="/img/post-big-data/v-v-v.jpg" class="img-responsive center-block" /></p>
+
+<p><strong>Volume</strong> : de gros volumes de données. Pour donner des <a href="https://www.domo.com/blog/2015/08/data-never-sleeps-3-0/" target="_blank">exemples</a> extrêmes : chaque minute dans le monde, 700 personnes réservent un Uber, 110 000 appels Skype sont passés, 600 000 profils sont swippés sur Tinder et 300h de vidéos sont uploadées sur Youtube.</p>
+
+<p><strong>Variété</strong> : tout type de données, en vrac. On veut stocker des types de données différents, allant du très structuré comme des bases relationnelles MySQL, au non structuré comme des fichiers CSV, PDF, photos ou vidéos en vrac dans un data lake (Hadoop, Amazon S3).</p>
+
+<p><strong>Vélocité</strong> : stockage et traitement toujours plus rapides. Les besoins en vitesse de collecte, stockage, traitement et calculs augmentent, avec comme Graal le temps réel, i.e. la capacité de traiter les données instantanément, sans délai. C’est facile sur des petits volumes mais devient vite très difficile lorsque les volumes augmentent.</p>
+
+<p>Et avec ceci madame, je vous remets quelques V de plus ?</p>
+
+<p>La définition par les V est tellement classique que les experts cherchent à expliquer chaque aspect du Big Data par des V supplémentaires : Véracité (nettoyage du bruit dans les données), Valeur (l’analyse des données doit être motivée par la valeur business qu’elle apporte), Viabilité (chercher les 5% des données qui sont porteurs d’information), Variabilité (présence d’incohérences dans les données) et beaucoup d’autres encore.</p>
+
+<p><img src="/img/post-big-data/encore-des-v.jpg" class="img-responsive center-block" /></p>
+
+<h2 id="on-manque-cruellement-de-data-scientists">On manque cruellement de Data Scientists</h2>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-3">
+        <img src="/img/post-big-data/wanted.jpg" class="img-responsive center-block" />
+    </div>
+
+    <div class="col-md-9">
+        <p>Le métier de Data Analyst est vieux et bien défini. On a toujours eu besoin d'analyser les données de l'activité d'une entreprise pour mieux comprendre le business et prendre de meilleures décisions.</p>
+
+        <p>Le métier de Data Engineer est celui d'administrateur système appliqué aux problématiques données. Si les challenges et les technologies sont nouvelles, les sysadmins peuvent s'autoformer aux nouvelles technos et les déployer.</p>
+
+        <p>En revanche, le métier de Data Scientist est nouveau... et déjà déclaré comme étant "<a href="https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century/" target="_blank">the sexiest job of the 21st century</a>" par la Harvard Business Review. Il existe encore très peu de formations dans le monde, les profils Data Scientists sont rares. Se reconvertir en Data Scientist est difficile : un statisticien doit apprendre à coder et un développeur doit apprendre les maths. Dans les 2 cas, il s'agit de sortir de sa zone de confort et d'apprendre un nouveau métier.</p>
+
+        
+    </div>
+</div>
+
+<h2 id="le-hello-world-des-data-sciences">Le Hello World des Data Sciences</h2>
+
+<p>Même si pour devenir un bon Data Scientist il vous faudra acquérir de bonnes connaissances en maths et dans divers langage de programmation, son approche est à la portée de tous. Voyons ensemble pour fixer les idées un exemple très simple d’algorithme de Machine Learning qui apprend sur des données et est capable de faire des prédictions.</p>
+
+<h3 id="jeu-de-données-du-titanic">Jeu de données du Titanic</h3>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-6">
+        On part du jeu de données classique des <a href="https://www.kaggle.com/c/titanic" target="_blank">données historiques</a> réelles des passagers du Titanic : un tableau (au format CSV) avec une ligne par passager et ses caractéristiques en colonne : s’il a survécu ou pas (1 survivant, 0 non survivant), son sexe (1 homme, 0 femme), la classe de son billet (1, 2 ou 3), son âge, le nombre de membres de sa famille à bord, le prix de son ticket en dollars.
+    </div>
+
+    <div class="col-md-6">
+        <img src="/img/post-big-data/titanic1.jpg" class="img-responsive center-block" />
+    </div>
+    
+</div>
+
+<table class="table">
+    <thead>
+        <tr><th>Survivant</th><th>Classe</th><th>Sexe</th><th>Age</th><th>Famille</th><th>Prix</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>0</td><td>3</td><td>1</td><td>22</td><td>1</td><td>7.3</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>38</td><td>1</td><td>71.3</td></tr>
+        <tr><td>1</td><td>3</td><td>0</td><td>26</td><td>0</td><td>7.9</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>35</td><td>1</td><td>53.1</td></tr>
+        <tr><td>0</td><td>3</td><td>1</td><td>35</td><td>0</td><td>8.1</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>54</td><td>0</td><td>51.9</td></tr>
+        <tr><td>0</td><td>3</td><td>1</td><td>2</td><td>4</td><td>21.1</td></tr>
+        <tr><td>1</td><td>3</td><td>0</td><td>27</td><td>2</td><td>11.1</td></tr>
+        <tr><td>1</td><td>2</td><td>0</td><td>14</td><td>1</td><td>30.1</td></tr>
+        <tr><td>1</td><td>3</td><td>0</td><td>4</td><td>2</td><td>16.7</td></tr>
+    </tbody>
+</table>
+
+<h3 id="classification-binaire">Classification binaire</h3>
+
+<p>La tâche est de créer un algorithme qui apprend à prédire la 1ère colonne à partir des autres, c’est-à-dire à classer les passagers du Titanic en 2 groupes, les survivants et ceux qui n’ont pas survécu, en fonction des caractéristiques des passagers.</p>
+
+<p>L’algorithme va apprendre, pour chaque passager, sur le fichier CSV les liens qu’il y a entre les différentes caractéristiques du passager et le fait qu’il ait survécu ou non. Ensuite, étant donné les informations d’un nouveau passager, l’algorithme pourra prédire s’il va survivre ou non.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">numpy</span>
+<span class="kn">from</span> <span class="n">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="c1"># lecture du fichier CSV
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="p">.</span><span class="nf">loadtxt</span><span class="p">(</span><span class="sh">"</span><span class="s">data.csv</span><span class="sh">"</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="sh">"</span><span class="s">,</span><span class="sh">"</span><span class="p">)</span>
+<span class="c1"># on isole la 1ère colonne "Survivant" des données dans y, le reste dans X
+</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># instanciation du modèle
+</span><span class="n">model</span> <span class="o">=</span> <span class="nc">RandomForestClassifier</span><span class="p">()</span>
+<span class="c1"># apprentissage du modèle sur les données
+</span><span class="n">model</span><span class="p">.</span><span class="nf">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># prédiction pour une femme de 50 ans, en 1ère classe,
+# ayant payé sa place 70$ et ayant 2 membres de sa famille avec elle
+</span><span class="k">print</span> <span class="n">model</span><span class="p">.</span><span class="nf">predict</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
+<span class="c1"># output &gt;&gt;&gt; 1
+# le modèle prédit qu’elle va survivre
+</span>
+<span class="c1"># prédiction pour une homme de 25 ans, en 3ème classe,
+# ayant payé sa place 6$ et étant seul de sa famille à bord
+</span><span class="k">print</span> <span class="n">model</span><span class="p">.</span><span class="nf">predict</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="c1"># output &gt;&gt;&gt; 0
+# le modèle prédit qu’il ne va pas survivre
+</span></code></pre></div></div>
+
+<h2 id="linternet-des-objets-va-décupler-le-big-data">L’internet des objets va décupler le Big Data</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <p>Cisco <a href="https://www.cisco.com/web/about/ac79/docs/innov/IoT_IBSG_0411FINAL.pdf" target="_blank">prédit</a> 50 milliards d’objets connectés d’ici 4 ans... Rendez-vous compte. 50 milliards !</p>
+
+        <p>Les objets connectés vont des objets électroniques que nous portons (téléphones, montres connectées, bracelets connectés…) aux senseurs industriels sur les lignes de production, en passant par les balances connectées et les colliers pour chats avec GPS.</p>
+
+        <p>Chacun de ces objets connectés est une petite usine qui génère des données en continu et qui les envoie dans le cloud. Un déluge de données provenant de ces objets que nos infrastructures vont devoir absorber et analyser. Et tout cela, bien sûr, en temps réel.</p>
+
+        <p>De nouveaux challenges passionnants sont à venir.</p>
+    </div>
+    <div class="col-md-4">
+        <img src="/img/post-big-data/iot.jpg" class="img-responsive center-block" />
+    </div>
+</div>
+
+<h2 id="faire-du-big-data-par-où-commencer-">Faire du Big Data, par où commencer ?</h2>
+
+<p>Commencez par stocker toutes les données que vous voyez passer, tous les événements que vous pouvez enregistrer : qui a fait quoi, quand, en combien de temps, dans quelles conditions… Le stockage ne coûte pas cher et même si vous ne vous y mettez que dans 1 ou 2 ans, avoir des données antérieures vous permettra d’aller plus vite.</p>
+
+<p>Pensez Cloud. Les plateformes du type Amazon Web Services sont aujourd’hui matures et permettent de construire une infrastructure puissante et complexe pour seulement quelques heures d’expérience qui ne vont vous coûter que quelques euros.</p>
+
+<p>Par ailleurs, tout le monde ne doit pas nécessairement faire du Big Data. Pour beaucoup d’entreprises, le Big Data n’apporte pas de valeur business. Il s’agit donc d’avoir une réelle réflexion orientée sur la valeur de ce que le Big Data peut apporter, éventuellement avec des experts externes, pour être sûr de ne pas investir dans une mauvaise direction.</p>
+
+<p>Lorsque vous avez des données et que vous êtes convaincu de la valeur business que peut apporter le Big Data, l’idéal est de se faire accompagner par des experts extérieurs pour réaliser une ou deux preuve de concept : faites faire une ou deux preuves de concept (POC) par des experts externes pour confirmer vos intuitions. Il s’agit alors de faire une expérience basique pour confirmer les intuitions et avoir une idées de performances que l’on peut espérer.</p>
+
+<p>Lorsque les résultats des preuves de concept sont concluants, alors vous pouvez passer à la vitesse supérieure et commencer à construire votre équipe Data Science en embauchant des profils spécialisés.</p>
+
+<h2 id="ai-je-assez-de-données-pour-faire-du-machine-learning-">Ai-je assez de données pour faire du Machine Learning ?</h2>
+
+<p>La plupart du temps, oui. Par exemple, les 1000 lignes dans le tableau du <a href="https://www.kaggle.com/c/titanic" target="_blank">jeu de données du titanic</a> permettent de construire un algorithme qui retrouve la bonne réponse 80% du temps.</p>
+
+<p><img src="/img/post-big-data/titanic2.jpg" class="img-responsive" style="margin: 20px auto" /></p>
+
+<p>Pour un autre jeu de données, il s’agit de trier des iris (fleurs) en 3 espèces (Setosa, Versicolour et Virginica) en fonction de 4 paramètres pour chaque fleur : la largeur et la longueur des sépales et des pétales.</p>
+
+<p><img src="/img/post-big-data/trieur.jpg" class="img-responsive" style="margin: 20px auto" /></p>
+
+<p>Avec seulement 150 exemples, on peut construire un algorithme de Machine Learning qui saura  reconnaître les 3 espèces dans 95% des cas.</p>
+
+<p><img src="/img/post-big-data/classif-iris.png" class="img-responsive" style="margin: 20px auto" /></p>
+
+<h2 id="big-data-et-vie-privée">Big Data et vie privée</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <p>La première étape si vous collectez des données personnelles de vos utilisateurs, c’est de faire une déclaration à la CNIL (ou de vérifier que vous en êtes dispensés).</p>
+
+        <p>Par ailleurs, la loi Informatique et libertés énonce les grands principes de la collecte de données, en particuliers les 3 principes de finalité, proportionnalité et temporalité.</p>
+
+        <p><strong>Principe de finalité</strong> : on doit dire clairement le but de la collecte des données.</p>
+
+        <p><strong>Principe de proportionnalité</strong> : on ne doit collecter que les données nécessaires à l’atteinte de ce but.</p>
+
+        <p><strong>Principe de temporalité</strong> (droit à l’oubli) : on ne doit pas conserver les données après avoir atteint le but.</p>
+    </div>
+    <div class="col-md-4">
+        <img src="/img/post-big-data/voleur.jpg" class="img-responsive center-block" />
+    </div>
+</div>
+
+<p>La philosophie Big Data va quant à elle dans l’autre direction : on aimerait pouvoir tout collecter avant de savoir ce qu’on va en faire, pour pouvoir remonter aussi loin que possible dans les données lorsqu’on imagine une nouvelle application.</p>
+
+<p>Il ne faut pas non plus tomber dans l’extrême en bloquant toute collecte. La recherche en médecine par exemple bénéficie grandement des données personnelles des patients pour étudier les effets des traitements et prévenir les risques. C’est en analysant nos données personnelles que Facebook est capable de sélectionner l’infime partie des informations qui nous intéresse pour nous les présenter sur notre fil d’actualité.</p>
+
+<p>Le cadre de la loi n’étant pas bien défini (on peut choisir un but très général pour collecter toutes les données pour une très longue durée), c’est à chaque entreprise de choisir une politique interne de gestion des données qui relève plus de l’éthique que de la loi.</p>
+
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

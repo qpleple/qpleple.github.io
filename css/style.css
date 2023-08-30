@@ -1,58 +1,29 @@
-body {
-    background: #EEE;
-    padding: 50px 0;
-    font-size: 16px;
-    line-height: 1.4em;
-    font-family: 'Helvetica Neue Light', HelveticaNeue-Light, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+html, h1, h2, h3, h4, h5, h6, .sidebar {
+    font-family: 'Roboto', sans-serif;
 }
 
-.container {
-    max-width: 1000px;
+@media (min-width: 38em) {
+    html {
+        font-size: 18px;
+    }
 }
 
-#page {
-    background: white;
-    padding: 40px;
-
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-
-    box-shadow: 0 3px 5px rgba(0,0,0,.25);
-    -moz-box-shadow: 0 3px 5px rgba(0,0,0,.25);
-    -webkit-box-shadow: 0 3px 5px rgba(0,0,0,.25);
+html {
+    font-weight: 300;
 }
 
-#card-post {
-    margin-top: 50px;
-}
-#card-post img {
-    margin-right: 20px;
+ul {
+    padding-left: 20px;
 }
 
-#card-home {
-    text-align: center;
+ul li::marker {
+    color: #D26D26;
 }
 
-#card-home img {
-    margin-bottom: 10px;
+.check {
+    color:firebrick;
 }
 
-#card-home .profiles a {
-    font-size: 23px;
-    color: #777;
-}
-
-#card-home .profiles a:hover {
-    text-decoration: none;
-    color: black;
-}
-
-pre {
-    margin: 20px 0;
-}
-
-.img-legend {
-    padding: 10px 15% 0 15%;
-    font-size: 0.9em;
+b {
+    font-weight: 400;
 }

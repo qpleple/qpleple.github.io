@@ -1,123 +1,143 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Run Symfony2 On Appfog</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Run Symfony2 On Appfog &middot; Quentin Pleplé
     
+  </title>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  
+  <link rel="canonical" href="https://qpleple.com/run-symfony2-on-appfog/">
+  
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Run Symfony2 On Appfog</h1>
-    
-    <div id="post-content">
-        <blockquote>
-<p><strong>TL;DR</strong> You can&#39;t (no shell access to run commands).</p>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Run Symfony2 On Appfog</h1>
+  <span class="post-date">12 Mar 2013</span>
+
+  
+
+  <blockquote>
+  <p><strong>TL;DR</strong> You can’t (no shell access to run commands).</p>
 </blockquote>
 
 <p>I have been trying to deploy a Symfony2 application on AppFog. I tried first <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">a PHP Hello World</a>, it was pretty easy. Then <a href="/deploy-a-new-wordpress-blog-on-appfog/" title="Deploy a new WordPress blog on AppFog">deploying a Wordpress</a> was a little bit more challenging as you have to automatically hook up the database to Wordpress and <a href="/have-your-wordpress-static-files-on-amazon-s3/" title="Have your WordPress static files on Amazon S3">tell Wordpress to use S3</a> to host any static content (AppFog does not offer persistent storage yet). But a complete Symfony2 application is a lot harder.</p>
 
 <p>Here is my checklist of things a Paas have to support in order to run a complete Symfony2 application.</p>
 
-<h3>Open questions</h3>
+<h3 id="open-questions">Open questions</h3>
 
 <p>I would be really interested if you have a way to go around one of these
 problems.</p>
 
 <ul>
-<li><p>Run Symfony2 commands</p>
+  <li>
+    <p>Run Symfony2 commands</p>
 
-<p>With Symfony2, you absolutely need to run commands in the production environment (cache, migrations, assets, vendors, ...) and there is no shell access in AppFog. I haven&#39;t found any way to get around this. </p></li>
-<li><p>Run post deploy hooks</p>
+    <p>With Symfony2, you absolutely need to run commands in the production environment (cache, migrations, assets, vendors, …) and there is no shell access in AppFog. I haven’t found any way to get around this.</p>
+  </li>
+  <li>
+    <p>Run post deploy hooks</p>
 
-<p>Same idea as previously, there is no way to do that in AppFog yet. </p></li>
-<li><p>Run cron jobs</p>
+    <p>Same idea as previously, there is no way to do that in AppFog yet.</p>
+  </li>
+  <li>
+    <p>Run cron jobs</p>
 
-<p>Same idea, there is <a href="https://docs.appfog.com/customize/task-scheduling">some way to run crons</a> but they can&#39;t call a Symfony2 command. Vote for <a href="https://support.appfog.com/entries/22471463-af-run-run-local-command-e-g-af-run-python-manage-py">the feature request</a> on AppFog support website!</p></li>
+    <p>Same idea, there is <a href="https://docs.appfog.com/customize/task-scheduling">some way to run crons</a> but they can’t call a Symfony2 command. Vote for <a href="https://support.appfog.com/entries/22471463-af-run-run-local-command-e-g-af-run-python-manage-py">the feature request</a> on AppFog support website!</p>
+  </li>
 </ul>
 
-<h3>Solved issues</h3>
+<h3 id="solved-issues">Solved issues</h3>
 
 <ul>
-<li><p>Set <code>web/</code> as the Document Root</p>
+  <li>
+    <p>Set <code class="language-plaintext highlighter-rouge">web/</code> as the Document Root</p>
 
-<p>On AppFog, we can&#39;t edit the virtual host configuration but we achieve the same goal by <a href="/change-the-document-root-for-php-application-in-appfog/" title="Change the Document Root for PHP application in AppFog">using URL rewritting</a> with another <code>.htaccess</code> at the root directory.</p></li>
-<li><p>Exclude <code>app/cache</code>, <code>app/logs</code> and <code>web/bundles</code> when deploying</p>
+    <p>On AppFog, we can’t edit the virtual host configuration but we achieve the same goal by <a href="/change-the-document-root-for-php-application-in-appfog/" title="Change the Document Root for PHP application in AppFog">using URL rewritting</a> with another <code class="language-plaintext highlighter-rouge">.htaccess</code> at the root directory.</p>
+  </li>
+  <li>
+    <p>Exclude <code class="language-plaintext highlighter-rouge">app/cache</code>, <code class="language-plaintext highlighter-rouge">app/logs</code> and <code class="language-plaintext highlighter-rouge">web/bundles</code> when deploying</p>
 
-<p>AppFog does not deploy with git but uses its own tool, af, which is similar to rsync. We can <a href="https://docs.appfog.com/getting-started/af-cli/afignore">specify a <code>.afignore</code> file</a> in the root directory that will be the equivalent of <code>.gitignore</code>. </p></li>
-<li><p>Set the database parameters</p>
+    <p>AppFog does not deploy with git but uses its own tool, af, which is similar to rsync. We can <a href="https://docs.appfog.com/getting-started/af-cli/afignore">specify a <code class="language-plaintext highlighter-rouge">.afignore</code> file</a> in the root directory that will be the equivalent of <code class="language-plaintext highlighter-rouge">.gitignore</code>.</p>
+  </li>
+  <li>
+    <p>Set the database parameters</p>
 
-<p>AppFog launches the database instance at the same time we deploy and <a href="https://docs.appfog.com/services">passes the database parameters into the <code>VCAP_SERVICES</code> environment variable</a>. So we can have <a href="http://symfony.com/doc/2.0/cookbook/configuration/external_parameters.html#miscellaneous-configuration">a PHP config file</a> (instead of Yaml) that reads the environment variable and save the parameters in the service container, <a href="/deploy-a-new-wordpress-blog-on-appfog/" title="Deploy a new WordPress blog on AppFog">like in the Wordpress example</a>.</p></li>
-<li><p>Have persistent storage for <code>web/uploads</code></p>
+    <p>AppFog launches the database instance at the same time we deploy and <a href="https://docs.appfog.com/services">passes the database parameters into the <code class="language-plaintext highlighter-rouge">VCAP_SERVICES</code> environment variable</a>. So we can have <a href="http://symfony.com/doc/2.0/cookbook/configuration/external_parameters.html#miscellaneous-configuration">a PHP config file</a> (instead of Yaml) that reads the environment variable and save the parameters in the service container, <a href="/deploy-a-new-wordpress-blog-on-appfog/" title="Deploy a new WordPress blog on AppFog">like in the Wordpress example</a>.</p>
+  </li>
+  <li>
+    <p>Have persistent storage for <code class="language-plaintext highlighter-rouge">web/uploads</code></p>
 
-<p>AppFog does not offer persistent storage yet. We can use <a href="https://github.com/KnpLabs/Gaufrette">Gaufrette</a> to use S3 as our file system. It does require to change our application code though.</p></li>
+    <p>AppFog does not offer persistent storage yet. We can use <a href="https://github.com/KnpLabs/Gaufrette">Gaufrette</a> to use S3 as our file system. It does require to change our application code though.</p>
+  </li>
 </ul>
 
-<h3>Available out of the box</h3>
+<h3 id="available-out-of-the-box">Available out of the box</h3>
 
 <ul>
-<li><p>Make <code>app/cache</code> and <code>app/logs</code> writeable</p>
+  <li>
+    <p>Make <code class="language-plaintext highlighter-rouge">app/cache</code> and <code class="language-plaintext highlighter-rouge">app/logs</code> writeable</p>
 
-<p>In AppFog, all the root directory and all subdirectories are writeable. <a href="https://docs.appfog.com/faq#persistentfs">Files are just not persistent</a> but it doesn&#39;t matter for those two directories. </p></li>
-<li><p>Use root domain names</p>
+    <p>In AppFog, all the root directory and all subdirectories are writeable. <a href="https://docs.appfog.com/faq#persistentfs">Files are just not persistent</a> but it doesn’t matter for those two directories.</p>
+  </li>
+  <li>
+    <p>Use root domain names</p>
 
-<p><a href="https://docs.appfog.com/customize/custom-domain-names">AppFog supports root domain names</a> out of the box. </p></li>
-<li><p>Use <code>web/app.php</code> as front controller</p>
+    <p><a href="https://docs.appfog.com/customize/custom-domain-names">AppFog supports root domain names</a> out of the box.</p>
+  </li>
+  <li>
+    <p>Use <code class="language-plaintext highlighter-rouge">web/app.php</code> as front controller</p>
 
-<p>AppFog is using Apache with the directive <code>AllowOverride All</code> so the standard <code>.htaccess</code> is working to redirect all trafic to <code>app.php</code>.</p></li>
+    <p>AppFog is using Apache with the directive <code class="language-plaintext highlighter-rouge">AllowOverride All</code> so the standard <code class="language-plaintext highlighter-rouge">.htaccess</code> is working to redirect all trafic to <code class="language-plaintext highlighter-rouge">app.php</code>.</p>
+  </li>
 </ul>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            March 2013
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>

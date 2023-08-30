@@ -1,57 +1,75 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Dynamic Programming</title>
-    <meta name="viewport" content="width=device-width">
+<html lang="en-us">
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
     
-        
+      Dynamic Programming &middot; Quentin Pleplé
     
-        
-            <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
-            });
-            </script>
-            <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-            </script>
-        
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/dynamic-programming/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
     
+  
+    
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes:true}
+        });
+      </script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-18013119-1']);
-        _gaq.push(['_trackPageview']);
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  
 </head>
-<body>
- 
-<div class="container">
-  <div id="page" style="position: relative">
+
+
+  <body>
+
     
-    
-    <h1>Dynamic Programming</h1>
-    
-    <div id="post-content">
-        <blockquote>
-<p>Dynamic Programming (DP) problems follow always the same couple of steps. Here they are.</p>
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Dynamic Programming</h1>
+  <span class="post-date">03 Jun 2013</span>
+
+  
+
+  <blockquote>
+  <p>Dynamic Programming (DP) problems follow always the same couple of steps. Here they are.</p>
 </blockquote>
 
-<h3>I. Subproblem definition</h3>
-
+<h3 id="i-subproblem-definition">I. Subproblem definition</h3>
 <p>DP is about remembering the solution of already computed
 problems. To remember them, we store them in an array/matrix.
 Here you define what are your subproblems, ie. how you
@@ -59,58 +77,83 @@ index your matrix. Here are a couple of example, extracted
 from other problems:</p>
 
 <ol>
-<li><p>Let $\text{OPT}[i]$ be the maximum profit we can get by building
-coffee shops in blocks from $i$ to $n$.</p></li>
-<li><p>Let $\text{OPT}[k]$ be the maximum value achievable with a capacity
-of $k$.</p></li>
-<li><p>Let $\text{OPT}[i]$ be the length of the longest increasing subsequence
-starting at $x[i]$.</p></li>
-<li><p>Let $\text{OPT}[i, j]$ be the edit distance between strings
-$x[i...n]$ and $y[j...m]$.</p></li>
-<li><p>Let $\text{OPT}[h, i]$ be the maximum grade we can get by spending $h$
-hours on assignments from $1$ to $i$.</p></li>
+  <li>
+    <p>Let $\text{OPT}[i]$ be the maximum profit we can get by building
+coffee shops in blocks from $i$ to $n$.</p>
+  </li>
+  <li>Let $\text{OPT}[k]$ be the maximum value achievable with a capacity
+of $k$.</li>
+  <li>
+    <p>Let $\text{OPT}[i]$ be the length of the longest increasing subsequence
+starting at $x[i]$.</p>
+  </li>
+  <li>
+    <p>Let $\text{OPT}[i, j]$ be the edit distance between strings
+$x[i…n]$ and $y[j…m]$.</p>
+  </li>
+  <li>Let $\text{OPT}[h, i]$ be the maximum grade we can get by spending $h$
+hours on assignments from $1$ to $i$.</li>
 </ol>
 
 <p>Once you have given the subproblem definition, tell which one
 of the subproblems correspond to the original problem. Here are the same examples as before:</p>
 
 <ol>
-<li><p>The final answer is $\text{OPT}[1]$ because we want the maximum profit on blocks from $i=1$ to $n$.</p></li>
-<li><p>The final answer is $\text{OPT}[K]$ because we want the maximum value with capacity $k =K$.</p></li>
-<li><p>The final answer is $\max_{1 \leq j \leq n} \text{OPT}[j]$ because we want the longest increasing subsequence of the string, wherever it starts.</p></li>
-<li><p>The final answer is $\text{OPT}[1, 1]$ because we want the edit distance between strings
-$x[1...n]$ and $y[1...m]$.</p></li>
-<li><p>The final answer is $\text{OPT}[H, 1]$ because we want the best grade by spending $h = H$ hours on projects from $i = 1$ to $n$.</p></li>
+  <li>
+    <p>The final answer is $\text{OPT}[1]$ because we want the maximum profit on blocks from $i=1$ to $n$.</p>
+  </li>
+  <li>
+    <p>The final answer is $\text{OPT}[K]$ because we want the maximum value with capacity $k =K$.</p>
+  </li>
+  <li>
+    <p>The final answer is $\max_{1 \leq j \leq n} \text{OPT}[j]$ because we want the longest increasing subsequence of the string, wherever it starts.</p>
+  </li>
+  <li>
+    <p>The final answer is $\text{OPT}[1, 1]$ because we want the edit distance between strings
+$x[1…n]$ and $y[1…m]$.</p>
+  </li>
+  <li>
+    <p>The final answer is $\text{OPT}[H, 1]$ because we want the best grade by spending $h = H$ hours on projects from $i = 1$ to $n$.</p>
+  </li>
 </ol>
 
-<h3>II. Recursive formulation</h3>
-
+<h3 id="ii-recursive-formulation">II. Recursive formulation</h3>
 <p>Now that you know what are the subproblems your are going to
 solve (each cell of the array/matrix OPT is a subproblem),
 you need to find a recursive formulation between them.
 Here are the same examples as before:</p>
 
 <ol>
-<li><p>Are we building a coffee ship on block $i$?
+  <li>
+    <p>Are we building a coffee ship on block $i$?
 If yes, the maximum profit is $\text{Profit}[i] + \text{OPT}[i+d+1]$, if no, it is $\text{OPT}[i+1]$.
-But because we don&#39;t know the answer and we want the maximum profit,
-$$ \text{OPT}[i] = \max\big\{ \text{Profit}[i] + \text{OPT}[i+d+1], \text{OPT}[i+1] \big\}$$</p></li>
-<li><p>What is the last item added to the knapsack? If it is item $i$, the maximum value would be $\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]$. But because we don&#39;t know the answer and we want the maximum value,
-$$ \text{OPT}[k] = \max_{1\leq i \leq n}\big\{\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]\big\}$$</p></li>
-<li><p>What the next element in the sequence after $a[i]$? If it is $a[j]$, the maximum length be $1 + \text{OPT}[j]$. But because we don&#39;t know the answer and we want the maximum length,
-$$\text{OPT}[i] = \max_{\substack{i&lt;j\\a[i] \leq a[j]}} \big\{ 1 + \text{OPT}[j] \big\}$$</p></li>
-<li><p>What is the optimal alignment for the left-most column? If it is $(x[i], -)$, then edit distance would be $1 + \text{OPT}[i+1, j]$. If it is $(-, y[j])$, then edit distance would be $1 + \text{OPT}[i, j+1]$. If it is $(x[i], y[j])$, then the edit distance would be $I(x[i] = y[j]) + \text{OPT}[i+1, j+1]$. But because we don&#39;t know the answer and we want the minimum value,
-$$ \text{OPT}[i,j] = \min \big\{ 1 + \text{OPT}[i+1, j], 1 + \text{OPT}[i, j+1], I(x[i] = y[j]) + \text{OPT}[i+1, j+1] \big\} $$</p></li>
-<li><p>How many hours are we spending on project $i$? If it is $x$, then the maximum grade would be $G_i[x] + \text{OPT}[h-x, i-1]$. But because we don&#39;t know the answer and we want the maximum value,
-$$ \text{OPT}[h,i] = \max_{1\leq x \leq h} \big\{ G_i[x] + \text{OPT}[h-x, i-1] \big\} $$</p></li>
+But because we don’t know the answer and we want the maximum profit,
+\(\text{OPT}[i] = \max\big\\{ \text{Profit}[i] + \text{OPT}[i+d+1], \text{OPT}[i+1] \big\\}\)</p>
+  </li>
+  <li>
+    <p>What is the last item added to the knapsack? If it is item $i$, the maximum value would be $\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]$. But because we don’t know the answer and we want the maximum value,
+\(\text{OPT}[k] = \max_{1\leq i \leq n}\big\\{\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]\big\\}\)</p>
+  </li>
+  <li>
+    <p>What the next element in the sequence after $a[i]$? If it is $a[j]$, the maximum length be $1 + \text{OPT}[j]$. But because we don’t know the answer and we want the maximum length,
+\(\text{OPT}[i] = \max_{\substack{i&lt;j\\\\a[i] \leq a[j]}} \big\\{ 1 + \text{OPT}[j] \big\\}\)</p>
+  </li>
+  <li>
+    <p>What is the optimal alignment for the left-most column? If it is $(x[i], -)$, then edit distance would be $1 + \text{OPT}[i+1, j]$. If it is $(-, y[j])$, then edit distance would be $1 + \text{OPT}[i, j+1]$. If it is $(x[i], y[j])$, then the edit distance would be $I(x[i] = y[j]) + \text{OPT}[i+1, j+1]$. But because we don’t know the answer and we want the minimum value,
+\(\text{OPT}[i,j] = \min \big\\{ 1 + \text{OPT}[i+1, j], 1 + \text{OPT}[i, j+1], I(x[i] = y[j]) + \text{OPT}[i+1, j+1] \big\\}\)</p>
+  </li>
+  <li>
+    <p>How many hours are we spending on project $i$? If it is $x$, then the maximum grade would be $G_i[x] + \text{OPT}[h-x, i-1]$. But because we don’t know the answer and we want the maximum value,
+\(\text{OPT}[h,i] = \max\_{1\leq x \leq h} \big\\{ G\_i[x] + \text{OPT}[h-x, i-1] \big\\}\)</p>
+  </li>
 </ol>
 
-<h3>III. Algorithm</h3>
-
+<h3 id="iii-algorithm">III. Algorithm</h3>
 <p>It is only when you have defined what are your subproblems and
 given the recursive formulation, that you can think of
 the algorithm.</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Base cases</span>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Base cases</span>
 <span class="p">...</span>
 
 <span class="c1">// Main loop (filling OPT[])</span>
@@ -118,42 +161,26 @@ the algorithm.</p>
 
 <span class="c1">// Final result</span>
 <span class="k">return</span> <span class="p">...</span>
-</code></pre></div>
-<h3>IV. Complexity</h3>
+</code></pre></div></div>
 
+<h3 id="iv-complexity">IV. Complexity</h3>
 <p>Time analysis for DP problems is usually straightforward:</p>
 
 <ul>
-<li><p>how many subproblems?</p></li>
-<li><p>time per subproblems?</p></li>
+  <li>
+    <p>how many subproblems?</p>
+  </li>
+  <li>
+    <p>time per subproblems?</p>
+  </li>
 </ul>
 
+</div>
+      </div>
     </div>
 
-    <div id="card-post">
-        <img class="img-circle pull-left" style="height: 50px" src="/img/picture-2.jpg">
-        <a href="/">Quentin Pleplé</a> <br>
-        <span class="muted">
-            June 2013
-        </span>
-    </div>
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
 
-</div>
-
-<div id="disqus_thread" style="padding: 60px 40px 20px 40px"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'qpleple'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-
-</body>
+    <script src='/js/script.js'></script>
+  </body>
 </html>
