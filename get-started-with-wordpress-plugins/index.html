@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,11 +63,10 @@
   <span class="post-date">25 Jun 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>The purpose of this article is to get you excited about how dead
-easy it is to make a Wordpress plugin.</p>
-</blockquote>
+  <p>The purpose of this article is to get you started with Wordpress plugin.</p>
 
 <ol>
   <li>
@@ -67,15 +74,15 @@ easy it is to make a Wordpress plugin.</p>
 <code class="language-plaintext highlighter-rouge">wp-content/plugins</code> with the name of the plugin, let’s say
 <code class="language-plaintext highlighter-rouge">qpleple-plugin.php</code>. Add some metadata and one first function:</p>
 
-    <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="cp">&lt;?php</span>
- <span class="cm">/*
- Plugin Name: qpleple plugin
- */</span>
-     
- <span class="k">function</span> <span class="n">qpleple_page</span><span class="p">(</span><span class="nv">$page</span><span class="p">)</span>
- <span class="p">{</span>
-     <span class="k">echo</span> <span class="s1">'&lt;a href="http://qpleple.com/'</span> <span class="mf">.</span> <span class="nv">$page</span> <span class="mf">.</span> <span class="s1">'"&gt;'</span> <span class="mf">.</span> <span class="nv">$page</span> <span class="mf">.</span> <span class="s1">'&lt;/a&gt;'</span><span class="p">;</span>
- <span class="p">}</span>
+    <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="cm">/*
+Plugin Name: qpleple plugin
+*/</span>
+       
+<span class="k">function</span> <span class="n">qpleple_page</span><span class="p">(</span><span class="nv">$page</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'&lt;a href="http://qpleple.com/'</span> <span class="mf">.</span> <span class="nv">$page</span> <span class="mf">.</span> <span class="s1">'"&gt;'</span> <span class="mf">.</span> <span class="nv">$page</span> <span class="mf">.</span> <span class="s1">'&lt;/a&gt;'</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div>    </div>
   </li>
   <li>
@@ -84,8 +91,8 @@ easy it is to make a Wordpress plugin.</p>
   <li>
     <p>You may now call all the functions of <code class="language-plaintext highlighter-rouge">qpleple-plugin.php</code> into your theme:</p>
 
-    <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code> You may want to read: 
- <span class="cp">&lt;?php</span> <span class="nf">qpleple_page</span><span class="p">(</span><span class="s2">"get-excited-with-wordpress-plugins"</span><span class="p">)</span> <span class="cp">?&gt;</span>
+    <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You may want to read: 
+<span class="cp">&lt;?php</span> <span class="nf">qpleple_page</span><span class="p">(</span><span class="s2">"get-started-with-wordpress-plugins"</span><span class="p">)</span> <span class="cp">?&gt;</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -96,20 +103,14 @@ easy it is to make a Wordpress plugin.</p>
 you some leads:</p>
 
 <ul>
-  <li>
-    <p><a href="http://codex.wordpress.org/Writing_a_Plugin">Writing a Plugin</a>
-(wordpress.org) : official documentation</p>
-  </li>
-  <li>
-    <p><a href="http://planetozh.com/blog/2009/09/top-10-most-common-coding-mistakes-in-wordpress-plugins/">Top 10 Most Common Coding Mistakes in WordPress
+  <li><a href="http://codex.wordpress.org/Writing_a_Plugin">Writing a Plugin</a>
+(wordpress.org) : official documentation</li>
+  <li><a href="http://planetozh.com/blog/2009/09/top-10-most-common-coding-mistakes-in-wordpress-plugins/">Top 10 Most Common Coding Mistakes in WordPress
 Plugins</a>
-(planetozh.com) : practical hints</p>
-  </li>
-  <li>
-    <p><a href="http://fuelyourcoding.com/getting-started-writing-wordpress-plugins/">Getting Started Writing WordPress
+(planetozh.com)</li>
+  <li><a href="http://fuelyourcoding.com/getting-started-writing-wordpress-plugins/">Getting Started Writing WordPress
 Plugins</a>
-(fuelyourcoding.com) : get even more excited, oh yeah</p>
-  </li>
+(fuelyourcoding.com)</li>
 </ul>
 
 </div>

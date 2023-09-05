@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,14 +63,10 @@
   <span class="post-date">04 Jul 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>Inspect what you can call from the Web Profiler.</p>
-</blockquote>
-
-<p><img class="pull-right" style="width: 100px" src="/img/logos/symfony2.png" /></p>
-
-<p>When I started with Symfony2, I was confused by these kind of things I could read :</p>
+  <p>When I started with Symfony2, I was confused by these kind of things I could read :</p>
 
 <figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'doctrine.orm.entity_manager'</span><span class="p">);</span>
 <span class="nv">$request</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'request'</span><span class="p">);</span></code></pre></figure>
@@ -70,8 +74,9 @@
 <p>I could understand it when I was reading the code but I did not feel
 safe to reuse them some place else. I could not find any list of all the
 services I could call and I was not sure about what I would get by
-calling something. There is no reference or documentation for that.
-WebProfilerBundleExtra is an enhancement of the debug toolbar of
+calling something. There is no reference or documentation for that.</p>
+
+<p>WebProfilerBundleExtra is an enhancement of the debug toolbar of
 Symfony2 that add some reference info by making list of stuff you can
 use and debugging info. It is a bundle that you add to your project (and
 load only in the <code class="language-plaintext highlighter-rouge">dev</code> environment) that will add 4 tabs to the Web
@@ -88,7 +93,7 @@ extensions, tests filters and functions that you can use (loaded)</li>
 
 <p>To install it, follow the instructions on <a href="https://github.com/Elao/WebProfilerExtraBundle">the project home on github</a>.</p>
 
-<h3 id="container">Container</h3>
+<h2 id="container">Container</h2>
 
 <p>If you are not familiar with containers in Symfony2, you should first
 read the Symfony2 book chapter <a href="http://symfony.com/doc/2.0/book/service_container.html">Service
@@ -129,11 +134,11 @@ container.</p>
 
 <figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'doctrine.orm.entity_manager'</span><span class="p">);</span></code></pre></figure>
 
-<h3 id="routing">Routing</h3>
+<h2 id="routing">Routing</h2>
 
 <p>You will find in that tab two sections : <strong>Sources</strong> and <strong>Routes</strong>.
 <strong>Sources</strong> is the list of all file that SF2 process to make the routing
-table. It’s a good start to debug if a route does not work : first check
+table. It’s a good start to debug if a route does not work: first check
 if the file in which you declare the route is processed by SF2.</p>
 
 <div class="text-center" style="margin: 20px 0">
@@ -154,12 +159,12 @@ in a lot of different files.</p>
     <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/routes.png" />
 </div>
 
-<h3 id="assetic">Assetic</h3>
+<h2 id="assetic">Assetic</h2>
 
 <p>This tab display all the assets information of the assetic collections
 being used. Use that tabs when debugging problems with assets.</p>
 
-<h3 id="twig">Twig</h3>
+<h2 id="twig">Twig</h2>
 
 <p>This tab is very useful when writing templates, use it as a reference.
 There is 4 sections : <strong>Twig Extensions</strong>, <strong>Twig Tests available</strong>,
@@ -168,7 +173,7 @@ Extensions</strong> is the list of all the Twig extensions loaded. Useful to
 debug when some filters or functions don’t work.</p>
 
 <div class="text-center" style="margin: 20px 0">
-    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Container-Twig-Extensions.png" />
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Twig-Extensions.png" />
 </div>
 
 <p><strong>Twig Tests available</strong> is the list of the tests you can use in your Twig templates.</p>

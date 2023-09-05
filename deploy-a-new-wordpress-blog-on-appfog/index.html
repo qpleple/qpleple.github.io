@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,15 +63,15 @@
   <span class="post-date">11 Mar 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>A tutorial to get you started with Wordpress on AppFog.</p>
-</blockquote>
+  <p>This is a tutorial to get you started with Wordpress on AppFog.</p>
 
 <p>I’m assuming that you already have your environment configured to
 use AppFog. If not, read my other post on how to <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">deploy a toy PHP application on AppFog</a>.</p>
 
-<h3 id="get-the-code">Get the code</h3>
+<h2 id="get-the-code">Get the code</h2>
 
 <p>First, download Wordpress</p>
 
@@ -72,7 +80,7 @@ use AppFog. If not, read my other post on how to <a href="/deploy-a-toy-php-appl
 <span class="nv">$ </span><span class="nb">cd </span>wordpress
 </code></pre></div></div>
 
-<h3 id="database-configuration">Database configuration</h3>
+<h2 id="database-configuration">Database configuration</h2>
 
 <p>The MySQL database will be added and automatically binded to the app as
 a service, so you don’t know the database parameters (host, user,
@@ -130,7 +138,7 @@ here, so replace the previous lines by</p>
 <span class="nb">define</span><span class="p">(</span><span class="s1">'DB_HOST'</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"hostname"</span><span class="p">]);</span>
 <span class="nb">define</span><span class="p">(</span><span class="s1">'DB_PORT'</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"port"</span><span class="p">]);</span></code></pre></figure>
 
-<h3 id="deploy-to-appfog">Deploy to AppFog</h3>
+<h2 id="deploy-to-appfog">Deploy to AppFog</h2>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>af push my-blog
 Would you like to deploy from the current directory? <span class="o">[</span>Yn]:
@@ -172,7 +180,7 @@ Staging Application <span class="s1">'my-blog'</span>: OK
 Starting Application <span class="s1">'my-blog'</span>: OK
 </code></pre></div></div>
 
-<h3 id="web-install">Web install</h3>
+<h2 id="web-install">Web install</h2>
 
 <p>Now go to your app, you should be welcomed by Wordpress.</p>
 
@@ -187,7 +195,7 @@ on AppFog.</p>
     <img src="/img/post-deploy-a-new-wordpress-blog-on-appfog/home.png" />
 </div>
 
-<h3 id="store-uploaded-files-to-s3">Store uploaded files to S3</h3>
+<h2 id="store-uploaded-files-to-s3">Store uploaded files to S3</h2>
 
 <p>The storage on AppFog is not persistent (yet). That means that all the
 files created on the server may disappear at any time. For Wordpress it
@@ -196,15 +204,11 @@ and themes. So you have to tell Wordpress to store your static files
 somewhere else. Here is another post I wrote to
 <a href="/have-your-wordpress-static-files-on-amazon-s3/" title="have your WordPress static files on Amazon S3">Have your WordPress static files on Amazon S3</a>.</p>
 
-<h3 id="further-reading">Further reading</h3>
+<h2 id="further-reading">Further reading</h2>
 
 <ol>
-  <li>
-    <p><a href="https://docs.appfog.com/languages/php/wordpress">Wordpress on AppFog official documentation</a></p>
-  </li>
-  <li>
-    <p><a href="https://docs.appfog.com/services">Dealing with services with the VCAP_SERVICES environment variable.</a></p>
-  </li>
+  <li><a href="https://docs.appfog.com/languages/php/wordpress">Wordpress on AppFog official documentation</a></li>
+  <li><a href="https://docs.appfog.com/services">Dealing with services with the VCAP_SERVICES environment variable.</a></li>
 </ol>
 
 </div>

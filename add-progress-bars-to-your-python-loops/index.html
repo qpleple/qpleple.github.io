@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,10 +63,10 @@
   <span class="post-date">11 Feb 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p>Instead of printing out indices or other info at each iteration of your Python loops to see the progress, you can easily add a progress bar.</p>
-</blockquote>
 
 <p>For each of your loop</p>
 
@@ -84,14 +92,12 @@ each iteration of the loop.</p>
 <p>It’s great if your run long script and you want to have an idea of how
 long it is going to run.</p>
 
-<h3 id="install">Install</h3>
-
-<p>Use pip.</p>
+<h2 id="installation">Installation</h2>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install progressbar
 </code></pre></div></div>
 
-<h3 id="customize-it">Customize it</h3>
+<h2 id="customize-it">Customize it</h2>
 
 <p>There are also a ton of customization options available. Here is an example of a progress
 bar that displays the number of iterations done over the total number of

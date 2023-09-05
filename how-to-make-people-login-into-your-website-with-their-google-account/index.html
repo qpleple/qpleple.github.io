@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,10 +63,10 @@
   <span class="post-date">27 Apr 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p>This is a step-by-step beginner tutorial so show you how to implement Google login in PHP from scratch.</p>
-</blockquote>
 
 <p>OpenID provides a safe, elegant and easy way for people to login into your website without
 having to fill in a registration form. They just have to have an account
@@ -212,24 +220,12 @@ other accounts: Yahoo, Wordpress, AOL, … You just have to change the
 url <code class="language-plaintext highlighter-rouge">$openid-&gt;identity</code> by:</p>
 
 <ul>
-  <li>
-    <p>Google: <code class="language-plaintext highlighter-rouge">https://www.google.com/accounts/o8/id</code></p>
-  </li>
-  <li>
-    <p>Google profile: <code class="language-plaintext highlighter-rouge">http://www.google.com/profiles/\~YOURUSERNAME</code></p>
-  </li>
-  <li>
-    <p>Yahoo: <code class="language-plaintext highlighter-rouge">https://me.yahoo.com</code></p>
-  </li>
-  <li>
-    <p>AOL: <code class="language-plaintext highlighter-rouge">https://www.aol.com</code></p>
-  </li>
-  <li>
-    <p>Wordpress: <code class="language-plaintext highlighter-rouge">http://YOURBLOG.wordpress.com</code></p>
-  </li>
-  <li>
-    <p>LiveJournal: <code class="language-plaintext highlighter-rouge">http://www.livejournal.com/openid/server.bml</code></p>
-  </li>
+  <li>Google: <code class="language-plaintext highlighter-rouge">https://www.google.com/accounts/o8/id</code></li>
+  <li>Google profile: <code class="language-plaintext highlighter-rouge">http://www.google.com/profiles/\~YOURUSERNAME</code></li>
+  <li>Yahoo: <code class="language-plaintext highlighter-rouge">https://me.yahoo.com</code></li>
+  <li>AOL: <code class="language-plaintext highlighter-rouge">https://www.aol.com</code></li>
+  <li>Wordpress: <code class="language-plaintext highlighter-rouge">http://YOURBLOG.wordpress.com</code></li>
+  <li>LiveJournal: <code class="language-plaintext highlighter-rouge">http://www.livejournal.com/openid/server.bml</code></li>
 </ul>
 
 <p>However, Facebook and Twitter are not OpenID provider: you cannot use the above code with them. Here is an article I wrote for <a href="/authenticate-users-with-their-facebook-account">implementing Facebook authentication in PHP</a>. As for Twitter, refer to <a href="https://dev.twitter.com/docs/auth/sign-twitter">the official documentation</a>.</p>

@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -69,16 +77,20 @@
 
   
 
-  <h3 id="probabilistic-models">Probabilistic models</h3>
-<p>LSA represents topics as points in Euclidean space and documents as linear combination of topics. Probabilistic topic models differ from LSA by representing topics as distributions over words, and documents as probabilistic mixtures of topics. Formally, given a vocabulary of $W$ words, each topic $k = 1, …, K$ has a word-distribution $\boldsymbol \phi_k \in \Delta_W$, with $\Delta_n$ the simplex of dimension $n$, and each document $d = 1, …, D$ has a topic-distribution $\boldsymbol \theta_d \in \Delta_K$. Call $\boldsymbol \Phi$ the matrix with rows $\boldsymbol \phi_k$ and $\boldsymbol \Theta$ the matrix with rows $\boldsymbol \theta_d$.</p>
+  <h2 id="probabilistic-models">Probabilistic models</h2>
+<p>LSA represents topics as points in Euclidean space and documents as linear combination of topics. Probabilistic topic models differ from LSA by representing topics as distributions over words, and documents as probabilistic mixtures of topics.</p>
 
-<p>By estimating the model parameters $(\boldsymbol \Phi, \boldsymbol \Theta)$ of the model, we discover new knowledge about the corpus; topics are represented by the word-distributions $\boldsymbol \phi_k$, and each document is tagged with discovered topics, which is represented by $\boldsymbol \theta_d$.</p>
+<p>Formally, given a vocabulary of $W$ words, each topic $k = 1, …, K$ has a word-distribution $\boldsymbol \varphi_k \in \Delta_W$, with $\Delta_n$ the simplex of dimension $n$, and each document $d = 1, …, D$ has a topic-distribution $\boldsymbol \theta_d \in \Delta_K$. We call $\boldsymbol \Phi$ the matrix with rows $\boldsymbol \varphi_k$ and $\boldsymbol \Theta$ the matrix with rows $\boldsymbol \theta_d$.</p>
 
-<h3 id="probabilistic-latent-semantic-indexing">Probabilistic Latent Semantic Indexing</h3>
+<p>By estimating the model parameters $(\boldsymbol \Phi, \boldsymbol \Theta)$, we discover new knowledge about the corpus; topics are represented by the word-distributions $\boldsymbol \varphi_k$, and each document is tagged with discovered topics, which is represented by $\boldsymbol \theta_d$.</p>
 
-<p>Probabilistic Latent Semantic Indexing (pLSI) is described as a generative process [<a href="/bib#Hofmann99">Hofmann99</a>], a procedure that probabilistically generates documents given the parameters of the model. Parameters of the model are then learned by Bayesian inference.</p>
+<h2 id="probabilistic-latent-semantic-indexing">Probabilistic Latent Semantic Indexing</h2>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>procedure GenerativePLSI(document-tagging theta_d, topics phi_k):
+<p>Probabilistic Latent Semantic Indexing (pLSI) is described as a generative process [<a href="/bib#Hofmann99">Hofmann99</a>], a procedure that probabilistically generates documents given the parameters of the model.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generative process for pLSI
+
+procedure GenerativePLSI(document-tagging theta_d, topics phi_k):
   for document d = 1..D:
     for position i = 1..N_d in document d:
       draw a topic z_di from Discrete(theta_d)
@@ -87,14 +99,27 @@
   return counts n_dw = sum_i I(w_di = w)
 </code></pre></div></div>
 
-<p>Although the formulation of the model is probabilistic, [<a href="/bib#Ding08">Ding08</a>] proved the equivalence between pLSI and NMF, by showing that they both optimize the same objective function. As they are different algorithms, they will navigate in the parameters space differently. It is possible to design an hybrid algorithm alternating between NMF and pLSI, every time jumping out of the local optimum of the other method.</p>
+<p>Here is a graphical representation of the model:</p>
 
-<h3 id="latent-dirichlet-allocation">Latent Dirichlet Allocation</h3>
+<p class="figure-sm">
+<img src="/img/thesis/plsi.png" />
+<small>pLSI model</small>
+</p>
+
+<p>Parameters of the model are then learned by Bayesian inference.</p>
+
+<p>Although the formulation of the model is probabilistic, [<a href="/bib#Ding08">Ding08</a>] proved the equivalence between pLSI and NMF, by showing that they both optimize the same objective function.</p>
+
+<p>As they are different algorithms, they will navigate in the parameters space differently. It is possible to design an hybrid algorithm alternating between NMF and pLSI, every time jumping out of the local optimum of the other method.</p>
+
+<h2 id="latent-dirichlet-allocation">Latent Dirichlet Allocation</h2>
 
 <p>[<a href="/bib#Blei03">Blei03</a>] extended pLSI by adding a symmetric Dirichlet prior $\text{Dir}(\alpha)$ on topic-distributions $\boldsymbol \theta_d$ of documents and derived a variational EM algorithm for the Bayesian inference.
-[<a href="/bib#Griffiths02a">Griffiths02a</a>] [<a href="/bib#Griffiths02b">Griffiths02b</a>] went further by adding a symmetric Dirichlet prior $\text{Dir}(\beta)$ on topics $\boldsymbol \phi_k$, and derived a Gibbs sampler for the Bayesian inference. Here is the generative process of LDA.</p>
+[<a href="/bib#Griffiths02a">Griffiths02a</a>] [<a href="/bib#Griffiths02b">Griffiths02b</a>] went further by adding a symmetric Dirichlet prior $\text{Dir}(\beta)$ on topics $\boldsymbol \varphi_k$, and derived a Gibbs sampler for the Bayesian inference. Here is the generative process of LDA.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>procedure GenerativeLDA(document-tagging smoothing alpha, topic smoothing beta):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generative process for LDA
+
+procedure GenerativeLDA(document-tagging smoothing alpha, topic smoothing beta):
   for topic k = 1..K:
     draw a word-distribution phi_k from Dir(beta)
   for document d = 1..D:
@@ -105,6 +130,13 @@
 
   return counts n_dw = sum_i I(w_di = w)
 </code></pre></div></div>
+
+<p>Here is a graphical representation of the model:</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/lda.png" />
+<small>LDA model</small>
+</p>
 
 <p>Bayesian model can also be described graphically in plate notation which helps to understand the dependencies between random variables.</p>
 

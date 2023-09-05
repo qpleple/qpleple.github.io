@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -98,13 +106,13 @@ the likelihood $p(\boldsymbol w_d | \boldsymbol \Phi, \alpha)$ of one document i
 <p>[<a href="/bib#Chang09">Chang09</a>] have shown that, surprisingly, predictive likelihood (or equivalently, perplexity) and human judgment are often not correlated, and even sometimes slightly anti-correlated.</p>
 
 <p>They ran a large scale experiment on the Amazon Mechanical Turk platform.
-For each topic, they took the top five words (ordered by frequency $p(w|k) = \phi_{kw}$) of that topic and added a random sixth word. Then, they presented these lists of six words to participants asking them to identify the intruder word.</p>
+For each topic, they took the top five words (ordered by frequency $p(w|k) = \varphi_{kw}$) of that topic and added a random sixth word. Then, they presented these lists of six words to participants asking them to identify the intruder word.</p>
 
 <p>If every participant could identify the intruder, then we could conclude that the topic is good at describing an idea.
 If on the other hand, many people identified one of the topic top five word as the intruder, it means that they could not see the logic in the association of words, and we can conclude the topic was not good enough.</p>
 
 <p>It’s important to understand what this experiment is proving.
-The result proves that, given a topic, the five words that have the largest frequency $p(w|k) = \phi_{kw}$ withing their topic are usually not good at describing one coherent idea; at least not good enough to be able to recognize an intruder.</p>
+The result proves that, given a topic, the five words that have the largest frequency $p(w|k) = \varphi_{kw}$ withing their topic are usually not good at describing one coherent idea; at least not good enough to be able to recognize an intruder.</p>
 
 </div>
       </div>

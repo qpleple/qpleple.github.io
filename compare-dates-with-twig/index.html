@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,6 +63,8 @@
   <span class="post-date">27 Sep 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
   <p>Here is a trick to compare two dates in Twig. Convert them as string with the <code class="language-plaintext highlighter-rouge">date</code> filter, with first the year, then the month and finally the day:</p>
 
@@ -64,18 +74,18 @@
 <p>Then, you can compare strings because the chronological order is the
 same than the lexicographical order:</p>
 
-<pre><code class="language-html+jinja">{% if date1|date('Y-m-d') &gt; date2|date('Y-m-d') %}
+<div class="language-jinja highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">{%</span> <span class="k">if</span> <span class="nv">date1</span><span class="o">|</span><span class="nf">date</span><span class="p">(</span><span class="s1">'Y-m-d'</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="p">(</span><span class="s1">'Y-m-d'</span><span class="p">)</span> <span class="cp">%}</span>
     ...
-{% endif %}
-</code></pre>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</code></pre></div></div>
 
 <p><strong>Tip.</strong> If you want to get the current date, you can give the string
 <code class="language-plaintext highlighter-rouge">now</code> to the <code class="language-plaintext highlighter-rouge">date</code> filter:</p>
 
-<pre><code class="language-html+jinja">{% if "now"|date('Y-m-d') &gt; date2|date('Y-m-d') %}
+<div class="language-jinja highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">{%</span> <span class="k">if</span> <span class="s2">"now"</span><span class="o">|</span><span class="nf">date</span><span class="p">(</span><span class="s1">'Y-m-d'</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nv">date2</span><span class="o">|</span><span class="nf">date</span><span class="p">(</span><span class="s1">'Y-m-d'</span><span class="p">)</span> <span class="cp">%}</span>
     ...
-{% endif %}
-</code></pre>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</code></pre></div></div>
 
 
 </div>

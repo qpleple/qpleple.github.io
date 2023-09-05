@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,24 +63,22 @@
   <span class="post-date">15 Nov 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p>Getting the full current URL without the GET parameters might be tricky.</p>
-</blockquote>
 
-<h3 id="the-problem">The problem</h3>
+<h2 id="the-problem">The problem</h2>
 
-<p>If you followed the instruction to get <a href="https://developers.facebook.com/docs/reference/plugins/like/">the Facebook loke button</a> or <a href="https://developers.facebook.com/docs/reference/plugins/comments/">the Facebook comments plugin</a> working on your website, you must have something like:</p>
+<p>If you followed the instruction to get <a href="https://developers.facebook.com/docs/reference/plugins/like/">the Facebook like button</a> or <a href="https://developers.facebook.com/docs/reference/plugins/comments/">the Facebook comments plugin</a> working on your website, you must have something like:</p>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"fb-like"</span> <span class="na">data-href=</span><span class="s">"http://my-website.com/my-page"</span><span class="nt">&gt;&lt;/div&gt;</span>
 </code></pre></div></div>
 
 <p>For Facebook comments, you will have <code class="language-plaintext highlighter-rouge">fb-comments</code> instead of <code class="language-plaintext highlighter-rouge">fb-like</code>, but it’s the same problem. You generate dynamically such piece of HTML with Twig in order to have:</p>
 
-<pre><code class="language-html+jinja">
-&lt;div class="fb-like" data-href="{{ app.request.uri }}"&gt;
-
-</code></pre>
+<div class="language-jinja highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"fb-like"</span> <span class="na">data-href=</span><span class="s">"</span><span class="cp">{{</span> <span class="nv">app.request.uri</span> <span class="cp">}}</span><span class="s">"</span><span class="nt">&gt;</span>
+</code></pre></div></div>
 
 <p>But you may want to avoid GET parameters (for instance Google analytics
 parameters) like these ones:</p>
@@ -82,15 +88,13 @@ parameters) like these ones:</p>
 
 <p>As comments and likes counts are for one unique URL, you will end up scattering your like count and comments accross all the URLs displaying the same page.</p>
 
-<h3 id="the-fix">The fix</h3>
+<h2 id="the-fix">The fix</h2>
 
 <p>Here is the trick to get the current URL without the GET parameters,
 enjoy!</p>
 
-<pre><code class="language-html+jinja">
-&lt;div class="fb-comments" data-href="{{ app.request.getUriForPath(app.request.pathInfo) }}"&gt;
-
-</code></pre>
+<div class="language-jinja highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"fb-comments"</span> <span class="na">data-href=</span><span class="s">"</span><span class="cp">{{</span> <span class="nv">app.request.getUriForPath</span><span class="p">(</span><span class="nv">app.request.pathInfo</span><span class="p">)</span> <span class="cp">}}</span><span class="s">"</span><span class="nt">&gt;</span>
+</code></pre></div></div>
 
 </div>
       </div>

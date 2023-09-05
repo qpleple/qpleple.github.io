@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -58,9 +66,7 @@
     <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
   
 
-  <p><img class="pull-right" style="width: 100px" src="/img/logos/symfony2.png" /></p>
-
-<p>Passwords are not stored the same way by sfGuard (symfony 1) and
+  <p>Passwords are not stored the same way by sfGuard (symfony 1) and
 FOSUserBundle (Symfony2). You will not be able to check with
 FOSUserBundle the password created with sfGuard for two reasons (if you
 keep default values):</p>
@@ -73,7 +79,7 @@ keep default values):</p>
 <p>I will show you how to change default in your new Symfony2 application
 to deal with passwords the way sfGuard do.</p>
 
-<h3 id="hashing-algorithm">Hashing Algorithm</h3>
+<h2 id="hashing-algorithm">Hashing Algorithm</h2>
 
 <p>The bundle FOSAdvancedEncoderBundle allows you to use different encoders
 on a per-instance basis, whereas Symfony security component uses
@@ -116,7 +122,7 @@ a field <code class="language-plaintext highlighter-rouge">algorithm</code> like
   <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<h3 id="password-and-salt-merging">Password and salt merging</h3>
+<h2 id="password-and-salt-merging">Password and salt merging</h2>
 
 <p>We are going to overwrite the method used to merge passwords. Create a
 new folder <code class="language-plaintext highlighter-rouge">Security/</code> in your bundle and add the file
@@ -150,7 +156,7 @@ default one:</p>
 <p>Don’t forget, here again, to change <code class="language-plaintext highlighter-rouge">Acme\SiteBundle</code> according to your
 names.</p>
 
-<h3 id="thats-it">That’s it</h3>
+<h2 id="thats-it">That’s it</h2>
 
 <p>You may now write your script reading the sfGuard users and writing
 FOSUserBundle users. It will probably look like that:</p>
@@ -180,7 +186,7 @@ FOSUserBundle users. It will probably look like that:</p>
     <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">salt</span> <span class="o">=</span> <span class="nv">$salt</span><span class="p">;</span>
 <span class="p">}</span></code></pre></figure>
 
-<h3 id="having-some-problems">Having some problems?</h3>
+<h2 id="having-some-problems">Having some problems?</h2>
 
 <p>If you are having trouble, <a href="http://www.folliked.com/sf2/migrer-sfdoctrineguardplugin-vers-fosuserbundle">try the parameters for the encoder in this post</a> (it’s in French, but just look for the Symfony2 config file).</p>
 

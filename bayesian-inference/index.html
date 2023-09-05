@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -71,44 +79,50 @@
 
   <p>Suppose we have a probabilistic model with observations $\boldsymbol x$ and hidden variables $\boldsymbol z$. We want to infer the hidden variables $\boldsymbol z$ that can best explain the observations $\boldsymbol x$. In the Bayesian framework, we treat parameters as hidden random variables as well.</p>
 
-<h3 id="maximum-likelihood">Maximum Likelihood</h3>
-<p>The common way to perform inference is to compute the Maximum Likelihood estimate
-\(\hat{\boldsymbol z}\_{\text{ML}}
-    = \mathop{\arg\\!\max}\_{\boldsymbol z} p(\boldsymbol x | \boldsymbol z)\)
-which is the set of hidden variables that maximizes the likelihood $p(\boldsymbol x | \boldsymbol z)$ of the observed data.</p>
+<h2 id="maximum-likelihood">Maximum Likelihood</h2>
+<p>The common way to perform inference is to compute the Maximum Likelihood estimate</p>
 
-<h3 id="maximum-a-posteriori">Maximum a posteriori</h3>
-<p>A Bayesian approach will assume some prior knowledge about the hidden variables: a distribution $p(\boldsymbol z)$ over the space of hidden variables $\boldsymbol z$. The likelihood $p(\boldsymbol x | \boldsymbol z)$ gets weighted by the prior knowledge $p(\boldsymbol z)$ to give the posterior $p(\boldsymbol z | \boldsymbol x)$:
-    \(\text{posterior} \ \propto \ \text{likelihood} \ \times \ \text{prior}
-        \qquad
-        \text{or here}
-        \qquad
-        p(\boldsymbol z | \boldsymbol x)
-        \ \propto \
-        p(\boldsymbol x | \boldsymbol z)
-        \ \times \
-        p(\boldsymbol z).\)
-The maximum a posteriori (MAP) estimate
-    \(\hat{\boldsymbol z}\_{\text{MAP}}
-        = \mathop{\arg\\!\max}\_z p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
-        = \mathop{\arg\\!\max}\_z p(\boldsymbol z | \boldsymbol x)\)
-is the set of hidden variables that maximizes the posterior. The main advantage of this approach is that in order to maximize $p(\boldsymbol z | \boldsymbol x)$, we don’t need to compute the normalizing constant 
-    \(p(\boldsymbol x)
-        = \int\_{\boldsymbol z}
-        p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
-        \text{d}\boldsymbol z\)
-whereas it is needed for the full Bayesian approach, as we will see in the next paragraph. This normalizer can become intractable when models get complicated. The MAP method is therefore sometimes described as poor man’s Bayesian inference [<a href="/bib#Tzikas08">Tzikas08</a>] as this is a way of including prior knowledge without having to pay the expensive price of computing $p(\boldsymbol x)$.</p>
+\[\hat{\boldsymbol z}_{\text{ML}}
+    = \mathop{\arg\max}_{\boldsymbol z} p(\boldsymbol x | \boldsymbol z)\]
 
-<h3 id="full-bayesian-approach">Full Bayesian approach</h3>
+<p>which is the set of hidden variables that maximizes the likelihood
+$p(\boldsymbol x | \boldsymbol z)$ of the observed data.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>In the full Bayesian approach, we don’t only want one estimate $\hat{\boldsymbol z}$ of the hidden variables, but the entire distribution over them, the posterior distribution $p(\boldsymbol z</td>
-      <td>\boldsymbol x)$.</td>
-    </tr>
-  </tbody>
-</table>
+<h2 id="maximum-a-posteriori">Maximum a posteriori</h2>
+<p>A Bayesian approach will assume some prior knowledge about the hidden variables: a distribution $p(\boldsymbol z)$ over the space of hidden variables $\boldsymbol z$. The likelihood $p(\boldsymbol x | \boldsymbol z)$ gets weighted by the prior knowledge $p(\boldsymbol z)$ to give the posterior $p(\boldsymbol z | \boldsymbol x)$:</p>
+
+\[\text{posterior} \ \propto \ \text{likelihood} \ \times \ \text{prior}
+    \qquad
+    \text{or here}
+    \qquad
+    p(\boldsymbol z | \boldsymbol x)
+    \ \propto \
+    p(\boldsymbol x | \boldsymbol z)
+    \ \times \
+    p(\boldsymbol z).\]
+
+<p>The maximum a posteriori (MAP) estimate</p>
+
+\[\hat{\boldsymbol z}_{\text{MAP}}
+    = \mathop{\arg\max}_z p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
+    = \mathop{\arg\max}_z p(\boldsymbol z | \boldsymbol x)\]
+
+<p>is the set of hidden variables that maximizes the posterior.
+The main advantage of this approach is that in order to maximize $p(\boldsymbol z | \boldsymbol x)$, we don’t need to compute the normalizing constant</p>
+
+\[p(\boldsymbol x)
+    = \int_{\boldsymbol z}
+    p(\boldsymbol x | \boldsymbol z) p(\boldsymbol z)
+    \text{d}\boldsymbol z\]
+
+<p>whereas it is needed for the full Bayesian approach, as we will see in the next paragraph. This normalizer can become intractable when models get complicated.</p>
+
+<p>The MAP method is therefore sometimes described as poor man’s Bayesian inference [<a href="/bib#Tzikas08">Tzikas08</a>] as this is a way of including prior knowledge without having to pay the expensive price of computing $p(\boldsymbol x)$.</p>
+
+<h2 id="full-bayesian-approach">Full Bayesian approach</h2>
+
+<p>In the full Bayesian approach, we don’t only want one estimate
+$\hat{\boldsymbol z}$ of the hidden variables, but the entire distribution over them, the posterior distribution $p(\boldsymbol z | \boldsymbol x)$.</p>
 
 <p>Every time we pick one specific value for a parameter in a model, we are making an approximation. As we compose models, approximations get amplified at every layer of the model. Feeding the entire parameters distribution in the next layer, instead of a point estimate, will increase the added value of this layer to the model.</p>
 

@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,17 +63,17 @@
   <span class="post-date">26 Apr 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p>This is a step-by-step beginner tutorial showing how to include Facebook comments to your own website.</p>
-</blockquote>
 
 <p>It is now possible to directly add the Facebook comments system as a plugin in your
 website. Without talking more, I am going to show you right away how
 easy it is to configure and then I will share with you some thoughts
 about it.</p>
 
-<h4 id="step-1-create-a-facebook-application">Step 1: Create a Facebook application</h4>
+<h2 id="step-1-create-a-facebook-application">Step 1: Create a Facebook application</h2>
 
 <p>The Facebook comments plugin is considered as a Facebook application. So
 it needs application credentials to communicate with Facebook servers.
@@ -86,7 +94,7 @@ follow the wizard and you there you have:</p>
 <p><em>Important</em>: make sure you filled “Site URL” and “Site Domain” with
 your infos.</p>
 
-<h4 id="step-2-add-the-meta-tags">Step 2: Add the meta tags</h4>
+<h2 id="step-2-add-the-meta-tags">Step 2: Add the meta tags</h2>
 
 <p>In the <code class="language-plaintext highlighter-rouge">&lt;head&gt;</code> tag of your page, add these 2 lines (those are mine that
 you can this in the source code of this page):</p>
@@ -98,7 +106,7 @@ you can this in the source code of this page):</p>
 <p>and replace my app ID by yours and my Facebook account ID by yours (<a href="/how-to-get-your-facebook-id" title="How to get your Facebook ID">How to get your Facebook ID</a>).
 The second line determine who will be able to manage the plugin (you!).</p>
 
-<h4 id="step-3-add-the-comments-plugin">Step 3: Add the comments plugin</h4>
+<h2 id="step-3-add-the-comments-plugin">Step 3: Add the comments plugin</h2>
 
 <p>Now that you have set up everything, here is the code you have to paste
 where you want the plugin to show:</p>

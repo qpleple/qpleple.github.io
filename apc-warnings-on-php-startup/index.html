@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,12 +63,12 @@
   <span class="post-date">24 Jun 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>Fix APC warnings complaining about M/G suffixes.</p>
-</blockquote>
+  <p>Here is how to fix APC warnings complaining about M/G suffixes.</p>
 
-<h3 id="the-problem">The problem</h3>
+<h2 id="the-problem">The problem</h2>
 
 <p>The following line gets printed everytime PHP starts (either in your log, in the command line, etc.):</p>
 
@@ -69,7 +77,7 @@
 
 <p>It means that in your <code class="language-plaintext highlighter-rouge">php.ini</code> file, the value of the key <code class="language-plaintext highlighter-rouge">apc.shm_size</code> doesn’t have a unit suffix: <code class="language-plaintext highlighter-rouge">M</code> for megabyte or <code class="language-plaintext highlighter-rouge">G</code> for gigabyte.</p>
 
-<h3 id="the-fix">The fix</h3>
+<h2 id="the-fix">The fix</h2>
 
 <p>Locate your <code class="language-plaintext highlighter-rouge">php.ini</code> file. You may have two of them: one for the web server, the other for the command line (CLI).</p>
 

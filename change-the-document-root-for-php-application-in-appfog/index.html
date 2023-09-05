@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,14 +63,12 @@
   <span class="post-date">12 Mar 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p>AppFog doesn’t allow to edit the virtual host configuration. We need a workaround.</p>
-</blockquote>
 
-<p><img class="pull-right" style="width: 200px" src="/img/logos/appfog.png" /></p>
-
-<h3 id="the-problem">The problem</h3>
+<h2 id="the-problem">The problem</h2>
 
 <p>If you are working with a framework like Symfony2, the front controller <code class="language-plaintext highlighter-rouge">index.php</code> is not in your app root directory:</p>
 
@@ -94,7 +100,7 @@ in the Apache virtual host configuration:</p>
 
 <p>But in AppFog, we can’t edit the virtual host configuration.</p>
 
-<h3 id="the-fix">The fix</h3>
+<h2 id="the-fix">The fix</h2>
 <p>The workaround <a href="https://docs.appfog.com/languages/php">proposed by AppFog</a>
 uses URL rewriting. Let’s add a <code class="language-plaintext highlighter-rouge">.htaccess</code> in the root directory
 <code class="language-plaintext highlighter-rouge">/path/to/my-website</code> to set the document root. Maybe you already have
@@ -117,7 +123,7 @@ going to rewrite the URL: if it doesn’t already start by <code class="language
 condition if true: prepend <code class="language-plaintext highlighter-rouge">web/</code>.</li>
 </ul>
 
-<h3 id="side-note">Side note</h3>
+<h2 id="side-note">Side note</h2>
 
 <p>AppFog proposes this configuration file adding two <code class="language-plaintext highlighter-rouge">RewriteCond</code>
 directives to check the domain names:</p>

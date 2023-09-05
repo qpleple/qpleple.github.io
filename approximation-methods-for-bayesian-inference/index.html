@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -71,13 +79,16 @@
 
   <p>There are two method families to approximate intractable posterior distributions: deterministic methods such as variational inference, and stochastic methods such as sampling methods.</p>
 
-<h3 id="deterministic-methods">Deterministic methods</h3>
-<p>Variational methods come from the mathematical field calculus of variations where the goal is to find the function that optimizes a given numerical quantity. One common variational method is Variational Expectation-Maximization (EM). Standard EM is used to get Maximum Likelihood estimates
-    \(\hat{\boldsymbol{z}}
-        = \mathop{\arg\\!\max}\_{\boldsymbol{z}} p(\boldsymbol{x} |\boldsymbol{z}).\)
-But when the model gets complicated, computing the posterior $p(\boldsymbol{z}|\boldsymbol{x})$ in the E step becomes computationally intractable. Variational Bayes approximates the posterior by removing some dependencies between some variables of the model to get a tractable distribution $q(\boldsymbol z)$ over the space of hidden variables $\boldsymbol z$. Variational EM approach approximates the posterior by considering a parameterized family of tractable distributions [<a href="/bib#Bishop06">Bishop06</a>].</p>
+<h2 id="deterministic-methods">Deterministic methods</h2>
+<p>Variational methods come from the mathematical field calculus of variations where the goal is to find the function that optimizes a given numerical quantity. One common variational method is Variational Expectation-Maximization (EM). Standard EM is used to get Maximum Likelihood estimates</p>
 
-<h3 id="stochastic-methods">Stochastic methods</h3>
+\[\hat{\boldsymbol{z}}
+    = \mathop{\arg\max}_{\boldsymbol{z}} p(\boldsymbol{x} |\boldsymbol{z}).\]
+
+<p>But when the model gets complicated,
+computing the posterior $p(\boldsymbol{z}|\boldsymbol{x})$ in the E step becomes computationally intractable. Variational Bayes approximates the posterior by removing some dependencies between some variables of the model to get a tractable distribution $q(\boldsymbol z)$ over the space of hidden variables $\boldsymbol z$. Variational EM approach approximates the posterior by considering a parameterized family of tractable distributions [<a href="/bib#Bishop06">Bishop06</a>].</p>
+
+<h2 id="stochastic-methods">Stochastic methods</h2>
 <p>Gibbs sampling is a Markov Chain Monte Carlo algorithm [<a href="/bib#Geman84">Geman84</a>] that repeatedly picks one hidden variable $z_i$ at random and samples it from the distribution of that variable conditioned on all other hidden variables $\boldsymbol{z}_{-i}$ and the observation $\boldsymbol x$.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>initialize z randomly

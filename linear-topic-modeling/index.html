@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -75,13 +83,15 @@
 
 <p>In this model, documents are converted to the bag-of-words format which ignores the ordering of words and only keeps the word counts.</p>
 
-<h3 id="singular-value-decomposition">Singular Value Decomposition.</h3>
-<p>The most common way is to use the Singular Value Decomposition (SVD) of
-    \(\boldsymbol X
-    = \boldsymbol U \boldsymbol \Sigma \boldsymbol V^T\)
-where $\boldsymbol U$ and $\boldsymbol V$ are orthonormal matrices and $\boldsymbol \Sigma$ is diagonal. By selecting only the $K$ largest singular values from $\boldsymbol \Sigma$ and the corresponding vectors in $\boldsymbol U$ and $\boldsymbol V^T$, we get the best rank $K$ approximation of matrix $\boldsymbol X$ according to the loss $\Vert \boldsymbol X - \tilde{\boldsymbol X}\Vert_2^2$.  Rows of $\boldsymbol U$ represent documents in a $K$-dimensional space, and columns of $\boldsymbol V^T$ represents the topics in the same space. Each document can be expressed as a linear combination of topics.</p>
+<h2 id="singular-value-decomposition">Singular Value Decomposition.</h2>
+<p>The most common way is to use the Singular Value Decomposition (SVD) of</p>
 
-<h3 id="non-negative-matrix-factorization">Non-negative Matrix Factorization.</h3>
+\[\boldsymbol X
+= \boldsymbol U \boldsymbol \Sigma \boldsymbol V^T\]
+
+<p>where $\boldsymbol U$ and $\boldsymbol V$ are orthonormal matrices and $\boldsymbol \Sigma$ is diagonal. By selecting only the $K$ largest singular values from $\boldsymbol \Sigma$ and the corresponding vectors in $\boldsymbol U$ and $\boldsymbol V^T$, we get the best rank $K$ approximation of matrix $\boldsymbol X$ according to the loss $\Vert \boldsymbol X - \tilde{\boldsymbol X}\Vert_2^2$.  Rows of $\boldsymbol U$ represent documents in a $K$-dimensional space, and columns of $\boldsymbol V^T$ represents the topics in the same space. Each document can be expressed as a linear combination of topics.</p>
+
+<h2 id="non-negative-matrix-factorization">Non-negative Matrix Factorization.</h2>
 <p>Another common approach is to use use Non-negative Matrix Factorization (NMF) on the document-word matrix $\boldsymbol X$ [<a href="/bib#Lee99">Lee99</a>] [<a href="/bib#Pauca04">Pauca04</a>]. Here, $\tilde{\boldsymbol X} = \boldsymbol U \boldsymbol V$ where $\boldsymbol U$ represents the topics and $\boldsymbol V$ the documents, both being non-negative matrices.</p>
 
 </div>

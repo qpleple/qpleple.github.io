@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -56,16 +64,14 @@
 
   
 
-  <blockquote>
   <p>Cet article présente comment on peut écouter le trafic entrant et sortant d’un ordinateur de son sous-réseau.</p>
-</blockquote>
 
 <p>On ne peut pas vraiment s’en protéger, il faut juste savoir que ça existe.
 Rassurez vous, même
 si un pirate peut voir tout votre flux internet même le crypté, il ne
 pourra pas décoder les flux sécurisés. Cela englobe tout ce que est
 HTTPS (site où un petit cadenas s’affiche dans le navigateur), SSH,
-etc… Rassurez vous, votre mot de passe bancaire est bien protégé !</p>
+etc… Rassurez vous, votre mot de passe bancaire est bien protégé !</p>
 
 <p>Il faut être dans le même sous-réseau que l’une au moins des deux
 extrémités de la communication, qui sera alors notre cible. Pour
@@ -77,7 +83,7 @@ paquets de différents protocoles (dans notre cas ARP). Pour obtenir
 l’utilitaire nemesis sous Mac, vous pouvez par exemple <a href="http://www.macports.org/install.php">utiliser
 MacPorts</a>.</p>
 
-<h3 id="principe">Principe</h3>
+<h2 id="principe">Principe</h2>
 
 <p>Les communications dans un même sous-réseau se font avec les adresses
 MAC (niveau 2), les adresses IP (niveau 3) étant en quelques sorte
@@ -88,11 +94,15 @@ première fois, il ne connait en général que son adresse IP. Il va donc
 envoyer à tout le monde sur le sous-réseau un message du type (requête
 ARP) :</p>
 
-<p><em>Quelle a l’adresse MAC de 192.168.0.2 ? Répondre à 192.168.0.3.</em></p>
+<blockquote>
+  <p>Quelle a l’adresse MAC de 192.168.0.2 ? Répondre à 192.168.0.3.</p>
+</blockquote>
 
 <p>et 192.168.0.2 va se reconnaitre et répondre un message du type :</p>
 
-<p><em>192.168.0.2 a l’adresse MAC 00:00:00:00:00:03</em></p>
+<blockquote>
+  <p>192.168.0.2 a l’adresse MAC 00:00:00:00:00:03</p>
+</blockquote>
 
 <p>L’expéditeur obtient ainsi l’adresse MAC du destinataire et peux lui
 envoyer le paquet. Pour éviter d’envoyer des requêtes ARP à chaque fois
@@ -111,11 +121,13 @@ adresse MAC</li>
 <p>Tous les paquets vont donc nous arriver dessus, il suffira ensuite de
 les faire suivre au bon destinataire.</p>
 
-<h3 id="1-prendre-lidentité-de-la-cible-auprès-de-la-passerelle">1. Prendre l’identité de la cible auprès de la passerelle</h3>
+<h2 id="1-prendre-lidentité-de-la-cible-auprès-de-la-passerelle">1. Prendre l’identité de la cible auprès de la passerelle</h2>
 
 <p>C’est fait en envoyant à la passerelle des paquets qui signifient :</p>
 
-<p><em>Je suis la cible (192.168.0.2) et mon adresse MAC est 00:00:00:00:00:03</em></p>
+<blockquote>
+  <p>Je suis la cible (192.168.0.2) et mon adresse MAC est 00:00:00:00:00:03</p>
+</blockquote>
 
 <p>c’est notre adresse MAC ! Ceci se fait avec la commande <code class="language-plaintext highlighter-rouge">nemesis</code> entrée
 avec les options suivantes :</p>
@@ -135,14 +147,16 @@ adresse MAC (encore par un message ARP), ce paquet doit être réinjecté
 régulièrement à l’aide par exemple d’une boucle qui répète toutes les 2
 secondes la commande <code class="language-plaintext highlighter-rouge">commande</code> :</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while true; do commande; sleep 2; done;
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>commande<span class="p">;</span> <span class="nb">sleep </span>2<span class="p">;</span> <span class="k">done</span><span class="p">;</span>
 </code></pre></div></div>
 
-<h3 id="2-prendre-lidentité-de-la-passerelle-auprès-de-la-cible">2. Prendre l’identité de la passerelle auprès de la cible</h3>
+<h2 id="2-prendre-lidentité-de-la-passerelle-auprès-de-la-cible">2. Prendre l’identité de la passerelle auprès de la cible</h2>
 
 <p>C’est fait en envoyant à la passerelle des paquets qui signifient :</p>
 
-<p><em>Je suis la passerelle (192.168.0.1) et mon adresse MAC est 00:00:00:00:00:03</em></p>
+<blockquote>
+  <p>Je suis la passerelle (192.168.0.1) et mon adresse MAC est 00:00:00:00:00:03</p>
+</blockquote>
 
 <p>c’est encore notre adresse MAC ! Ceci se fait avec la commande <code class="language-plaintext highlighter-rouge">nemesis</code>
 entrée avec les options suivantes :</p>
@@ -160,7 +174,7 @@ entrée avec les options suivantes :</p>
 <p>De la même façon, il faut que ce paquet soit régulièrement injecté dans
 le réseau en utilisant par exemple une boucle comme à l’étape 1.</p>
 
-<h3 id="3-routage">3. Routage</h3>
+<h2 id="3-routage">3. Routage</h2>
 
 <p>A ce stade là, tous les paquets envoyés par la cible (resp. la
 passerelle) à la passerelle (resp. la cible) sont adressés à notre

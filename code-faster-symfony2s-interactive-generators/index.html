@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -58,30 +66,24 @@
     <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
   
 
-  <p><img class="pull-right" style="width: 100px" src="/img/logos/symfony2.png" /></p>
-
-<p>When building a Symfony2 application, there are some tasks that you always
+  <p>When building a Symfony2 application, there are some tasks that you always
 do. In the lifetime of every project, you will create around 2 bundles,
 5 and 10 entities, and for almost all entities, you will implement a
 CRUD (Create, Read, Update, Delete) interface with controllers and
-templates to deal with them. Symonfy2’s interactive generators save you
+templates to deal with them.</p>
+
+<p>Symonfy2’s interactive generators save you
 a lot of time. Currently, there are 3 of them:</p>
 
 <ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">generate:bundle</code> generates a new bundle</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">generate:doctrine:entity</code> generates a new entity</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">generate:doctrine:crud</code> generates a CRUD based on an entity</p>
-  </li>
+  <li><code class="language-plaintext highlighter-rouge">generate:bundle</code> generates a new bundle</li>
+  <li><code class="language-plaintext highlighter-rouge">generate:doctrine:entity</code> generates a new entity</li>
+  <li><code class="language-plaintext highlighter-rouge">generate:doctrine:crud</code> generates a CRUD based on an entity</li>
 </ul>
 
 <p>Before starting, get excited by watching <a href="http://symfony.com/blog/symfony2-getting-easier-interactive-generators">the screencast made by the Symfony2 team</a>.</p>
 
-<h3 id="new-bundle">New Bundle</h3>
+<h2 id="new-bundle">New Bundle</h2>
 
 <p>To create a new bundle, run the command:</p>
 
@@ -113,7 +115,7 @@ you can start to play with:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello !
 </code></pre></div></div>
 
-<h3 id="new-entity">New Entity</h3>
+<h2 id="new-entity">New Entity</h2>
 
 <p>Instead of creating all your entities by creating and editing the PHP
 files in <code class="language-plaintext highlighter-rouge">MyBundle/Entity</code>, just run the command:</p>
@@ -185,7 +187,7 @@ the question:</p>
 <span class="kd">class</span> <span class="nc">PostRepository</span> <span class="kd">extends</span> <span class="nc">EntityRepository</span> <span class="p">{</span>
 <span class="p">}</span></code></pre></figure>
 
-<h3 id="entity-crud-generator">Entity CRUD generator</h3>
+<h2 id="entity-crud-generator">Entity CRUD generator</h2>
 
 <p>But the real time saver is the CRUD generator. You run the command:</p>
 

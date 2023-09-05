@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,21 +63,18 @@
   <span class="post-date">11 Mar 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>A tutorial to get you started with AppFog in PHP.</p>
-</blockquote>
+  <p>A tutorial to get you started with AppFog in PHP. And because “Hello World” is boring, I’ll do a “Drink Coffee” app!</p>
 
-<p>It’s all free. And because “Hello World” is boring, I’ll do a “Drink Coffee”
-app!</p>
-
-<h3 id="command-line-tool">Command line tool</h3>
+<h2 id="command-line-tool">Command line tool</h2>
 <p>After creating an account on AppFog, install <a href="https://docs.appfog.com/getting-started/af-cli#installation">AppFog’s command line
 tool</a> by
 following their instructions. Depending on your system, it can be either
 very easy or quite a pain. Good luck!</p>
 
-<h3 id="php-app">PHP app</h3>
+<h2 id="php-app">PHP app</h2>
 <p>Once you have <code class="language-plaintext highlighter-rouge">af</code> installed, log in by</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>af login
@@ -86,7 +91,7 @@ Successfully logged into <span class="o">[</span>https://api.appfog.com]
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'&lt;?php echo "Drink coffee!"; ?&gt;'</span> <span class="o">&gt;</span> index.php
 </code></pre></div></div>
 
-<h3 id="deploying">Deploying</h3>
+<h2 id="deploying">Deploying</h2>
 
 <p>Then deploy! (Default values are all good)</p>
 
@@ -126,7 +131,7 @@ Starting Application <span class="s1">'drink-coffee'</span>: OK
     <img src="/img/post-deploy-a-toy-php-application-on-appfog/appfog.png" />
 </div>
 
-<h3 id="updating">Updating</h3>
+<h2 id="updating">Updating</h2>
 
 <p>Updating your application is easy as well.</p>
 

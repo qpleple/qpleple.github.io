@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -88,7 +96,7 @@
 <p><a id="Hofmann99"></a></p>
 <h4 id="paper-hofmann99">Paper <code class="language-plaintext highlighter-rouge">Hofmann99</code></h4>
 
-<p>Introduced pLSI, a probabilistic topic model based on the following generative process. No priors on $\boldsymbol \theta_d$ and $\boldsymbol \phi_k$.</p>
+<p>Introduced pLSI, a probabilistic topic model based on the following generative process. No priors on $\boldsymbol \theta_d$ and $\boldsymbol \varphi_k$.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for document d = 1..D:
   for position i = 1..N in document d:
@@ -102,9 +110,9 @@
 <p>Proved the equivalence between pLSI and NMF, by showing that they both optimize the same objective function. As they are different algorithms, this allow to design an hybrid method alternating between NMF and pLSI, every time jumping out of the local optimum of the other method.</p>
 
 <h3 id="lda">LDA</h3>
-<p>Chronologically, Blei, Ng and Jordan first published [<a href="#Blei02">Blei02</a>] presenting LDA in <em>NIPS</em> treating topics $\boldsymbol \phi_k$ as free parameters.
-Shortly after, Griffiths and Steyvers published [<a href="#Griffiths02a">Griffiths02a</a>] and [<a href="#Griffiths02b">Griffiths02b</a>] extending this model by adding a symmetric Dirichlet prior on $\boldsymbol \phi_k$.
-Finally, Blei, Ng and Jordan published an extended version [<a href="#Blei03">Blei03</a>] of their first paper in <em>Journal of Machine Learning Research</em> (by far the most cited LDA paper) with a section on having this Dirichlet smoothing on multinomial parameters $\boldsymbol \phi_k$.</p>
+<p>Chronologically, Blei, Ng and Jordan first published [<a href="#Blei02">Blei02</a>] presenting LDA in <em>NIPS</em> treating topics $\boldsymbol \varphi_k$ as free parameters.
+Shortly after, Griffiths and Steyvers published [<a href="#Griffiths02a">Griffiths02a</a>] and [<a href="#Griffiths02b">Griffiths02b</a>] extending this model by adding a symmetric Dirichlet prior on $\boldsymbol \varphi_k$.
+Finally, Blei, Ng and Jordan published an extended version [<a href="#Blei03">Blei03</a>] of their first paper in <em>Journal of Machine Learning Research</em> (by far the most cited LDA paper) with a section on having this Dirichlet smoothing on multinomial parameters $\boldsymbol \varphi_k$.</p>
 
 <p><a id="Blei02"></a></p>
 <h4 id="paper-blei02">Paper <code class="language-plaintext highlighter-rouge">Blei02</code></h4>
@@ -114,7 +122,7 @@ Finally, Blei, Ng and Jordan published an extended version [<a href="#Blei03">Bl
 <p><a id="Griffiths02a"></a></p>
 <h4 id="paper-griffiths02a">Paper <code class="language-plaintext highlighter-rouge">Griffiths02a</code></h4>
 
-<p>Derive a Gibbs sampler for LDA and introduce Dirichlet prior on topics $\boldsymbol \phi_k$.</p>
+<p>Derive a Gibbs sampler for LDA and introduce Dirichlet prior on topics $\boldsymbol \varphi_k$.</p>
 
 <p><a id="Griffiths02b"></a></p>
 <h4 id="paper-griffiths02b">Paper <code class="language-plaintext highlighter-rouge">Griffiths02b</code></h4>

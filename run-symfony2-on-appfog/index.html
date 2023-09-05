@@ -9,7 +9,7 @@
 
   <title>
     
-      Run Symfony2 On Appfog &middot; Quentin Pleplé
+      Run Symfony2 on AppFog? &middot; Quentin Pleplé
     
   </title>
 
@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -51,14 +59,14 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Run Symfony2 On Appfog</h1>
+  <h1 class="post-title">Run Symfony2 on AppFog?</h1>
   <span class="post-date">12 Mar 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
   <p><strong>TL;DR</strong> You can’t (no shell access to run commands).</p>
-</blockquote>
 
 <p>I have been trying to deploy a Symfony2 application on AppFog. I tried first <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">a PHP Hello World</a>, it was pretty easy. Then <a href="/deploy-a-new-wordpress-blog-on-appfog/" title="Deploy a new WordPress blog on AppFog">deploying a Wordpress</a> was a little bit more challenging as you have to automatically hook up the database to Wordpress and <a href="/have-your-wordpress-static-files-on-amazon-s3/" title="Have your WordPress static files on Amazon S3">tell Wordpress to use S3</a> to host any static content (AppFog does not offer persistent storage yet). But a complete Symfony2 application is a lot harder.</p>
 

@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -63,7 +71,7 @@ install a Facebook plugin on your website or if you develop a Facebook
 application. To get your Facebook ID, go to the <a href="http://developers.facebook.com/docs/reference/api/#reading">Facebook API reference page</a>, look for the link <code class="language-plaintext highlighter-rouge">graph.facebook.com/me</code> (right above the Pictures title)
 and click it. You can then see your Facebook ID:</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"</span><span class="s">id"</span><span class="err">:</span> <span class="s2">"</span><span class="s">1536397056"</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"id": "1536397056"
 </code></pre></div></div>
 
 <h3 id="why-do-i-get-an-error-if-i-go-directly-to-graphfacebookcomme">Why do I get an error if I go directly to <a href="https://graph.facebook.com/me">graph.facebook.com/me</a>?</h3>

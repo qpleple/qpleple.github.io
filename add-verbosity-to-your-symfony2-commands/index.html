@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -55,14 +63,12 @@
   <span class="post-date">15 Nov 2011</span>
 
   
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>How to use Symfony2’s built-in verbose command line parameter to control verbosity in your commands.</p>
-</blockquote>
+  <p>Here is how to use Symfony2’s built-in verbose command line parameter to control verbosity in your commands.</p>
 
-<p><img class="pull-right" style="width: 200px" src="/img/post-add-verbosity-to-your-symfony2-commands/blahblah.png" /></p>
-
-<h3 id="your-need">Your need</h3>
+<h2 id="your-need">Your need</h2>
 
 <p>Let’s say you want a lot of detail when you run a command manually in
 order to debug or even to see what is happening. But you don’t want so
@@ -75,7 +81,7 @@ be logged but you don’t want as much detail as previously in logs</li>
 maybe send an email), otherwise you don’t want any output</li>
 </ul>
 
-<h3 id="the-solution">The solution</h3>
+<h2 id="the-solution">The solution</h2>
 
 <p>Symfony2’s command component has a built-in verbose option for command
 that you can find with <code class="language-plaintext highlighter-rouge">list</code> commande</p>

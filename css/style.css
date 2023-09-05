@@ -44,3 +44,21 @@ b, strong {
     background-color: #fff3cd;
     color: #856404;
 }
+
+
+p.figure, p.figure-sm {
+    text-align: center;
+}
+
+p.figure-sm img {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+p.figure img {
+    margin-bottom: 0;
+}
+
+figure {
+    margin: 0;
+}

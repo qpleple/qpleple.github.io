@@ -45,7 +45,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -102,21 +110,21 @@ for word $w$ within topic $k$ as being the frequency divided by the exponential 
 
 <h3 id="computation-of-word-relevance-measure">Computation of word relevance measure</h3>
 <p>Let’s see how to express relevance $\mathcal R(w|k)$ in terms of LDA parameters. The numerator is straightforward
-    \(\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H\_w}} = \frac{\phi\_{kw}}{e^{H\_w}}\)
+    \(\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H\_w}} = \frac{\varphi\_{kw}}{e^{H\_w}}\)
 Now, computing the entropy
     \(E\_w = \sum\_k p(k|w) \log p(k|w)\)
 requires applying Bayes rule on $p(k|w)$:
 \(\begin{aligned}
     p(k|w) &amp; \propto p(w|k) \ p(k)\\\
-    &amp; = \phi\_{kw} \ \sum\_d p(k|d) p(d)\\\
-    &amp; \propto \phi\_{kw} \ \sum\_d \theta\_{dk} N\_d
+    &amp; = \varphi\_{kw} \ \sum\_d p(k|d) p(d)\\\
+    &amp; \propto \varphi\_{kw} \ \sum\_d \theta\_{dk} N\_d
 \end{aligned}\)
 where $N_d$ is the length of document.
 Recombining the results, we get a procedure to compute the relevance score:</p>
 
 <ol>
   <li>Compute topic-distribution given word $w$:
- \(p(k|w) \propto \phi\_{kw} \ \sum\_d \theta\_{dk} N\_d\)</li>
+ \(p(k|w) \propto \varphi\_{kw} \ \sum\_d \theta\_{dk} N\_d\)</li>
   <li>Compute its entropy:
  \(H\_w \triangleq \sum\_k p(k|w) \log p(k|w)\)</li>
   <li>Divide the frequency of word $w$ within topic $k$ by the exponential entropy:

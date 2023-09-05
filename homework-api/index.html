@@ -9,7 +9,7 @@
 
   <title>
     
-      Homework API &middot; Quentin Pleplé
+      Project: Homework API &middot; Quentin Pleplé
     
   </title>
 
@@ -32,7 +32,15 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKRZ09F5F1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XKRZ09F5F1');
+  </script>
 </head>
 
 
@@ -51,13 +59,17 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Homework API</h1>
+  <h1 class="post-title">Project: Homework API</h1>
   <span class="post-date">15 Jun 2011</span>
 
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
   
 
   <p>This API is an interface to order some homework to be done. See the
 <a href="http://www.mashape.com/apis/Getting%20Homework%20Done">hosted version on Mashape</a>.</p>
+
+<p><a href="http://github.com/qpleple/homework-api">See project on github</a></p>
 
 <h3 id="usage">Usage</h3>
 
@@ -66,8 +78,7 @@ containing the exercise will issue a job id. An notification email is
 sent to the API host with the id of the new homework. You can check the
 status (<code class="language-plaintext highlighter-rouge">pending</code> or <code class="language-plaintext highlighter-rouge">done</code>) of the job with a GET request on
 <code class="language-plaintext highlighter-rouge">/status/{id}</code>. You can get the solution of the exercise when the job is
-done with a GET request on <code class="language-plaintext highlighter-rouge">/solution/{id}</code>. Powered by
-[mashape.com]((http://www.mashape.com/) API Framework.</p>
+done with a GET request on <code class="language-plaintext highlighter-rouge">/solution/{id}</code>. Powered by <a href="http://www.mashape.com/">mashape.com</a> API Framework.</p>
 
 <h3 id="installation">Installation</h3>
 
