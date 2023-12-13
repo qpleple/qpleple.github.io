@@ -62,3 +62,8 @@ p.figure img {
 figure {
     margin: 0;
 }
+
+/* Hide line numbers in gists */
+.js-line-number {
+    display: none;
+}

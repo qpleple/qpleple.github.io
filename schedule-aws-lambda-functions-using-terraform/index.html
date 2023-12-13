@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Schedule AWS Lambda Functions Using Terraform &middot; Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/schedule-aws-lambda-functions-using-terraform/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Schedule AWS Lambda Functions Using Terraform</h1>
+  <span class="post-date">13 Dec 2023</span>
+
+  
+
+  <p>Managing AWS Lambda functions efficiently is crucial for modern cloud architectures. In this post, we’ll show how to make a simple homemade Terraform module that simplifies the scheduling of AWS Lambda functions using CloudWatch Events. This approach is particularly useful for tasks like periodic data processing, automated backups, or any other operation that requires regular execution.</p>
+
+<p>Below is a basic usage example, where the module is configured to trigger an AWS Lambda function named <code class="language-plaintext highlighter-rouge">lambda-function-name</code> at 3 AM UTC every day:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span> <span class="s2">"schedule-lambda-update-reporting"</span> <span class="p">{</span>
+  <span class="nx">source</span>              <span class="p">=</span> <span class="s2">"../path/to/modules/schedule-lambda"</span>
+  <span class="nx">function_name</span>       <span class="p">=</span> <span class="s2">"lambda-function-name"</span>
+  <span class="nx">schedule_expression</span> <span class="p">=</span> <span class="s2">"cron(0 3 * * ? *)"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="variables">Variables</h2>
+<p>The module utilizes two variables:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">function_name</code>: The name of the Lambda function to be scheduled.</li>
+  <li><code class="language-plaintext highlighter-rouge">schedule_expression</code>: A cron or rate expression that defines the schedule.</li>
+</ul>
+
+<p>These variables offer flexibility, allowing for easy integration into various workflows.</p>
+
+<h2 id="module-code">Module code</h2>
+
+<p>The module fixes versions of Terraform and AWS prodiver, ensuring compatibility with the latest AWS features and best practices.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+  <span class="nx">required_version</span> <span class="p">=</span> <span class="s2">"&gt;= 1.5"</span>
+
+  <span class="nx">required_providers</span> <span class="p">{</span>
+    <span class="nx">aws</span> <span class="p">=</span> <span class="p">{</span>
+      <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/aws"</span>
+      <span class="nx">version</span> <span class="p">=</span> <span class="s2">"&gt;= 4.67.0"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>First, retrieve details of an existing AWS Lambda function from its name using the <code class="language-plaintext highlighter-rouge">aws_lambda_function</code> data source. This step ensures that the module targets the correct Lambda function for scheduling.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">data</span> <span class="s2">"aws_lambda_function"</span> <span class="s2">"this"</span> <span class="p">{</span>
+  <span class="nx">function_name</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">function_name</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Next, create a CloudWatch Event Rule. This rule defines when the Lambda function should be triggered. The <code class="language-plaintext highlighter-rouge">schedule_expression</code> variable allows for flexible scheduling configurations (see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html">AWS documentation for expressions</a>).</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"aws_cloudwatch_event_rule"</span> <span class="s2">"this"</span> <span class="p">{</span>
+  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"schedule-${var.function_name}"</span>
+  <span class="nx">schedule_expression</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">schedule_expression</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then create a <code class="language-plaintext highlighter-rouge">aws_cloudwatch_event_target</code> resource linking the created Event Rule to the Lambda function. It specifies the Lambda function as the target for the events generated based on the defined schedule.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"aws_cloudwatch_event_target"</span> <span class="s2">"this"</span> <span class="p">{</span>
+  <span class="nx">target_id</span> <span class="p">=</span> <span class="s2">"event-target-${var.function_name}"</span>
+  <span class="nx">rule</span>      <span class="p">=</span> <span class="nx">aws_cloudwatch_event_rule</span><span class="err">.</span><span class="nx">this</span><span class="err">.</span><span class="nx">name</span>
+  <span class="nx">arn</span>       <span class="p">=</span> <span class="nx">data</span><span class="err">.</span><span class="nx">aws_lambda_function</span><span class="err">.</span><span class="nx">this</span><span class="err">.</span><span class="nx">arn</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Lastly, for the CloudWatch Event Rule to invoke the Lambda function, the correct permissions must be set. This is accomplished through the <code class="language-plaintext highlighter-rouge">aws_lambda_permission</code> resource.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"aws_lambda_permission"</span> <span class="s2">"lambda-update-reporting"</span> <span class="p">{</span>
+  <span class="nx">action</span>        <span class="p">=</span> <span class="s2">"lambda:InvokeFunction"</span>
+  <span class="nx">function_name</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">function_name</span>
+  <span class="nx">principal</span>     <span class="p">=</span> <span class="s2">"events.amazonaws.com"</span>
+  <span class="nx">source_arn</span>    <span class="p">=</span> <span class="nx">aws_cloudwatch_event_rule</span><span class="err">.</span><span class="nx">this</span><span class="err">.</span><span class="nx">arn</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="complete-code">Complete code</h2>
+
+<p>Here is the complete code for the module</p>
+
+<script src="https://gist.github.com/qpleple/64befaababa03878a373dc69ff300055.js"></script>
+
+
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>
