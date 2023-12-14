@@ -81,62 +81,85 @@
 
 <p>One can classify the methods addressing this problem into two categories. <em>Intrinsic</em> methods that do not use any external source or task from the dataset, whereas <em>extrinsic</em> methods use the discovered topics for external tasks, such as information retrieval [<a href="/bib#Wei06">Wei06</a>], or use external statistics to evaluate topics.</p>
 
-<p>As an early intrinsic method, [<a href="/bib#Alsumait09">Alsumait09</a>] define measures based on three prototypes of junk and insignificant topics. The three prototypes for junk topics are the uniform word-distribution, the empirical corpus word-distribution, and the uniform document-distribution:
-    \(p(w | \text{topic}) \propto 1
-        \qquad
-        p(w | \text{topic}) \propto \text{count}(w \text{ in corpus})
-        \qquad
-        p(d | \text{topic}) \propto 1\)
-Then a topic significance score is computed from various dissimilarities and similarities (KL divergence, cosine, and correlation) to these three prototypes. However, the significance score is a complicated function with free parameters, that seem to be arbitrarily chosen, so the risk of overfitting the two datasets used for experiments is high.</p>
+<p>As an early intrinsic method, [<a href="/bib#Alsumait09">Alsumait09</a>] define measures based on three prototypes of junk and insignificant topics. The three prototypes for junk topics are the uniform word-distribution, the empirical corpus word-distribution, and the uniform document-distribution:</p>
+
+\[p(w | \text{topic}) \propto 1
+    \qquad
+    p(w | \text{topic}) \propto \text{count}(w \text{ in corpus})
+    \qquad
+    p(d | \text{topic}) \propto 1\]
+
+<p>Then a topic significance score is computed from various dissimilarities and similarities (KL divergence, cosine, and correlation) to these three prototypes. However, the significance score is a complicated function with free parameters, that seem to be arbitrarily chosen, so the risk of overfitting the two datasets used for experiments is high.</p>
 
 <h3 id="topic-coherence">Topic coherence</h3>
 
-<p>The state-of-the-art in terms of topic coherence are the intrinsic measure UMass and the extrinsic measure UCI, both based on the same high level idea. Both measure compute the sum
-    \(\text{Coherence} = \sum\_{i \lt j} \text{score}(w\_i, w\_j)\)
-of pairwise scores on the words $w_1$, …, $w_n$ used to describe the topic, usually the top $n$ words by frequency $p(w|k)$. This measure can be seen as the sum of all edges on complete graph.</p>
+<p>The state-of-the-art in terms of topic coherence are the intrinsic measure UMass and the extrinsic measure UCI, both based on the same high level idea. Both measure compute the sum</p>
 
-<div class="text-center" style="margin: 20px 0">
-    <img src="/img/thesis/complete-graph.png" style="height: 350px" />
-    <p class="img-legend">Both topic coherence measures UCI and UMass are based on the sum $\sum_{i \lt j} \text{score}(w_i, w_j)$ of the pairwise scores of the $n$ top words $w_1$, ..., $w_n$ of the topic.</p>
-</div>
+\[\text{Coherence} = \sum_{i \lt j} \text{score}(w_i, w_j)\]
+
+<p>of pairwise scores on the words $w_1$, …, $w_n$ used to describe the topic, usually the top $n$ words by frequency $p(w|k)$. This measure can be seen as the sum of all edges on complete graph.</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/complete-graph.png" />
+<small>Both topic coherence measures UCI and UMass are based on<br />
+the sum $\sum_{i \lt j} \text{score}(w_i, w_j)$ of the pairwise scores<br />
+of the $n$ top words $w_1$, ..., $w_n$ of the topic.</small>
+</p>
 
 <p><em>Notation.</em> Let’s define $D(w_i)$ as the count of documents containing the word $w_i$, $D(w_i, w_j)$ the count of documents containing both words $w_i$ and $w_j$, and $D$ the total number or documents in the corpus. The corpus used to compute the counts is specified in a subscript of symbol $D$. For example, $D_{\text{Wikipedia}}(w_i)$ it the count of documents of the Wikipedia corpus containing the word $w_i$. When no subscript is specified, the corpus used is the corpus on which the model have been trained.</p>
 
 <h3 id="extrinsic-uci-measure">Extrinsic UCI measure</h3>
-<p>The UCI measure introduced by [<a href="/bib#Newman10a">Newman10a</a>] uses as pairwise score function the Pointwise Mutual Information (PMI)
-    \(\text{score}\_{\text{UCI}}(w\_i, w\_j)  = \log \frac{p(w\_i, w\_j)}{p(w\_i)p(w\_j)}\)
-where $p(w)$ represents the probability of seeing $w_i$ in a random document, and $p(w_i, w_j)$ the probability of seeing both $w_i$ and $w_j$ co-occurring in a random document. Those probabilities are empirically estimated from an external dataset such as Wikipedia:
-    \(p(w\_i) = \frac{D\_{\text{Wikipedia}}(w\_i)}{D\_{\text{Wikipedia}}}
-    \qquad
-    \text{and}
-    \qquad
-    p(w\_i, w\_j) = \frac{D\_{\text{Wikipedia}}(w\_i, w\_j)}{D\_{\text{Wikipedia}}}.\)</p>
+<p>The UCI measure introduced by [<a href="/bib#Newman10a">Newman10a</a>] uses as pairwise score function the Pointwise Mutual Information (PMI)</p>
+
+\[\text{score}_{\text{UCI}}(w_i, w_j)  = \log \frac{p(w_i, w_j)}{p(w_i)p(w_j)}\]
+
+<p>where $p(w)$ represents the probability of seeing $w_i$ in a random document, and $p(w_i, w_j)$ the probability of seeing both $w_i$ and $w_j$ co-occurring in a random document. Those probabilities are empirically estimated from an external dataset such as Wikipedia:</p>
+
+\[p(w_i) = \frac{D_{\text{Wikipedia}}(w_i)}{D_{\text{Wikipedia}}}
+\qquad
+\text{and}
+\qquad
+p(w_i, w_j) = \frac{D_{\text{Wikipedia}}(w_i, w_j)}{D_{\text{Wikipedia}}}.\]
 
 <p>Given the score function, we are free to choose the corpus to compute the empirical probabilities.
 [<a href="/bib#Newman10a">Newman10a</a>] chose three external corpus to evaluate them (Wikipedia, Google 2-grams, and Medline) but not the corpus that generated the topics. The argument given is that using the same dataset would reinforce noise or unusual word statistics. However, some intrinsic topic coherence measures have been developed since, that are also better correlated to human judgment than perplexity [<a href="/bib#Mimno11a">Mimno11a</a>] (see next section).
 It may be worth comparing intrinsic and extrinsic PMI-based measures.</p>
 
 <h3 id="intrinsic-umass-measure">Intrinsic UMass measure</h3>
-<p>The UMass measure introduced by [<a href="/bib#Mimno11a">Mimno11a</a>] uses as pairwise score function
-    \(\text{score}\_{\text{UMass}}(w\_i, w\_j) =
-    \log
-    \frac{D(w\_i, w\_j) + 1}{D(w\_i)}\)
-which is the empirical conditional log-probability $\log p(w_j|w_i) = \log \frac{p(w_i, w_j)}{p(w_i)}$ smoothed by adding one to $D(w_i, w_j)$.</p>
+<p>The UMass measure introduced by [<a href="/bib#Mimno11a">Mimno11a</a>] uses as pairwise score function</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>The score function is not symmetric as it is an increasing function of the empirical probability $p(w_j</td>
-      <td>w_i)$, where $w_i$ is more common than $w_j$, words being ordered by decreasing frequency $p(w</td>
-      <td>k)$. So this score measures how much, within the words used to describe a topic, a common word is in average a good predictor for a less common word.</td>
-    </tr>
-  </tbody>
-</table>
+\[\text{score}_{\text{UMass}}(w_i, w_j) =
+\log
+\frac{D(w_i, w_j) + 1}{D(w_i)}\]
+
+<p>which is the empirical conditional log-probability $\log p(w_j|w_i) = \log \frac{p(w_i, w_j)}{p(w_i)}$ smoothed by adding one to $D(w_i, w_j)$.</p>
+
+<p>The score function is not symmetric as it is an increasing function of the empirical probability $p(w_j|w_i)$, where $w_i$ is more common than $w_j$, words being ordered by decreasing frequency $p(w|k)$. So this score measures how much, within the words used to describe a topic, a common word is in average a good predictor for a less common word.</p>
 
 <p>As the pairwise score used by the UMass measure is not symmetric, the order of the arguments matters.
 UMass measure is computing $p(\text{rare word } | \text{ common word})$, how much a common word triggers a rarer word.
 However, in human word association, high frequency words are more likely to be used as response words than low frequency words [<a href="/bib#Steyvers06">Steyvers06</a>].
 It would be interesting to understand the effect of this choice by doing more experiments and comparing the two options.</p>
+
+
+
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "http://qpleple.com//topic-coherence-to-evaluate-topic-models/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/topic-coherence-to-evaluate-topic-models/"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 </div>
       </div>
