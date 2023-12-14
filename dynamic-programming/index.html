@@ -73,15 +73,13 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Dynamic Programming</h1>
-  <span class="post-date">03 Jun 2013</span>
+  <span class="post-date">Jun 3rd, 2013</span>
 
   
 
-  <blockquote>
   <p>Dynamic Programming (DP) problems follow always the same couple of steps. Here they are.</p>
-</blockquote>
 
-<h3 id="i-subproblem-definition">I. Subproblem definition</h3>
+<h2 id="i-subproblem-definition">I. Subproblem definition</h2>
 <p>DP is about remembering the solution of already computed
 problems. To remember them, we store them in an array/matrix.
 Here you define what are your subproblems, ie. how you
@@ -89,20 +87,14 @@ index your matrix. Here are a couple of example, extracted
 from other problems:</p>
 
 <ol>
-  <li>
-    <p>Let $\text{OPT}[i]$ be the maximum profit we can get by building
-coffee shops in blocks from $i$ to $n$.</p>
-  </li>
+  <li>Let $\text{OPT}[i]$ be the maximum profit we can get by building
+coffee shops in blocks $i$ to $n$.</li>
   <li>Let $\text{OPT}[k]$ be the maximum value achievable with a capacity
 of $k$.</li>
-  <li>
-    <p>Let $\text{OPT}[i]$ be the length of the longest increasing subsequence
-starting at $x[i]$.</p>
-  </li>
-  <li>
-    <p>Let $\text{OPT}[i, j]$ be the edit distance between strings
-$x[i…n]$ and $y[j…m]$.</p>
-  </li>
+  <li>Let $\text{OPT}[i]$ be the length of the longest increasing subsequence
+starting at $x[i]$.</li>
+  <li>Let $\text{OPT}[i, j]$ be the edit distance between strings
+$x[i…n]$ and $y[j…m]$.</li>
   <li>Let $\text{OPT}[h, i]$ be the maximum grade we can get by spending $h$
 hours on assignments from $1$ to $i$.</li>
 </ol>
@@ -129,38 +121,66 @@ $x[1…n]$ and $y[1…m]$.</p>
   </li>
 </ol>
 
-<h3 id="ii-recursive-formulation">II. Recursive formulation</h3>
+<h2 id="ii-recursive-formulation">II. Recursive formulation</h2>
 <p>Now that you know what are the subproblems your are going to
 solve (each cell of the array/matrix OPT is a subproblem),
 you need to find a recursive formulation between them.
 Here are the same examples as before:</p>
 
 <ol>
-  <li>
-    <p>Are we building a coffee ship on block $i$?
-If yes, the maximum profit is $\text{Profit}[i] + \text{OPT}[i+d+1]$, if no, it is $\text{OPT}[i+1]$.
-But because we don’t know the answer and we want the maximum profit,
-\(\text{OPT}[i] = \max\big\\{ \text{Profit}[i] + \text{OPT}[i+d+1], \text{OPT}[i+1] \big\\}\)</p>
+  <li>Are we building a coffee ship on block $i$?
+    <ul>
+      <li>If yes, the maximum profit is $\text{Profit}[i] + \text{OPT}[i+d+1]$,</li>
+      <li>if no, it is $\text{OPT}[i+1]$.</li>
+    </ul>
+
+    <p>But because we don’t know the answer and we want the maximum profit,</p>
+
+\[\text{OPT}[i] = \max\big\{ \text{Profit}[i] + \text{OPT}[i+d+1], \text{OPT}[i+1] \big\}\]
+  </li>
+  <li>What is the last item added to the knapsack?
+    <ul>
+      <li>If it is item $i$, the maximum value would be $\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]$.</li>
+    </ul>
+
+    <p>But because we don’t know the answer and we want the maximum value,</p>
+
+\[\text{OPT}[k] = \max_{1\leq i \leq n}\big\{\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]\big\}\]
+  </li>
+  <li>What the next element in the sequence after $a[i]$?
+    <ul>
+      <li>If it is $a[j]$, the maximum length be $1 + \text{OPT}[j]$.</li>
+    </ul>
+
+    <p>But because we don’t know the answer and we want the maximum length,</p>
+
+\[\text{OPT}[i] = \max_{\substack{i&lt;j\\a[i] \leq a[j]}} \big\{ 1 + \text{OPT}[j] \big\}\]
+  </li>
+  <li>What is the optimal alignment for the left-most column?
+    <ul>
+      <li>if it is $(x[i], -)$, then edit distance would be $1 + \text{OPT}[i+1, j]$,</li>
+      <li>if it is $(-, y[j])$, then edit distance would be $1 + \text{OPT}[i, j+1]$,</li>
+      <li>if it is $(x[i], y[j])$, then the edit distance would be $I(x[i] = y[j]) + \text{OPT}[i+1, j+1]$.</li>
+    </ul>
+
+    <p>But because we don’t know the answer and we want the minimum value,</p>
+
+\[\text{OPT}[i,j] = \min \big\{ 1 + \text{OPT}[i+1, j], 1 + \text{OPT}[i, j+1], I(x[i] = y[j]) + \text{OPT}[i+1, j+1] \big\}\]
   </li>
   <li>
-    <p>What is the last item added to the knapsack? If it is item $i$, the maximum value would be $\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]$. But because we don’t know the answer and we want the maximum value,
-\(\text{OPT}[k] = \max_{1\leq i \leq n}\big\\{\text{Value}[i] + \text{OPT}\left[k - \text{Weight}[i]\right]\big\\}\)</p>
-  </li>
-  <li>
-    <p>What the next element in the sequence after $a[i]$? If it is $a[j]$, the maximum length be $1 + \text{OPT}[j]$. But because we don’t know the answer and we want the maximum length,
-\(\text{OPT}[i] = \max_{\substack{i&lt;j\\\\a[i] \leq a[j]}} \big\\{ 1 + \text{OPT}[j] \big\\}\)</p>
-  </li>
-  <li>
-    <p>What is the optimal alignment for the left-most column? If it is $(x[i], -)$, then edit distance would be $1 + \text{OPT}[i+1, j]$. If it is $(-, y[j])$, then edit distance would be $1 + \text{OPT}[i, j+1]$. If it is $(x[i], y[j])$, then the edit distance would be $I(x[i] = y[j]) + \text{OPT}[i+1, j+1]$. But because we don’t know the answer and we want the minimum value,
-\(\text{OPT}[i,j] = \min \big\\{ 1 + \text{OPT}[i+1, j], 1 + \text{OPT}[i, j+1], I(x[i] = y[j]) + \text{OPT}[i+1, j+1] \big\\}\)</p>
-  </li>
-  <li>
-    <p>How many hours are we spending on project $i$? If it is $x$, then the maximum grade would be $G_i[x] + \text{OPT}[h-x, i-1]$. But because we don’t know the answer and we want the maximum value,
-\(\text{OPT}[h,i] = \max\_{1\leq x \leq h} \big\\{ G\_i[x] + \text{OPT}[h-x, i-1] \big\\}\)</p>
+    <p>How many hours are we spending on project $i$?</p>
+
+    <ul>
+      <li>If it is $x$, then the maximum grade would be $G_i[x] + \text{OPT}[h-x, i-1]$.</li>
+    </ul>
+
+    <p>But because we don’t know the answer and we want the maximum value,</p>
+
+\[\text{OPT}[h,i] = \max_{1\leq x \leq h} \big\{ G_i[x] + \text{OPT}[h-x, i-1] \big\}\]
   </li>
 </ol>
 
-<h3 id="iii-algorithm">III. Algorithm</h3>
+<h2 id="iii-algorithm">III. Algorithm</h2>
 <p>It is only when you have defined what are your subproblems and
 given the recursive formulation, that you can think of
 the algorithm.</p>
@@ -175,7 +195,7 @@ the algorithm.</p>
 <span class="k">return</span> <span class="p">...</span>
 </code></pre></div></div>
 
-<h3 id="iv-complexity">IV. Complexity</h3>
+<h2 id="iv-complexity">IV. Complexity</h2>
 <p>Time analysis for DP problems is usually straightforward:</p>
 
 <ul>
@@ -186,7 +206,6 @@ the algorithm.</p>
     <p>time per subproblems?</p>
   </li>
 </ul>
-
 
 
   <div id="disqus_thread"></div>
@@ -204,8 +223,6 @@ the algorithm.</p>
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

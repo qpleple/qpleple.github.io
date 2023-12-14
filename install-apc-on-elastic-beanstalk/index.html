@@ -9,7 +9,7 @@
 
   <title>
     
-      Install APC On Elastic Beanstalk &middot; Quentin Pleplé
+      Install APC On AWS Elastic Beanstalk &middot; Quentin Pleplé
     
   </title>
 
@@ -59,8 +59,8 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Install APC On Elastic Beanstalk</h1>
-  <span class="post-date">16 May 2014</span>
+  <h1 class="post-title">Install APC On AWS Elastic Beanstalk</h1>
+  <span class="post-date">May 16th, 2014</span>
 
   
 
@@ -80,7 +80,7 @@
 
 <h3 id="logs">Logs</h3>
 
-<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>. You should see something like:</p>
+<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextensions/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>. You should see something like:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[DEBUG] Installing/updating [u'php55-pecl-apc'] via yum
 [INFO] Yum installed [u'php55-pecl-apc']
@@ -92,7 +92,6 @@
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum search node
 </code></pre></div></div>
-
 
 
   <div id="disqus_thread"></div>
@@ -110,8 +109,6 @@
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

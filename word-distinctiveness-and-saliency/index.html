@@ -73,21 +73,24 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Word Distinctiveness And Saliency</h1>
-  <span class="post-date">01 Nov 2013</span>
+  <span class="post-date">Nov 1st, 2013</span>
 
   
 
-  <p>In order to find the best informative words of a corpus, [<a href="/bib#Chuang12">Chuang12</a>] first define word <em>distinctiveness</em>
-    \(\mathcal{D}(w)
-        = \sum\_{k}
-        p\left(k|w\right) \log \frac{p(k|w)}{p(k)}
-        = \text{KL}\big(p(k|w) \ \Vert \ p(k)\big)\)
-of a word as the Kullback–Leibler (KL) divergence between, the topic distribution $p(k|w)$ given the word $w$, and the marginal topic distribution $p(k)$, the likelihood that any random word has been drawn from topic $k$. The word distinctiveness measures how much a word is shared across topics. The higher the distinctiveness, the less this word is shared across topics.</p>
+  <p>In order to find the best informative words of a corpus, [<a href="/bib#Chuang12">Chuang12</a>] first define word <em>distinctiveness</em></p>
 
-<p>Then, they define the word <em>saliency</em>
-    \(\mathcal{S}(w) = p(w) \mathcal{D}(w)\)
-of a word $w$ by weighting its frequency by its distinctiveness. Compared to the ranking by frequency $p(w)$, the ranking by saliency $p(w) \mathcal D(w)$ will penalize the words shared across several topics, as they will have a low distinctiveness, and boost words that are good predictors of one topic, as they will have a high distinctiveness.</p>
+\[\mathcal{D}(w)
+    = \sum_{k}
+    p\left(k|w\right) \log \frac{p(k|w)}{p(k)}
+    = \text{KL}\big(p(k|w) \ \Vert \ p(k)\big)\]
 
+<p>of a word as the Kullback–Leibler (KL) divergence between, the topic distribution $p(k|w)$ given the word $w$, and the marginal topic distribution $p(k)$, the likelihood that any random word has been drawn from topic $k$. The word distinctiveness measures how much a word is shared across topics. The higher the distinctiveness, the less this word is shared across topics.</p>
+
+<p>Then, they define the word <em>saliency</em></p>
+
+\[\mathcal{S}(w) = p(w) \mathcal{D}(w)\]
+
+<p>of a word $w$ by weighting its frequency by its distinctiveness. Compared to the ranking by frequency $p(w)$, the ranking by saliency $p(w) \mathcal D(w)$ will penalize the words shared across several topics, as they will have a low distinctiveness, and boost words that are good predictors of one topic, as they will have a high distinctiveness.</p>
 
 
   <div id="disqus_thread"></div>
@@ -105,8 +108,6 @@ of a word $w$ by weighting its frequency by its distinctiveness. Compared to the
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

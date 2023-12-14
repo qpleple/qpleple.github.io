@@ -73,35 +73,42 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Using PMI For Topic Relevance</h1>
-  <span class="post-date">04 Nov 2013</span>
+  <span class="post-date">Nov 4th, 2013</span>
 
   
 
   <p>One can ask if it is always good thing to increase the PMI score. Indeed, the major issue with PMI is that it over-estimates low-frequency events. Therefore, a high PMI may not mean a high word correlation, but maybe just low-frequency words.</p>
 
 <h4 id="example">Example</h4>
-<p>For instance, the PMI is maximal when $w_i$ and $w_j$ always occur together:
-    \(D(w\_i) = D(w\_j) = D(w\_i, w\_j) = n\)
-where $n$ is the count of documents where their occur. Then their PMI will be
-    \(\text{PMI}(w\_i, w\_j) = \log \frac{\frac n D}{\frac n D \cdot \frac n D} = \log D - \log n\)
-where $D$ is the total number of documents. So for the same high predictive power of one word given the other, if they are present in all documents, their PMI will be zero, but it will be $\log D$ if they are appear in only one document.</p>
+<p>For instance, the PMI is maximal when $w_i$ and $w_j$ always occur together:</p>
+
+\[D(w_i) = D(w_j) = D(w_i, w_j) = n\]
+
+<p>where $n$ is the count of documents where their occur. Then their PMI will be</p>
+
+\[\text{PMI}(w_i, w_j) = \log \frac{\frac n D}{\frac n D \cdot \frac n D} = \log D - \log n\]
+
+<p>where $D$ is the total number of documents. So for the same high predictive power of one word given the other, if they are present in all documents, their PMI will be zero, but it will be $\log D$ if they are appear in only one document.</p>
 
 <h4 id="alternatives">Alternatives</h4>
-<p>Some alternatives have been developed to go around this issue. One is to use variants of the PMI such as the Weighted PMI [<a href="/bib#Schneider05">Schneider05</a>]:
-    \(p(w\_i, w\_j) \log \frac{p(w\_i, w\_j)}{p(w\_i)p(w\_j)}\)
-or giving more weight to the joint probability:
-    \(\log \frac{p(w\_i, w\_j)^2}{p(w\_i)p(w\_j)}
-    \qquad
-    \text{or}
-    \qquad
-    \log \frac{p(w\_i, w\_j)^3}{p(w\_i)p(w\_j)}\)
-But the most common common alternative is to heuristically choose a threshold on frequencies and don’t consider low-frequency events [<a href="/bib#Pantel02">Pantel02</a>].</p>
+<p>Some alternatives have been developed to go around this issue. One is to use variants of the PMI such as the Weighted PMI [<a href="/bib#Schneider05">Schneider05</a>]:</p>
+
+\[p(w_i, w_j) \log \frac{p(w_i, w_j)}{p(w_i)p(w_j)}\]
+
+<p>or giving more weight to the joint probability:</p>
+
+\[\log \frac{p(w_i, w_j)^2}{p(w_i)p(w_j)}
+\qquad
+\text{or}
+\qquad
+\log \frac{p(w_i, w_j)^3}{p(w_i)p(w_j)}\]
+
+<p>But the most common common alternative is to heuristically choose a threshold on frequencies and don’t consider low-frequency events [<a href="/bib#Pantel02">Pantel02</a>].</p>
 
 <h4 id="pmi-for-top-words">PMI for top words</h4>
 <p>In our case, we are actually not computing the PMI for every pairs of words but just for the top ten words, either according to frequency or topic relevance. This is close to setting a threshold on frequency: we are only considering frequent words. This argument is true also for word relevance, even if we penalize some high-frequency words (the background words), a word scoring high on relevance $p(w|k) e^{-H_w}$ will have a high frequency $p(w|k)$ as well.</p>
 
 <p>So by working only with high-frequency words, high PMI is more likely to mean high correlation rather than rarer events.</p>
-
 
 
   <div id="disqus_thread"></div>
@@ -119,8 +126,6 @@ But the most common common alternative is to heuristically choose a threshold on
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

@@ -73,32 +73,32 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Greedy Algorithms</h1>
-  <span class="post-date">03 Jun 2013</span>
+  <span class="post-date">Jun 3rd, 2013</span>
 
   
 
-  <blockquote>
   <p>This article presents the two most common startegies to prove the correctness of Greedy algorithms.</p>
-</blockquote>
 
 <h3 id="exchange-argument-for-greedy-algorithms">Exchange argument for Greedy algorithms</h3>
 <p>The Greedy solution $\text{Gr}$ makes a sequence of choices, and an optimal solution $\text{OPT}_0$ makes another sequence of choices.</p>
 
-\[\left\\{
+\[\left\{
 \begin{array}{ll}
-    \text{Gr} &amp; = C\_1, C\_2, ... \\\\
-    \text{OPT}\_0 &amp; = C\_1', C\_2', ...
+    \text{Gr} &amp; = C_1, C_2, ... \\
+    \text{OPT}_0 &amp; = C_1', C_2', ...
 \end{array}
 \right.\]
 
-<p>We are going to build by induction a sequence of optimal solutions where the last one agrees with $\text{Gr}$ on all the choices (proving that $\text{Gr}$ is optimal)
-    \(\text{OPT}\_0 \to \text{OPT}\_1 \to ... \to \text{OPT}\_n = \text{Gr}\)
-and $\text{OPT}_i$ agrees with $\text{Gr}$ up to the $i$th choice:</p>
+<p>We are going to build by induction a sequence of optimal solutions where the last one agrees with $\text{Gr}$ on all the choices (proving that $\text{Gr}$ is optimal)</p>
 
-\[\left\\{
+\[\text{OPT}_0 \to \text{OPT}_1 \to ... \to \text{OPT}_n = \text{Gr}\]
+
+<p>and $\text{OPT}_i$ agrees with $\text{Gr}$ up to the $i$th choice:</p>
+
+\[\left\{
 \begin{array}{ll}
-    \text{Gr} &amp; = C\_1, C\_2, ..., C\_i, C\_{i+1},... \\\\
-    \text{OPT}\_i &amp; = C\_1, C\_2, ..., C\_i, C\_{i+1}',...
+    \text{Gr} &amp; = C_1, C_2, ..., C_i, C_{i+1},... \\
+    \text{OPT}_i &amp; = C_1, C_2, ..., C_i, C_{i+1}',...
 \end{array}
 \right.\]
 
@@ -107,8 +107,11 @@ and $\text{OPT}_i$ agrees with $\text{Gr}$ up to the $i$th choice:</p>
     <p><strong>Base case.</strong> $\text{OPT}_0$ agrees with $\text{Gr}$ up to choice zero (vacuously true).</p>
   </li>
   <li>
-    <p><strong>Inductive step.</strong> Suppose we have an optimal solution $\text{OPT}_i$ agreeing with $\text{Gr}$ up to choice $i$. We need to transform $\text{OPT}_i \to \text{OPT}_{i+1}$ such that it agrees also on choice $i+1$ and it is still optimal.<br />
-Here, it is problem specific.</p>
+    <p><strong>Inductive step.</strong> Suppose we have an optimal solution $\text{OPT}_i$ agreeing with $\text{Gr}$ up to choice $i$. We need to transform</p>
+
+\[\text{OPT}_i \to \text{OPT}_{i+1}\]
+
+    <p>such that it agrees also on choice $i+1$ and it is still optimal. Here, it is problem specific.</p>
   </li>
   <li>
     <p><strong>Conclusion.</strong> We have built an optimal solution $\text{OPT}_n$ agreeing with $\text{Gr}$ on all choices. Therefore, $\text{Gr} = \text{OPT}_n$ is optimal.</p>
@@ -134,7 +137,6 @@ Here, it is problem specific.</p>
 </ul>
 
 
-
   <div id="disqus_thread"></div>
   <script>
     /**
@@ -150,8 +152,6 @@ Here, it is problem specific.</p>
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

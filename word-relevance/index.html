@@ -73,7 +73,7 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Word relevance within a topic</h1>
-  <span class="post-date">02 Nov 2013</span>
+  <span class="post-date">Nov 2nd, 2013</span>
 
   
 
@@ -84,51 +84,70 @@
 <h3 id="word-relevance-for-a-topic">Word relevance for a topic</h3>
 <p><a href="/word-distinctiveness-and-saliency">Word distinctiveness and saliency</a> have been design to find relevant words corpus-wide, not for a specific topic. They are not good to find candidates for topic representatives. In this section, we present a word relevance score within a topic based on the same idea: penalize the word frequency by a factor that captures how much the word is shared across topics.</p>
 
-<p>First, instead of the global word frequency $p(w)$, we consider the frequency $p(w|k)$ of the word within a topic $k$. Then as a sharing penalty, we divide by the exponential entropy $e^{H_w}$, where
-    \(H\_w \triangleq - \sum\_k p(k|w) \log p(k|w)\)
-is the entropy of the distribution of topics given a word $w$, capturing how much the word $w$ is shared across several topics. We define the relevance measure
-    \(\mathcal R (w|k) \triangleq \frac{p(w|k)}{e^{H\_w}}\)
-for word $w$ within topic $k$ as being the frequency divided by the exponential entropy.</p>
+<p>First, instead of the global word frequency $p(w)$, we consider the frequency $p(w|k)$ of the word within a topic $k$. Then as a sharing penalty, we divide by the exponential entropy $e^{H_w}$, where</p>
+
+\[H_w \triangleq - \sum_k p(k|w) \log p(k|w)\]
+
+<p>is the entropy of the distribution of topics given a word $w$, capturing how much the word $w$ is shared across several topics. We define the relevance measure</p>
+
+\[\mathcal R (w|k) \triangleq \frac{p(w|k)}{e^{H_w}}\]
+
+<p>for word $w$ within topic $k$ as being the frequency divided by the exponential entropy.</p>
 
 <h4 id="interpretation-of-exponential-entropy-eh">Interpretation of exponential entropy $e^{H}$</h4>
 <p>The exponential entropy can be seen as a measure of the extent, or the spread, of a distribution [<a href="/bib#Campbell66">Campbell66</a>].  By extent, we mean the size of the support, or the number of elements with non-zero probability. Here is a figure illustrating it on three examples.</p>
 
-<div class="row">
-    <div class="col-md-4 text-center">
-        <img src="/img/thesis/eh-delta.png" class="img-responsive" />
-        <p class="img-legend">Delta distribution <br /> $H = 0$, and $e^H = 1$</p>
-    </div>
-    <div class="col-md-4 text-center">
-        <img src="/img/thesis/eh-example.png" class="img-responsive" />
-        <p class="img-legend">Example distribution <br /> $H=0.67$, and $e^H = 1.96$</p>
-    </div>
-    <div class="col-md-4 text-center">
-        <img src="/img/thesis/eh-uniform.png" class="img-responsive" />
-        <p class="img-legend">Uniform distribution <br /> $H=\log K$, and $e^H = K$</p>
-    </div>
-</div>
+<p class="figure-sm">
+<img src="/img/thesis/eh-delta.png" />
+<small>Delta distribution $H = 0$, and $e^H = 1$</small>
+</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/eh-example.png" />
+<small>Example distribution $H=0.67$, and $e^H = 1.96$</small>
+</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/eh-uniform.png" />
+<small>Uniform distribution $H=\log K$, and $e^H = K$</small>
+</p>
 
 <h3 id="computation-of-word-relevance-measure">Computation of word relevance measure</h3>
-<p>Let’s see how to express relevance $\mathcal R(w|k)$ in terms of LDA parameters. The numerator is straightforward
-    \(\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H\_w}} = \frac{\varphi\_{kw}}{e^{H\_w}}\)
-Now, computing the entropy
-    \(E\_w = \sum\_k p(k|w) \log p(k|w)\)
-requires applying Bayes rule on $p(k|w)$:
-\(\begin{aligned}
+<p>Let’s see how to express relevance $\mathcal R(w|k)$ in terms of LDA parameters. The numerator is straightforward</p>
+
+\[\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H_w}} = \frac{\varphi_{kw}}{e^{H_w}}\]
+
+<p>Now, computing the entropy</p>
+
+\[E_w = \sum_k p(k|w) \log p(k|w)\]
+
+<p>requires applying Bayes rule on $p(k|w)$:</p>
+
+\[\begin{aligned}
     p(k|w) &amp; \propto p(w|k) \ p(k)\\\
-    &amp; = \varphi\_{kw} \ \sum\_d p(k|d) p(d)\\\
-    &amp; \propto \varphi\_{kw} \ \sum\_d \theta\_{dk} N\_d
-\end{aligned}\)
-where $N_d$ is the length of document.
+    &amp; = \varphi_{kw} \ \sum_d p(k|d) p(d)\\\
+    &amp; \propto \varphi_{kw} \ \sum_d \theta_{dk} N_d
+\end{aligned}\]
+
+<p>where $N_d$ is the length of document.
 Recombining the results, we get a procedure to compute the relevance score:</p>
 
 <ol>
-  <li>Compute topic-distribution given word $w$:
- \(p(k|w) \propto \varphi\_{kw} \ \sum\_d \theta\_{dk} N\_d\)</li>
-  <li>Compute its entropy:
- \(H\_w \triangleq \sum\_k p(k|w) \log p(k|w)\)</li>
-  <li>Divide the frequency of word $w$ within topic $k$ by the exponential entropy:
- \(\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H\_w}}\)</li>
+  <li>
+    <p>Compute topic-distribution given word $w$:</p>
+
+\[p(k|w) \propto \varphi_{kw} \ \sum_d \theta_{dk} N_d\]
+  </li>
+  <li>
+    <p>Compute its entropy:</p>
+
+\[H_w \triangleq \sum_k p(k|w) \log p(k|w)\]
+  </li>
+  <li>
+    <p>Divide the frequency of word $w$ within topic $k$ by the exponential entropy:</p>
+
+\[\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H_w}}\]
+  </li>
 </ol>
 
 <h3 id="top-relevant-word-to-describe-topics">Top relevant word to describe topics</h3>
@@ -157,26 +176,9 @@ Recombining the results, we get a procedure to compute the relevance score:</p>
     </thead>
 </table>
 
-<table>
-  <tbody>
-    <tr>
-      <td>Those background words such as <em>people</em>, <em>writes</em>, <em>article</em>, <em>good</em>, etc. are shared across numerous topics, and their $e^{H_w}$ will be high. They will be penalized by $e^{-H_w}$ and score low on word relevance measure. On the other hand, words scoring high on word relevance measure $p(w</td>
-      <td>k) e^{-H_w}$ are more descriptive, and topics that did not make sense when described by top words by frequency $p(w</td>
-      <td>k)$, become intelligible when described by top words by relevance $p(w</td>
-      <td>k) e^{-H_w}$.</td>
-    </tr>
-  </tbody>
-</table>
+<p>Those background words such as <em>people</em>, <em>writes</em>, <em>article</em>, <em>good</em>, etc. are shared across numerous topics, and their $e^{H_w}$ will be high. They will be penalized by $e^{-H_w}$ and score low on word relevance measure. On the other hand, words scoring high on word relevance measure $p(w|k) e^{-H_w}$ are more descriptive, and topics that did not make sense when described by top words by frequency $p(w|k)$, become intelligible when described by top words by relevance $p(w|k) e^{-H_w}$.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>This effect is even stronger for specialized corpora, such as [nips] or [nsf] that contain research papers of one specific area. The following table shows six topics extracted from a run of LDA on the highly specialized corpus [nips] with 30 topics. For each topic, we give the top words by frequency $p(w</td>
-      <td>k)$ and relevance $p(w</td>
-      <td>k)e^{-H_w}$.</td>
-    </tr>
-  </tbody>
-</table>
+<p>This effect is even stronger for specialized corpora, such as [nips] or [nsf] that contain research papers of one specific area. The following table shows six topics extracted from a run of LDA on the highly specialized corpus [nips] with 30 topics. For each topic, we give the top words by frequency $p(w|k)$ and relevance $p(w|k)e^{-H_w}$.</p>
 
 <table class="table">
     <thead>
@@ -212,15 +214,7 @@ Recombining the results, we get a procedure to compute the relevance score:</p>
 
 <p>Background words here are not general English words, like for [20news], but words describing the field of the research papers: <em>network, networks, neural</em>, and <em>input</em>. Each of these topics, taken alone by itself, will look intelligible by humans. However, all presented next to each other, it becomes unclear what is the difference between them. Being able to understand interactions between topics is important when topics are used for an external task, such as browsing the corpus or information retrieval.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>Showing the top words by relevance $p(w</td>
-      <td>k)e^{-H_w}$ will show what is specific about each topic. Topic 1 is more about chips and circuits where topic 3 is specifically about head direction cells, a special type of neurons involved in self-motion, and topic 4 about controlled substances (drugs, precursors and plants).</td>
-    </tr>
-  </tbody>
-</table>
-
+<p>Showing the top words by relevance $p(w|k)e^{-H_w}$ will show what is specific about each topic. Topic 1 is more about chips and circuits where topic 3 is specifically about head direction cells, a special type of neurons involved in self-motion, and topic 4 about controlled substances (drugs, precursors and plants).</p>
 
 
   <div id="disqus_thread"></div>
@@ -238,8 +232,6 @@ Recombining the results, we get a procedure to compute the relevance score:</p>
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

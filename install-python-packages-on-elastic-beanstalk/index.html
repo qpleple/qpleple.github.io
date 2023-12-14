@@ -9,7 +9,7 @@
 
   <title>
     
-      Install Python Packages On Elastic Beanstalk &middot; Quentin Pleplé
+      Install Python Packages On AWS Elastic Beanstalk &middot; Quentin Pleplé
     
   </title>
 
@@ -59,14 +59,16 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Install Python Packages On Elastic Beanstalk</h1>
-  <span class="post-date">16 May 2014</span>
+  <h1 class="post-title">Install Python Packages On AWS Elastic Beanstalk</h1>
+  <span class="post-date">May 16th, 2014</span>
 
+  
+    <p class="message warning">🦖 This post was published in 2014 and is most likely outdated.</p>
   
 
   <h3 id="install">Install</h3>
 
-<p>To install Python packages on Amazon Beanstalk, we have to run add a command in our <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> file. Amazon Linux AMIs in Beanstalk are not shipped with <code class="language-plaintext highlighter-rouge">pip</code> but <code class="language-plaintext highlighter-rouge">easy_install</code>.</p>
+<p>To install Python packages on Amazon Beanstalk, we have to run add a command in our <code class="language-plaintext highlighter-rouge">.ebextensions/*.config</code> file. Amazon Linux AMIs in Beanstalk are not shipped with <code class="language-plaintext highlighter-rouge">pip</code> but <code class="language-plaintext highlighter-rouge">easy_install</code>.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># these commands run before the application and web server are</span>
 <span class="c1"># set up and the application version file is extracted.</span>
@@ -79,7 +81,7 @@
 
 <h3 id="troubleshooting">Troubleshooting</h3>
 
-<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextension/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>.</p>
+<p>Logs of the execution of <code class="language-plaintext highlighter-rouge">.ebextensions/*.config</code> files are found in <code class="language-plaintext highlighter-rouge">/var/log/cfn-init.log</code>.</p>
 
 <p>You should see something like</p>
 
@@ -90,7 +92,6 @@
 Reading http://pypi.python.org/simple/termcolor/
 Best match: termcolor 1.1.0
 </code></pre></div></div>
-
 
 
   <div id="disqus_thread"></div>
@@ -108,8 +109,6 @@ Best match: termcolor 1.1.0
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

@@ -73,36 +73,43 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">On Smoothing In Topic Coherence Measures</h1>
-  <span class="post-date">17 May 2013</span>
+  <span class="post-date">May 17th, 2013</span>
 
   
 
-  <p>[<a href="/bib#Stevens12">Stevens12</a>] performed an extensive study of the these two measures on one dataset, New York Times articles (92,600 New York Times articles from 2003 and a vocabulary size of 35,836 tokens after removing the ones occurring less than 200 times throughout the corpus), in order to compare the three models: LDA, LSA with SVD, and LSA with NMF.</p>
+  <p>[<a href="/bib#Stevens12">Stevens12</a>] performed an extensive study of the these two measures on one dataset, New York Times articles (93k New York Times articles from 2003 and a vocabulary size of 36k tokens after removing the ones occurring less than 200 times throughout the corpus), in order to compare the three models: LDA, LSA with SVD, and LSA with NMF.</p>
 
 <p>However, they did not use the formulations of the measures used by their original authors.</p>
 
 <h3 id="umass-measure">UMass measure</h3>
 
-<p>For the UMass measure, they introduced a free parameter $\epsilon$, instead of just one, for smoothing in the pairwise scoring function
-    \(\text{score}\_{\text{UMass}}(w\_i, w\_j) =
-    \log
-    \frac{D(w\_i, w\_j) + \epsilon}{D(w\_i)}\)
-and tried both $\epsilon = 1$ and $\epsilon = 10^{-12}$. Setting $\epsilon = 10^{-12}$ seems to over-penalize pairs that never occur together, i.e. when $D(w_i, w_j) = 0$, as it will decrease the score of that pair by 12
-    \(\text{score}\_{\text{UMass}}(w\_i, w\_j)
-    = \log \frac{\epsilon}{D(w\_i)}
-    = -12 - \log D(w\_i)\)
-which is very large in the log space of document counts. It is also equivalent to say that we would have to see $10^{12}$ more documents to see the two words appearing only once together. Having $\epsilon = 1$ looks more reasonable as it is treating pairs that appear once throughout the corpus, i.e. when $D(w_i, w_j) = 1$, and pairs that never appear, i.e. when $D(w_i, w_j) = 0$, roughly in the same order of magnitude.</p>
+<p>For the UMass measure, they introduced a free parameter $\varepsilon$, instead of just one, for smoothing in the pairwise scoring function</p>
+
+\[\text{score}_{\text{UMass}}(w_i, w_j) =
+\log
+\frac{D(w_i, w_j) + \varepsilon}{D(w_i)}\]
+
+<p>and tried both $\varepsilon = 1$ and $\varepsilon = 10^{-12}$. Setting $\varepsilon = 10^{-12}$ seems to over-penalize pairs that never occur together, i.e. when $D(w_i, w_j) = 0$, as it will decrease the score of that pair by 12</p>
+
+\[\text{score}_{\text{UMass}}(w_i, w_j)
+= \log \frac{\varepsilon}{D(w_i)}
+= -12 - \log D(w_i)\]
+
+<p>which is very large in the log space of document counts. It is also equivalent to say that we would have to see $10^{12}$ more documents to see the two words appearing only once together. Having $\varepsilon = 1$ looks more reasonable as it is treating pairs that appear once throughout the corpus, i.e. when $D(w_i, w_j) = 1$, and pairs that never appear, i.e. when $D(w_i, w_j) = 0$, roughly in the same order of magnitude.</p>
 
 <h3 id="uci-measure">UCI measure</h3>
 
-<p>For the UCI measure, they introduced a smoothing $\epsilon$ in the pairwise score that the original authors did not
-    \(\text{score}\_{\text{UCI}}(w\_i, w\_j)  = \log \frac{p(w\_i, w\_j) + \epsilon}{p(w\_i)p(w\_j)}\)
-with $\epsilon$ initially set to one. Here, we are at a different scale as we are dealing with probabilities and not counts. As $\epsilon = 1$ is likely to be huge compared to $p(w_i, w_j)$, the smoothing parameter artificially increases the topic coherence, and not even by the same amount for all pairs of words. Then, using $\epsilon = 10^{-12}$, which is likely to be smaller than $p(w_i, w_j)$, caused big changes, and therefore the authors concluded that coherence measures depend heavily on smoothing $\epsilon$.</p>
+<p>For the UCI measure, they introduced a smoothing $\varepsilon$ in the pairwise score that the original authors did not</p>
 
-<p>Nonetheless a smoothing parameter is required to avoid taking the logarithm of zero. A reasonable choice for smoothing is to assume that every pair of words is present at least once in the corpus, and compute the empirical probability
-    \(p(w\_i, w\_j) = \frac{D\_{\text{Wikipedia}}(w\_i, w\_j) + 1}{D\_{\text{Wikipedia}}}\)
-which is the same smoothing as the UMass measure.</p>
+\[\text{score}_{\text{UCI}}(w_i, w_j)  = \log \frac{p(w_i, w_j) + \varepsilon}{p(w_i)p(w_j)}\]
 
+<p>with $\varepsilon$ initially set to one. Here, we are at a different scale as we are dealing with probabilities and not counts. As $\varepsilon = 1$ is likely to be huge compared to $p(w_i, w_j)$, the smoothing parameter artificially increases the topic coherence, and not even by the same amount for all pairs of words. Then, using $\varepsilon = 10^{-12}$, which is likely to be smaller than $p(w_i, w_j)$, caused big changes, and therefore the authors concluded that coherence measures depend heavily on smoothing $\varepsilon$.</p>
+
+<p>Nonetheless a smoothing parameter is required to avoid taking the logarithm of zero. A reasonable choice for smoothing is to assume that every pair of words is present at least once in the corpus, and compute the empirical probability</p>
+
+\[p(w_i, w_j) = \frac{D_{\text{Wikipedia}}(w_i, w_j) + 1}{D_{\text{Wikipedia}}}\]
+
+<p>which is the same smoothing as the UMass measure.</p>
 
 
   <div id="disqus_thread"></div>
@@ -120,8 +127,6 @@ which is the same smoothing as the UMass measure.</p>
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

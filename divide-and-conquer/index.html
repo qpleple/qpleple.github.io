@@ -73,15 +73,13 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Divide and Conquer</h1>
-  <span class="post-date">03 Jun 2013</span>
+  <span class="post-date">Jun 3rd, 2013</span>
 
   
 
-  <blockquote>
   <p>This article is a tutorial on how to analyse Divide and Conquer algorithms.</p>
-</blockquote>
 
-<h3 id="startegy">Startegy</h3>
+<h2 id="startegy">Startegy</h2>
 
 <p>The idea of Divide and Conquer is to solve the problem recursively on smaller versions of the problem. Analyzing Divide and Conquer algorithms always include the following steps.</p>
 
@@ -100,17 +98,18 @@
     <p>Draw the recursion tree to understand the recursion structure.</p>
   </li>
   <li>
-    <p>From the tree, sum up the overhead that you spend at each node to find the final complexity $T(n)$:
-\(T(n) =
- \sum_{\text{level } k = 0}^{\text{\# levels}}
- (\text{number of nodes at level }k)
- \times
- (\text{overhead per node at level }k)\)</p>
+    <p>From the tree, sum up the overhead that you spend at each node to find the final complexity $T(n)$:</p>
+
+\[T(n) =
+     \sum_{\text{level } k = 0}^{\text{# levels}}
+     (\text{number of nodes at level }k)
+     \times
+     (\text{overhead per node at level }k)\]
   </li>
 </ol>
 
-<h3 id="fast-exponentiation">Fast exponentiation</h3>
-<h4 id="naive-algorithm">Naive algorithm</h4>
+<h2 id="fast-exponentiation">Fast exponentiation</h2>
+<h3 id="naive-algorithm">Naive algorithm</h3>
 <p>To compute $a^n$, repeat $n$ times multiplying by $a$.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">NaiveMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -120,7 +119,7 @@
 
 <p>If $T(n)$ is the number of multiplication needed to compute $a^n$, here $T(n) = O(n)$.</p>
 
-<h4 id="efficient-algorithm">Efficient algorithm</h4>
+<h3 id="efficient-algorithm">Efficient algorithm</h3>
 <p>The idea is to square $a^{n/2}$ to get $a^n$ (one multiplication) and when $n$ is odd, evaluate $a^{n-1}$ the same way and then multiply it by $a$ (one multiplication).</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -131,16 +130,19 @@
   <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="nc">FastMult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>Here again, let $T(n)$ be the number of multiplications. For the time analysis, we suppose without loss of generality that $n$ is power of 2. At each step $n$ is divided by 2.
-    \(T(n) = T \left( \frac n 2 \right)  + 1\)
-Drawing the recursion tree gives us
-\(T(n) = \sum_{k=0}^{\log n} 1 = O(\log n)\)</p>
+<p>Here again, let $T(n)$ be the number of multiplications. For the time analysis, we suppose without loss of generality that $n$ is power of 2. At each step $n$ is divided by 2.</p>
 
-<h3 id="tower-of-hanoi">Tower of Hanoi</h3>
+\[T(n) = T \left( \frac n 2 \right)  + 1\]
+
+<p>Drawing the recursion tree gives us</p>
+
+\[T(n) = \sum_{k=0}^{\log n} 1 = O(\log n)\]
+
+<h2 id="tower-of-hanoi">Tower of Hanoi</h2>
 
 <p>The goal of the game is to move the tower to another rod. You can move only one disk at a time, and you can’t place a disk on top of a smaller one.</p>
 
-<h4 id="recursive-algorithm">Recursive algorithm</h4>
+<h3 id="recursive-algorithm">Recursive algorithm</h3>
 <p>To move a pile of $n$ disk to another rod, first recursively move a pile of $n-1$ to the last rod, then move the largest disk, then move back the $n-1$ on top of the largest.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
@@ -150,12 +152,15 @@ Drawing the recursion tree gives us
         <span class="nc">Hanoi</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>Let’s analyze the time complexity. Let $T(n)$ be the number of moves. Then the code gives us
-    \(T(n) = 2T(n-1) + 1\)
-Drawing the recursion tree allow us to conclude
-    \(T(n) = \sum_{k=0}^{n-1} 2^k \times 1 = \cdots = O(2^n)\)</p>
+<p>Let’s analyze the time complexity. Let $T(n)$ be the number of moves. Then the code gives us</p>
 
-<h3 id="comparison-of-algorithms">Comparison of algorithms</h3>
+\[T(n) = 2T(n-1) + 1\]
+
+<p>Drawing the recursion tree allow us to conclude</p>
+
+\[T(n) = \sum_{k=0}^{n-1} 2^k \times 1 = O(2^n)\]
+
+<h2 id="comparison-of-algorithms">Comparison of algorithms</h2>
 <p>You are product manager at Facebook and three engineers from your team come up with these three algorithms to detect fake Facebook accounts in the list of $n = 1$ billion Facebook accounts.</p>
 
 <ul>
@@ -172,7 +177,7 @@ Drawing the recursion tree allow us to conclude
 
 <p><em>Examples from Algorithms, Dasgupta, Papadimitriou, and Vazirani.</em></p>
 
-<h4 id="time-analysis">Time analysis</h4>
+<h3 id="time-analysis">Time analysis</h3>
 
 <ul>
   <li>
@@ -187,11 +192,11 @@ Drawing the recursion tree allow us to conclude
   </li>
 </ul>
 
-<h3 id="finding-a-fixed-point">Finding a fixed point</h3>
+<h2 id="finding-a-fixed-point">Finding a fixed point</h2>
 <p>Given a sorted array $a[1…n]$, design an algorithm that finds if there is an element such that $a[i] = i$.<br />
 <em>From Algorithms, Dasgupta, Papadimitriou, and Vazirani.</em></p>
 
-<h4 id="naive-algorithm-1">Naive algorithm</h4>
+<h3 id="naive-algorithm-1">Naive algorithm</h3>
 <p>The naive approach is just to check all elements. The time complexity is linear.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">NaiveFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="p">.</span><span class="n">n</span><span class="p">]):</span>
@@ -200,7 +205,7 @@ Drawing the recursion tree allow us to conclude
   <span class="k">return</span> <span class="bp">False</span>
 </code></pre></div></div>
 
-<h4 id="efficient-algorithm-1">Efficient algorithm</h4>
+<h3 id="efficient-algorithm-1">Efficient algorithm</h3>
 <p>We didn’t use the fact it is sorted in the previous idea. We look at the middle element of the array. Because the array is sorted, if the element is strictly larger than its index, then we know for sure that if an element being equal to its index exists, then it has to be in the right side of the array. Same idea for the opposite situation.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mf">1.</span><span class="p">..</span><span class="n">n</span><span class="p">]):</span>
@@ -211,16 +216,20 @@ Drawing the recursion tree allow us to conclude
   <span class="k">return</span> <span class="nc">EfficientFind</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mf">1.</span><span class="p">..</span><span class="n">n</span><span class="p">])</span>
 </code></pre></div></div>
 
-<p>At every step, we get rid of half the array, so we can guess it’s going to be a logarithmic algorithmic algorithm. Let’s check. Define $T(n)$ the number of comparison needed to answer the question in the worst case. Then
-    \(T(n) \leq T(n/2) + 2\)</p>
+<p>At every step, we get rid of half the array, so we can guess it’s going to be a logarithmic algorithmic algorithm. Let’s check. Define $T(n)$ the number of comparison needed to answer the question in the worst case. Then</p>
 
-<p>Drawing the recursive tree allow us to find
-    \(T(n) \leq \sum_{k=1}^{\log n} 1 \times 2 = \cdots = O(\log n)\)</p>
+\[T(n) \leq T(n/2) + 2\]
 
-<h3 id="practice-problem-master-theorem">Practice problem: Master Theorem</h3>
-<p>Suppose you have a recurrence of the form
-    \(T(n) = aT \left( \frac n b \right)  + O(n^d)\)
-with $a$, $b$ and $d$ constants. Draw the recurrence tree (numbering levels from zero) and answer the following questions.</p>
+<p>Drawing the recursive tree allow us to find</p>
+
+\[T(n) \leq \sum_{k=1}^{\log n} 1 \times 2 = \cdots = O(\log n)\]
+
+<h2 id="practice-problem-master-theorem">Practice problem: Master Theorem</h2>
+<p>Suppose you have a recurrence of the form</p>
+
+\[T(n) = aT \left( \frac n b \right)  + O(n^d)\]
+
+<p>with $a$, $b$ and $d$ constants. Draw the recurrence tree (numbering levels from zero) and answer the following questions.</p>
 
 <ol>
   <li>
@@ -245,41 +254,46 @@ with $a$, $b$ and $d$ constants. Draw the recurrence tree (numbering levels from
     <p>… at each node of level $k$?</p>
   </li>
   <li>
-    <p>Apply the formula given in the introduction and derive
-\(T(n) = O \left( n^d \sum\_{k=0}^{\log\_b n} \left( \frac{a}{b^d} \right)^k  \right)\)</p>
+    <p>Apply the formula given in the introduction and derive</p>
+
+\[T(n) = O \left( n^d \sum_{k=0}^{\log_b n} \left( \frac{a}{b^d} \right)^k  \right)\]
   </li>
   <li>
-    <p>Use the geometric series formula
-\(q^0 + q^1 + q^2 + \cdots + q^{m}
-=  \frac{q^{m+1} - 1}{q-1} \quad \text{if } q \neq 1\)
-to derive
-\(T(n) =
-\left\\{
+    <p>Use the geometric series formula</p>
+
+\[q^0 + q^1 + q^2 + \cdots + q^{m} =  \frac{q^{m+1} - 1}{q-1} \quad \text{if } q \neq 1\]
+
+    <p>to derive</p>
+
+\[T(n) =
+\left\{
 \begin{array}{ll}
-O \left( n^d \log n \right)  &amp; \text{if } \frac{a}{b^d} - 1 = 0\\\\
-O \left( n^d \right)  &amp; \text{if } \frac{a}{b^d} -1 &lt; 0\\\\
-O \left( n^d \left( \frac{a}{b^d} \right)^{\log\_b n} \right)  &amp; \text{if } \frac{a}{b^d} -1 &gt; 0
+    O \left( n^d \log n \right)  &amp; \text{if } \frac{a}{b^d} - 1 = 0\\\\
+    O \left( n^d \right)  &amp; \text{if } \frac{a}{b^d} -1 &lt; 0\\\\
+    O \left( n^d \left( \frac{a}{b^d} \right)^{\log_b n} \right)  &amp; \text{if } \frac{a}{b^d} -1 &gt; 0
 \end{array}
-\right.\)
-Be sure to have the three cases.</p>
+\right.\]
+
+    <p>Be sure to have the three cases.</p>
   </li>
   <li>
-    <p>Prove using logarithmic and exponential rules this small property
-\(\left( \frac{a}{b^d} \right)^{\log\_b n} = n^{\log\_b \left( \frac{a}{b^d} \right) }\)</p>
+    <p>Prove using logarithmic and exponential rules this small property</p>
+
+\[\left( \frac{a}{b^d} \right)^{\log_b n} = n^{\log_b \left( \frac{a}{b^d} \right) }\]
   </li>
   <li>
-    <p>Use this property to derive the final form
-\(T(n) =
-\left\\{
-\begin{array}{ll}
- O \left( n^d \log n \right)  &amp; \text{if } b^d = a\\\\
- O \left( n^d \right)  &amp; \text{if } b^d &gt; a\\\\
- O \left( n^{\log\_b a} \right)  &amp; \text{if } b^d &lt; a
-\end{array}
-\right.\)</p>
+    <p>Use this property to derive the final form</p>
+
+\[T(n) =
+ \left\{
+ \begin{array}{ll}
+     O \left( n^d \log n \right)  &amp; \text{if } b^d = a\\\\
+     O \left( n^d \right)  &amp; \text{if } b^d &gt; a\\\\
+     O \left( n^{\log_b a} \right)  &amp; \text{if } b^d &lt; a
+ \end{array}
+ \right.\]
   </li>
 </ol>
-
 
 
   <div id="disqus_thread"></div>
@@ -297,8 +311,6 @@ Be sure to have the three cases.</p>
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>

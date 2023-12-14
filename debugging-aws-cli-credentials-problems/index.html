@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Simplify AWS CLI Troubleshooting with My Custom Debug Script &middot; Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/debugging-aws-cli-credentials-problems/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Simplify AWS CLI Troubleshooting with My Custom Debug Script</h1>
+  <span class="post-date">Dec 11th, 2023</span>
+
+  
+
+  <p>Working with AWS CLI can sometimes feel like navigating a maze, especially when it comes to managing credentials and configurations. Misconfigurations or missing credentials can halt your work, leading to frustration and lost productivity. To address this common issue, I’ve crafted a handy Bash script to streamline the debugging process for AWS CLI credentials.</p>
+
+<h2 id="what-does-the-script-do">What Does the Script Do?</h2>
+<p>This script serves as a diagnostic tool, systematically checking various aspects of your AWS configuration. It outputs crucial information regarding your AWS environment, making it easier to identify and fix issues. Here’s a rundown of its features:</p>
+
+<p>Here is an usage example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./debug-aws-credentials.sh
+
+================== Environment variables =======================================
+AWS_PROFILE not set
+AWS_ACCESS_KEY_ID not set
+AWS_SECRET_ACCESS_KEY not set
+AWS_SESSION_TOKEN not set
+
+================== aws configure list ==========================================
+      Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile                &lt;not set&gt;             None    None
+access_key                &lt;not set&gt;             None    None
+secret_key                &lt;not set&gt;             None    None
+    region                &lt;not set&gt;             None    None
+
+================== aws sts get-caller-identity =================================
+
+Unable to locate credentials. You can configure credentials by running "aws configure".
+
+================== aws configure list-profiles =================================
+terraform
+management-admin
+security-admin
+
+================== ~/.aws/config ===============================================
+[profile terraform]
+sso_start_url = https://aws-short-edition.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 866109354512
+sso_role_name = AdministratorRole
+region = eu-west-1
+output = yaml
+
+[profile management-admin]
+sso_start_url = https://aws-short-edition.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 866109354512
+sso_role_name = AdministratorRole
+region = eu-west-1
+output = yaml
+
+[profile security-admin]
+sso_start_url = https://aws-short-edition.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 274407225643
+sso_role_name = AdministratorRole
+region = eu-west-1
+output = yaml
+
+
+================== versions ====================================================
+aws-cli/2.3.1 Python/3.8.8 Darwin/21.6.0 exe/x86_64 prompt/off
+EB CLI 3.20.9 (Python 3.11.5 (main, Aug 24 2023, 15:23:30) [Clang 14.0.0 (clang-1400.0.29.202)])
+Python 3.11.5
+Terraform v1.5.0
+on darwin_amd64
+
+Your version of Terraform is out of date! The latest version
+is 1.6.6. You can update by downloading from https://www.terraform.io/downloads.html
+</code></pre></div></div>
+
+<h2 id="environment-variables-verification">Environment Variables Verification</h2>
+<p>Firstly, the script checks for the presence of essential AWS environment variables: <code class="language-plaintext highlighter-rouge">AWS_PROFILE</code>, <code class="language-plaintext highlighter-rouge">AWS_ACCESS_KEY_ID</code>, <code class="language-plaintext highlighter-rouge">AWS_SECRET_ACCESS_KEY</code>, and <code class="language-plaintext highlighter-rouge">AWS_SESSION_TOKEN</code>. It reports whether these variables are set and, if so, whether they are populated or empty.</p>
+
+<h2 id="aws-configuration-listings">AWS Configuration Listings</h2>
+<p>Next, the script executes <code class="language-plaintext highlighter-rouge">aws configure list</code>, displaying the current configuration status.</p>
+
+<h2 id="identity-confirmation">Identity Confirmation</h2>
+<p>By running <code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code>, the script confirms the identity that the AWS CLI is operating under and wether or not it is recognized by the AWS API.</p>
+
+<h2 id="profile-listings">Profile Listings</h2>
+<p>The script also lists all the configured profiles through <code class="language-plaintext highlighter-rouge">aws configure list-profiles</code>. This is particularly useful in environments where multiple profiles are used.</p>
+
+<h2 id="config-file-display">Config File Display</h2>
+<p>It prints the contents of the <code class="language-plaintext highlighter-rouge">~/.aws/config</code> file. This file typically contains your AWS CLI configurations and is a common source of issues.</p>
+
+<h2 id="version-checks">Version Checks</h2>
+<p>Finally, the script checks the versions of various AWS-related tools such as AWS CLI, Elastic Beanstalk CLI, Python, and Terraform. Version mismatches can often lead to unexpected errors.</p>
+
+<h2 id="customizable-for-specific-profiles">Customizable for Specific Profiles</h2>
+<p>An additional feature of the script is its ability to take a profile name as an argument. If provided, it will run the <code class="language-plaintext highlighter-rouge">aws configure list</code> and <code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code> commands for that specific profile, further aiding in debugging issues related to specific AWS CLI profiles.</p>
+
+<h2 id="script-code">Script code</h2>
+
+<script src="https://gist.github.com/qpleple/0340df38042e0907e920fdff28379a26.js"></script>
+
+
+
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/debugging-aws-cli-credentials-problems/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

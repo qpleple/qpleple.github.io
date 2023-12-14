@@ -73,28 +73,25 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Topic Modeling Bibliography</h1>
-  <span class="post-date">15 Mar 2013</span>
+  <span class="post-date">Mar 15th, 2013</span>
 
   
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
 
-  <blockquote>
-  <p>My peronal bibliography for topic modeling, with some notes about how the paper is useful to me.</p>
-</blockquote>
+  <p>My personal bibliography for topic modeling, with some notes about how the paper is useful to me.</p>
 
-<h3 id="topic-modeling-pre-lda">Topic modeling pre-LDA</h3>
-
-<p><a id="Landauer97"></a></p>
-<h4 id="paper-landauer97">Paper <code class="language-plaintext highlighter-rouge">Landauer97</code></h4>
+<h2 id="topic-modeling-pre-lda">Topic modeling pre-LDA</h2>
 
 <p><a id="Deerwester90"></a></p>
-<h4 id="paper-deerwester90">Paper <code class="language-plaintext highlighter-rouge">Deerwester90</code></h4>
+<h4 id="deerwester90-deerwester-s-s-t-dumais-g-w-furnas-t-k-landauer-and-r-harshman-1990-indexing-by-latent-semantic-analysis-journal-of-the-american-society-for-information-science-416-391407"><code class="language-plaintext highlighter-rouge">Deerwester90</code> Deerwester, S., S. T. Dumais, G. W. Furnas, T. K. Landauer, and R. Harshman (1990). Indexing by latent semantic analysis. Journal of the American Society for Information Science 41(6), 391–407.</h4>
 
 <p>LSA (or LSI) is a linear topic model based the factorization of the document-word matrix  $\boldsymbol X$, where $x_{dw}$ is the count of occurrences of word $w$ in document $d$.  The goal is to find a low-rank approximation $\tilde{\boldsymbol X}$ of $\boldsymbol X$ factorizing it into two matrices, one representing the documents, and the other the topics.</p>
 
 <p>Use SVD on $  \boldsymbol X = \boldsymbol U \boldsymbol \Sigma \boldsymbol V^T$. By selecting only the $K$ largest singular values from $\boldsymbol \Sigma$ and the corresponding vectors in $\boldsymbol U$ and $\boldsymbol V^T$, we get the best rank $K$ approximation of matrix $\boldsymbol X$.  Rows of $\boldsymbol U$ represent documents, and rows of $\boldsymbol V^T$ represents the topics. Each document can be expressed as a linear combination of topics.</p>
 
 <p><a id="Hofmann99"></a></p>
-<h4 id="paper-hofmann99">Paper <code class="language-plaintext highlighter-rouge">Hofmann99</code></h4>
+<h4 id="hofmann99-hofmann-t-1999-probilistic-latent-semantic-analysis-in-uai"><code class="language-plaintext highlighter-rouge">Hofmann99</code> Hofmann, T. (1999). Probilistic latent semantic analysis. In UAI.</h4>
 
 <p>Introduced pLSI, a probabilistic topic model based on the following generative process. No priors on $\boldsymbol \theta_d$ and $\boldsymbol \varphi_k$.</p>
 
@@ -105,69 +102,59 @@
 </code></pre></div></div>
 
 <p><a id="Ding08"></a></p>
-<h4 id="paper-ding08">Paper <code class="language-plaintext highlighter-rouge">Ding08</code></h4>
+<h4 id="ding08-ding-c-t-li-and-w-peng-2008-on-the-equivalence-between-non-negative-matrix-factorization-and-probabilistic-latent-semantic-indexing-computational-statistics-and-data-analysis-52-39133927"><code class="language-plaintext highlighter-rouge">Ding08</code> Ding, C., T. Li, and W. Peng (2008). On the equivalence between non-negative matrix factorization and probabilistic latent semantic indexing. Computational Statistics and Data Analysis 52, 3913–3927.</h4>
 
 <p>Proved the equivalence between pLSI and NMF, by showing that they both optimize the same objective function. As they are different algorithms, this allow to design an hybrid method alternating between NMF and pLSI, every time jumping out of the local optimum of the other method.</p>
 
-<h3 id="lda">LDA</h3>
+<h2 id="lda">LDA</h2>
 <p>Chronologically, Blei, Ng and Jordan first published [<a href="#Blei02">Blei02</a>] presenting LDA in <em>NIPS</em> treating topics $\boldsymbol \varphi_k$ as free parameters.
 Shortly after, Griffiths and Steyvers published [<a href="#Griffiths02a">Griffiths02a</a>] and [<a href="#Griffiths02b">Griffiths02b</a>] extending this model by adding a symmetric Dirichlet prior on $\boldsymbol \varphi_k$.
 Finally, Blei, Ng and Jordan published an extended version [<a href="#Blei03">Blei03</a>] of their first paper in <em>Journal of Machine Learning Research</em> (by far the most cited LDA paper) with a section on having this Dirichlet smoothing on multinomial parameters $\boldsymbol \varphi_k$.</p>
 
 <p><a id="Blei02"></a></p>
-<h4 id="paper-blei02">Paper <code class="language-plaintext highlighter-rouge">Blei02</code></h4>
+<h4 id="blei02-blei-d-m-a-y-ng-and-m-i-jordan-2002-latent-dirichlet-allocation-in-nips"><code class="language-plaintext highlighter-rouge">Blei02</code> Blei, D. M., A. Y. Ng, and M. I. Jordan (2002). Latent dirichlet allocation. In NIPS.</h4>
 
 <p>First first paper for LDA, quite short, not used. See [<a href="#Blei03">Blei03</a>].</p>
 
 <p><a id="Griffiths02a"></a></p>
-<h4 id="paper-griffiths02a">Paper <code class="language-plaintext highlighter-rouge">Griffiths02a</code></h4>
+<h4 id="griffiths02a-griffiths-t-and-m-steyvers-2002a-a-probabilistic-approach-to-semantic-representation-in-proceedings-of-the-24th-annual-conference-of-the-cognitive-science-society"><code class="language-plaintext highlighter-rouge">Griffiths02a</code> Griffiths, T. and M. Steyvers (2002a). A probabilistic approach to semantic representation. In Proceedings of the 24th Annual Conference of the Cognitive Science Society.</h4>
 
 <p>Derive a Gibbs sampler for LDA and introduce Dirichlet prior on topics $\boldsymbol \varphi_k$.</p>
 
 <p><a id="Griffiths02b"></a></p>
-<h4 id="paper-griffiths02b">Paper <code class="language-plaintext highlighter-rouge">Griffiths02b</code></h4>
+<h4 id="griffiths02b-griffiths-t-l-and-m-steyvers-2002b-prediction-and-semantic-association-in-nips-pp-1118"><code class="language-plaintext highlighter-rouge">Griffiths02b</code> Griffiths, T. L. and M. Steyvers (2002b). Prediction and semantic association. In NIPS, pp. 11–18.</h4>
 
 <p>Almost the same paper as [<a href="#Griffiths02a">Griffiths02a</a>].</p>
 
 <p><a id="Blei03"></a></p>
-<h4 id="paper-blei03">Paper <code class="language-plaintext highlighter-rouge">Blei03</code></h4>
+<h4 id="blei03-blei-d-m-a-y-ng-and-m-i-jordan-2003-march-latent-dirichlet-allocation-j-mach-learn-res-3-9931022"><code class="language-plaintext highlighter-rouge">Blei03</code> Blei, D. M., A. Y. Ng, and M. I. Jordan (2003, March). Latent dirichlet allocation. J. Mach. Learn. Res. 3, 993–1022.</h4>
 
 <p>Most cited paper for LDA, extended version of [<a href="#Blei02">Blei02</a>].</p>
 
-<p><a id="Griffiths04"></a></p>
-<h4 id="paper-griffiths04">Paper <code class="language-plaintext highlighter-rouge">Griffiths04</code></h4>
-
-<p>Less technical paper showing application of LDA to several datasets.</p>
-
-<p><a id="Heinrich04"></a></p>
-<h4 id="paper-heinrich04">Paper <code class="language-plaintext highlighter-rouge">Heinrich04</code></h4>
-
-<p>Heavily detailed tutorial about LDA, and inference using Gibbs sampling.</p>
-
 <p><a id="Steyvers06"></a></p>
-<h4 id="paper-steyvers06">Paper <code class="language-plaintext highlighter-rouge">Steyvers06</code></h4>
+<h4 id="steyvers06-steyvers-m-and-t-griffiths-2006-probabilistic-topic-models-in-t-landauer-d-mcna--mara-s-dennis-and-w-kintsch-eds-latent-semantic-analysis-a-road-to-meaning-laurence-erlbaum"><code class="language-plaintext highlighter-rouge">Steyvers06</code> Steyvers, M. and T. Griffiths (2006). Probabilistic topic models. In T. Landauer, D. Mcna- mara, S. Dennis, and W. Kintsch (Eds.), Latent Semantic Analysis: A Road to Meaning. Laurence Erlbaum.</h4>
 
 <p>LDA has been around for 3 years, they give an in-depth review and analysis of probabilistic models, full of deep insights. hey propose measure capturing similarity between topics (KL, KLsym, JS, cos, L1, L2), between a set of words and documents, and between words.</p>
 
 <p><a id="Blei12"></a></p>
-<h4 id="paper-blei12">Paper <code class="language-plaintext highlighter-rouge">Blei12</code></h4>
+<h4 id="blei12-blei-d-m-2012-april-probabilistic-topic-models-commun-acm-554-7784"><code class="language-plaintext highlighter-rouge">Blei12</code> Blei, D. M. (2012, April). Probabilistic topic models. Commun. ACM 55(4), 77–84.</h4>
 
 <p>A short, high-level review on topic models. Not technical.</p>
 
 <p><a id="Hoffman10"></a></p>
-<h4 id="paper-hoffman10">Paper <code class="language-plaintext highlighter-rouge">Hoffman10</code></h4>
+<h4 id="hoffman10-hoffman-m-bach-f--blei-d-2010-online-learning-for-latent-dirichlet-allocation-advances-in-neural-information-processing-systems-23"><code class="language-plaintext highlighter-rouge">Hoffman10</code> Hoffman, M., Bach, F., &amp; Blei, D. (2010). Online learning for latent dirichlet allocation. advances in neural information processing systems, 23.</h4>
 
 <p>Present an online version of the Variational EM algorithm introduced in [<a href="#Blei03">Blei03</a>].</p>
 
-<h3 id="evaluation-of-topic-models">Evaluation of topic models</h3>
+<h2 id="evaluation-of-topic-models">Evaluation of topic models</h2>
 
 <p><a id="Wei06"></a></p>
-<h4 id="paper-wei06">Paper <code class="language-plaintext highlighter-rouge">Wei06</code></h4>
+<h4 id="wei06-wei-x-and-b-croft-2006-lda-based-document-models-for-ad-hoc-retrieval-in-sigir"><code class="language-plaintext highlighter-rouge">Wei06</code> Wei, X. and B. Croft (2006). Lda-based document models for ad-hoc retrieval. In SIGIR.</h4>
 
 <p>As an extrinsic evaluation method of topics, used discovered topics for information retrieval.</p>
 
 <p><a id="Chang09"></a></p>
-<h4 id="paper-chang09">Paper <code class="language-plaintext highlighter-rouge">Chang09</code></h4>
+<h4 id="chang09-chang-j-j-boyd-graber-c-wang-s-gerrish-and-d-m-blei-2009-reading-tea-leaves-how-humans-interpret-topic-models-in-nips"><code class="language-plaintext highlighter-rouge">Chang09</code> Chang, J., J. Boyd-Graber, C. Wang, S. Gerrish, and D. M. Blei (2009). Reading tea leaves: How humans interpret topic models. In NIPS.</h4>
 
 <p>Shown that surprisingly predictive likelihood (or equivalently, perplexity) and human judgment are often not correlated, and even sometimes slightly anti-correlated.</p>
 
@@ -178,155 +165,115 @@ For each topic, they took the five top words of that topics and added a random s
 If on the other hand, many people identified other words as the intruder, it means that they could not see the logic into the association of words, and we can conclude the topic was not good enough.</p>
 
 <p><a id="Wallach09a"></a></p>
-<h4 id="paper-wallach09a">Paper <code class="language-plaintext highlighter-rouge">Wallach09a</code></h4>
+<h4 id="wallach09a-wallach-h-m-i-murray-r-salakhutdinov-and-d-mimno-2009-evaluation-methods-for-topic-models-in-proceedings-of-the-26th-annual-international-conference-on-machine-learning-icml-09-new-york-ny-usa-pp-11051112-acm"><code class="language-plaintext highlighter-rouge">Wallach09a</code> Wallach, H. M., I. Murray, R. Salakhutdinov, and D. Mimno (2009). Evaluation methods for topic models. In Proceedings of the 26th Annual International Conference on Machine Learning, ICML ’09, New York, NY, USA, pp. 1105–1112. ACM.</h4>
 
-<table>
-  <tbody>
-    <tr>
-      <td>Gives tons of methods to compute approximations of the likelihood $p(\boldsymbol w_d</td>
-      <td>\boldsymbol \Phi, \alpha)$ for one unseen document, which is intractable but needed to evaluate topic models.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><a id="Buntine09"></a></p>
-<h4 id="paper-buntine09">Paper <code class="language-plaintext highlighter-rouge">Buntine09</code></h4>
-
-<p>Like [<a href="#Wallach09a">Wallach09a</a>], gives method to estimate the likelihood of unseen documents.</p>
+<p>Gives tons of methods to compute approximations of the likelihood $p(\boldsymbol w_d | \boldsymbol \Phi, \alpha)$ for one unseen document, which is intractable but needed to evaluate topic models.</p>
 
 <p><a id="AlSumait09"></a></p>
-<h4 id="paper-alsumait09">Paper <code class="language-plaintext highlighter-rouge">AlSumait09</code></h4>
+<h4 id="alsumait09-alsumait-l-d-barbara-j-gentle-and-c-domeniconi-2009-topic-significance-ranking-of-lda-generative-models-in-ecml"><code class="language-plaintext highlighter-rouge">AlSumait09</code> AlSumait, L., D. Barbara, J. Gentle, and C. Domeniconi (2009). Topic significance ranking of lda generative models. In ECML.</h4>
 
-<p>Define measures based on three prototypes of junk and insignificant topics to rank discovered topics according to their significance score. The three junk prototypes are the uniform word-distribution, the empirical corpus word-distribution, and the uniform document-distribution:
-    \(p(w | \text{topic}) \propto 1
-        \qquad
-        p(w | \text{topic}) \propto \text{count}(w \text{ in corpus})
-        \qquad
-        p(d | \text{topic}) \propto 1\)
-Then the topic significance score is based on combinations of dissimilarities (KL divergence, cosine, and correlation) from those three junk prototypes. However</p>
+<p>Define measures based on three prototypes of junk and insignificant topics to rank discovered topics according to their significance score. The three junk prototypes are the uniform word-distribution, the empirical corpus word-distribution, and the uniform document-distribution:</p>
 
-<p><a id="Newman10c"></a></p>
-<h4 id="paper-newman10c">Paper <code class="language-plaintext highlighter-rouge">Newman10c</code></h4>
+\[p(w | \text{topic}) \propto 1
+    \qquad
+    p(w | \text{topic}) \propto \text{count}(w \text{ in corpus})
+    \qquad
+    p(d | \text{topic}) \propto 1\]
 
-<p>Tries different coherence measure on different dataset to compare them.</p>
+<p>Then the topic significance score is based on combinations of dissimilarities (KL divergence, cosine, and correlation) from those three junk prototypes. However</p>
 
-<p><a id="Mimno11b"></a></p>
-<h4 id="paper-mimno11b">Paper <code class="language-plaintext highlighter-rouge">Mimno11b</code></h4>
-
-<p>Presents a Baysian methods measuring how well a topics model fits a corpus.</p>
-
-<h3 id="topic-coherence">Topic coherence</h3>
+<h2 id="topic-coherence">Topic coherence</h2>
 
 <p><a id="Newman10a"></a></p>
-<h4 id="paper-newman10a">Paper <code class="language-plaintext highlighter-rouge">Newman10a</code></h4>
+<h4 id="newman10a-newman-d-y-noh-e-talley-s-karimi-and-t-baldwin-2010-evaluating-topic-models-for-digital-libraries-in-proceedings-of-the-10th-annual-joint-conference-on-digital-libraries-new-york-ny-usa-pp-215224-acm"><code class="language-plaintext highlighter-rouge">Newman10a</code> Newman, D., Y. Noh, E. Talley, S. Karimi, and T. Baldwin (2010). Evaluating topic models for digital libraries. In Proceedings of the 10th annual joint conference on Digital libraries, New York, NY, USA, pp. 215–224. ACM.</h4>
 
 <p>Introduced the UCI coherence measure $\sum_{i&lt;j} \log \frac{p(w_i, w_j)}{p(w_i)p(w_j)}$ for $w_1$, …, $w_{10}$ top words (based on PMI). The measure is extrinsic as it uses empirical probabilities from an external corpus such as Wikipedia.</p>
 
 <p><a id="Mimno11a"></a></p>
-<h4 id="paper-mimno11a">Paper <code class="language-plaintext highlighter-rouge">Mimno11a</code></h4>
+<h4 id="mimno11a-mimno-d-h-wallach-e-talley-m-leenders-and-a-mccallum-2011-optimizing"><code class="language-plaintext highlighter-rouge">Mimno11a</code> Mimno, D., H. Wallach, E. Talley, M. Leenders, and A. McCallum (2011). Optimizing</h4>
+<p>semantic coherence in topic models. In EMNLP.</p>
 
 <p>Introduced the UMass coherence measure $\sum_{i&lt;j} \log \frac{1+D(w_i, w_j)}{D(w_i)}$ for $w_1$, …, $w_{10}$ top words (intrinsic measure).</p>
 
 <p><a id="Stevens12"></a></p>
-<h4 id="paper-stevens12">Paper <code class="language-plaintext highlighter-rouge">Stevens12</code></h4>
+<h4 id="stevens12-stevens-k-p-kegelmeyer-d-andrzejewski-and-d-buttler-2012-exploring-topic-coher--ence-over-many-models-and-many-topics-in-proceedings-of-the-2012-joint-conference-on-empirical-methods-in-natural-language-processing-and-computational-natural-language-learning-emnlp-conll-12-stroudsburg-pa-usa-pp-952961-association-for-computational-linguistics"><code class="language-plaintext highlighter-rouge">Stevens12</code> Stevens, K., P. Kegelmeyer, D. Andrzejewski, and D. Buttler (2012). Exploring topic coher- ence over many models and many topics. In Proceedings of the 2012 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning, EMNLP-CoNLL ’12, Stroudsburg, PA, USA, pp. 952–961. Association for Computational Linguistics.</h4>
 
 <p>Explore computing the two coherence metrics UCI from [<a href="#Newman10a">Newman10a</a>] and UMass from [<a href="#Mimno11a">Mimno11a</a>] on multiple datasets, for different number of topics. The aggregate results (computing average and entropy). They assume these two are good metrics and use them to compare different topic models: LDA, LSA+SVD, and LSA+NMF.</p>
 
-<h3 id="interactive-lda">Interactive LDA</h3>
+<h2 id="interactive-lda">Interactive LDA</h2>
 
 <p><a id="Andr09"></a></p>
-<h4 id="paper-andr09">Paper <code class="language-plaintext highlighter-rouge">Andr09</code></h4>
+<h4 id="andr09-andrzejewski-d-x-zhu-and-m-craven-2009-incorporating-domain-knowledge-into-topic-modeling-via-dirichlet-forest-priors-in-icml-pp-2532"><code class="language-plaintext highlighter-rouge">Andr09</code> Andrzejewski, D., X. Zhu, and M. Craven (2009). Incorporating domain knowledge into topic modeling via dirichlet forest priors. In ICML, pp. 25–32.</h4>
 
-<p>Make the discovery of topics semi-supervised where a user repeatedly gives orders on top words of discovered topics: “those words should be in the same topic”, “those “rds should not be in the same topic”, and “those “rds should be by themselves”. Orders are encoded into pair-wise constraints on words: two words have to or can not be in the same topic. Then the model is trained again with a complex new prior encoding the constraints based on Dirichlet Forests.</p>
+<p>Make the discovery of topics semi-supervised where a user repeatedly gives orders on top words of discovered topics: “those words should be in the same topic”, “those words should not be in the same topic”, and “those words should be by themselves”. Orders are encoded into pair-wise constraints on words: two words have to or can not be in the same topic. Then the model is trained again with a complex new prior encoding the constraints based on Dirichlet Forests.</p>
 
 <p><a id="Hu11"></a></p>
-<h4 id="paper-hu11">Paper <code class="language-plaintext highlighter-rouge">Hu11</code></h4>
+<h4 id="hu11-hu-y-j-boyd-graber-and-b-satinoff-2011-interactive-topic-modeling-in-association"><code class="language-plaintext highlighter-rouge">Hu11</code> Hu, Y., J. Boyd-Graber, and B. Satinoff (2011). Interactive topic modeling. In Association</h4>
+<p>for Computational Linguistics.</p>
 
 <p>Extended approach from [<a href="#Andr09">Andr09</a>] proposing interactive topic modeling (ITM) where we don’t have to start over the Gibbs sampler after each human action. Instead, the prior is updated in-place to incorporate the new constraints and the underlying model is changed and seen a starting position for a new Markov chain. Updating the model is done by state ablation; invalidate some topic-word assignments by setting $z = -1$. The counts are decremented accordingly</p>
 
 <p>They explore several strategies of invalidation: invalidates all assignments, only of documents that have any of the terms constraints, only of the terms concerned, or none. After each human actions, the Gibbs sample runs for 30 more iterations before asking for human feedback again. Experiments have been done using Amazon Mechanical Turk.</p>
 
-<h3 id="misc-topic-modeling">Misc topic modeling</h3>
+<h2 id="misc-topic-modeling">Misc topic modeling</h2>
 
 <p><a id="Pauca04"></a></p>
-<h4 id="paper-pauca04">Paper <code class="language-plaintext highlighter-rouge">Pauca04</code></h4>
+<h4 id="pauca04-pauca-v-p-f-shahnaz-m-w-berry-and-r-j-plemmons-2004-text-mining-using"><code class="language-plaintext highlighter-rouge">Pauca04</code> Pauca, V. P., F. Shahnaz, M. W. Berry, and R. J. Plemmons (2004). Text mining using</h4>
+<p>non-negative matrix factorizations. In SDM.</p>
 
 <p>Reference for successful use of NMF for topic modeling.</p>
 
 <p><a id="Lee99"></a></p>
-<h4 id="paper-lee99">Paper <code class="language-plaintext highlighter-rouge">Lee99</code></h4>
+<h4 id="lee99-lee-d-d-and-h-s-seung-1999-learning-the-parts-of-objects-by-non-negative-matrix"><code class="language-plaintext highlighter-rouge">Lee99</code> Lee, D. D. and H. S. Seung (1999). Learning the parts of objects by non-negative matrix</h4>
+<p>factorization. Nature 401(6755).</p>
 
 <p>Reference for successful use of NMF for topic modeling.</p>
 
-<p><a id="Doyle09"></a></p>
-<h4 id="paper-doyle09">Paper <code class="language-plaintext highlighter-rouge">Doyle09</code></h4>
-
-<p>Elkan’s paper about burstiness.</p>
-
 <p><a id="Wallach09b"></a></p>
-<h4 id="paper-wallach09b">Paper <code class="language-plaintext highlighter-rouge">Wallach09b</code></h4>
+<h4 id="wallach09b-wallach-h-m-i-murray-r-salakhutdinov-and-d-mimno-2009-evaluation-methods-for-topic-models-in-proceedings-of-the-26th-annual-international-conference-on-machine-learning-icml-09-new-york-ny-usa-pp-11051112-acm"><code class="language-plaintext highlighter-rouge">Wallach09b</code> Wallach, H. M., I. Murray, R. Salakhutdinov, and D. Mimno (2009). Evaluation methods for topic models. In Proceedings of the 26th Annual International Conference on Machine Learning, ICML ’09, New York, NY, USA, pp. 1105–1112. ACM.</h4>
 
 <p>Study the effect of different priors on LDA output.</p>
 
-<p><a id="Andr11"></a></p>
-<h4 id="paper-andr11">Paper <code class="language-plaintext highlighter-rouge">Andr11</code></h4>
-
-<p>Use discovered topics in a search engine, use query expansion (like we do in Squid).</p>
-
-<p><a id="Chang10"></a></p>
-<h4 id="paper-chang10">Paper <code class="language-plaintext highlighter-rouge">Chang10</code></h4>
-
-<p>Presents a “manual” topic modeling where humans are asked to repeatedly tag documents and cluster these annotations.</p>
-
 <p><a id="Chuang12"></a></p>
-<h4 id="paper-chuang12">Paper <code class="language-plaintext highlighter-rouge">Chuang12</code></h4>
+<h4 id="chuang12-chuang-j-c-d-manning-and-j-heer-2012-termite-visualization-techniques-for-assessing-textual-topic-models-in-advanced-visual-interfaces"><code class="language-plaintext highlighter-rouge">Chuang12</code> Chuang, J., C. D. Manning, and J. Heer (2012). Termite: Visualization techniques for assessing textual topic models. In Advanced Visual Interfaces.</h4>
 
-<p>Define the distinctiveness $\mathcal{D}(w)$ of a word as the KL divergence between the topic distribution $p(k|w)$ given the word $w$ and the empirical topic distribution $p(k)$ of the corpus. Also, the distinctiveness of a word can be weighted by its frequency, this how we define the saliency $\mathcal{S}(w)$ of a word.
-\(\mathcal{D}(w)
-    = \sum\_{\text{topic } k}
+<p>Define the distinctiveness $\mathcal{D}(w)$ of a word as the KL divergence between the topic distribution $p(k|w)$ given the word $w$ and the empirical topic distribution $p(k)$ of the corpus. Also, the distinctiveness of a word can be weighted by its frequency, this how we define the saliency $\mathcal{S}(w)$ of a word.</p>
+
+\[\mathcal{D}(w)
+    = \sum_{\text{topic } k}
     p\left(k|w\right) \log \frac{p(k|w)}{p(k)}
     = \text{KL}\big(p(k|w) \ \Vert \ p(k)\big)
     \qquad
-    \mathcal{S}(w) = p(w) \mathcal{D}(w)\)
-Also present a new visualization of topics distributions based on a matrix of circles, and a word ordering such that topics span contiguous words.</p>
+    \mathcal{S}(w) = p(w) \mathcal{D}(w)\]
 
-<h3 id="misc">Misc</h3>
+<p>Also present a new visualization of topics distributions based on a matrix of circles, and a word ordering such that topics span contiguous words.</p>
+
+<h2 id="misc">Misc</h2>
 
 <p><a id="Campbell66"></a></p>
-<h4 id="paper-campbell66">Paper <code class="language-plaintext highlighter-rouge">Campbell66</code></h4>
+<h4 id="campbell66-campbell-l-l-1966-exponential-entropy-as-a-measure-of-extent-of-a-distribution-in-zeitschrift-fu-̈r-wahrscheinlichkeitstheorie-und-verwandte-gebiete-volume-5"><code class="language-plaintext highlighter-rouge">Campbell66</code> Campbell, L. L. (1966). Exponential entropy as a measure of extent of a distribution. In Zeitschrift fu ̈r Wahrscheinlichkeitstheorie und Verwandte Gebiete, Volume 5.</h4>
 
 <p>Reference for argument: given a distribution, the exponential entropy is a measure of the extent, or spread, of the distribution. For eg, measure how much a word is shared across several topics.</p>
 
 <p><a id="Geman84"></a></p>
-<h4 id="paper-geman84">Paper <code class="language-plaintext highlighter-rouge">Geman84</code></h4>
+<h4 id="geman84-geman-s-and-d-geman-1984-november-stochastic-relaxation-gibbs-distributions-and-the-bayesian-restoration-of-images-ieee-trans-pattern-anal-mach-intell-66-721741"><code class="language-plaintext highlighter-rouge">Geman84</code> Geman, S. and D. Geman (1984, November). Stochastic relaxation, gibbs distributions, and the bayesian restoration of images. IEEE Trans. Pattern Anal. Mach. Intell. 6(6), 721–741.</h4>
 
 <p>Introduced Gibbs sampling.</p>
 
-<p><a id="Bottou98"></a></p>
-<h4 id="paper-bottou98">Paper <code class="language-plaintext highlighter-rouge">Bottou98</code></h4>
-
-<p>Convergence of online algorihtms, gives the condition $\sum_{t=0}^\infty \rho_t^2 &lt; \infty$ needed to prove the convergence of Online Variational LDA [<a href="#Hoffman10">Hoffman10</a>].</p>
-
-<p><a id="Lee00"></a></p>
-<h4 id="paper-lee00">Paper <code class="language-plaintext highlighter-rouge">Lee00</code></h4>
-
-<p>Reference for NMF.</p>
-
 <p><a id="Bishop06"></a></p>
-<h4 id="paper-bishop06">Paper <code class="language-plaintext highlighter-rouge">Bishop06</code></h4>
+<h4 id="bishop06-bishop-c-m-2006-pattern-recognition-and-machine-learning-information-science-and-statistics-secaucus-nj-usa-springer-verlag-new-york-inc"><code class="language-plaintext highlighter-rouge">Bishop06</code> Bishop, C. M. (2006). Pattern Recognition and Machine Learning (Information Science and Statistics). Secaucus, NJ, USA: Springer-Verlag New York, Inc.</h4>
 
 <p>Heavy book used a reference on Bayesian methods.</p>
 
 <p><a id="Tzikas08"></a></p>
-<h4 id="paper-tzikas08">Paper <code class="language-plaintext highlighter-rouge">Tzikas08</code></h4>
+<h4 id="tzikas08-tzikas-d-a-likas-and-n-galatsanos-2008-november-the-variational-approximation-for-bayesian-inference-ieee-signal-processing-magazine-256-131146"><code class="language-plaintext highlighter-rouge">Tzikas08</code> Tzikas, D., A. Likas, and N. Galatsanos (2008, November). The variational approximation for Bayesian inference. IEEE Signal Processing Magazine 25(6), 131–146.</h4>
 
 <p>A step-by-step tutorial on EM algorithm, following closely the Bishop book [<a href="#Bishop06">Bishop06</a>]. They described the MAP as poor man’s Bayesian inference as this is a way of including prior knowledge without having to pay the expensive price of computing the normalizer.</p>
 
 <p><a id="Crump13"></a></p>
-<h4 id="paper-crump13">Paper <code class="language-plaintext highlighter-rouge">Crump13</code></h4>
+<h4 id="crump13-crump-m-j-c-j-v-mcdonnell-and-t-m-gureckis-2013-march-evaluating-amazons-mechanical-turk-as-a-tool-for-experimental-behavioral-research-plos-one-83-e57410"><code class="language-plaintext highlighter-rouge">Crump13</code> Crump, M. J. C., J. V. McDonnell, and T. M. Gureckis (2013, March). Evaluating Amazon’s Mechanical Turk as a Tool for Experimental Behavioral Research. PLoS ONE 8(3), e57410.</h4>
 
-<p>On using Amazon Turk for doing experiments. One experiment is about measuring the performance of users when varying the amount of the financial incentive, either $2 and a bonus up to $2.5 based on task performance, or $0.75 with no bonus. Results show that the amount on the incentive does not effect the task performance but does effect the rate at which workers sign up for the task.</p>
-
+<p>On using Amazon Turk for doing experiments. One experiment is about measuring the performance of users when varying the amount of the financial incentive, either <span>$</span>2 and a bonus up to <span>$</span>2.5 based on task performance, or <span>$</span>0.75 with no bonus. Results show that the amount on the incentive does not effect the task performance but does effect the rate at which workers sign up for the task.</p>
 
 
   <div id="disqus_thread"></div>
@@ -344,8 +291,6 @@ Also present a new visualization of topics distributions based on a matrix of ci
     (d.head || d.body).appendChild(s);
     })();
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </div>
       </div>
     </div>
