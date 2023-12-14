@@ -479,16 +479,16 @@ qui nous concernent sur le schéma et on peut y aller :</p>
 </div>
 
 <p>Donc on se place dans la situation où l’ordinateur en haut à gauche
-(0.0.1.1) veut envoyer un message à l’ordinateur à droite (0.0.3.1).</p>
+(0.0.1.1) veut envoyer un message à l’ordinateur à droite (0.0.3.2).</p>
 
 <ol>
   <li>
     <p>Il écrit donc son message sur notre papier spécial (c’est-à-dire,
 utilise le protocole TCP), le met dans une enveloppe réseau (en bleu)
 qui va parcourir tout le réseau et y note l’adresse IP du destinataire :
-0.0.3.1.</p>
+0.0.3.2.</p>
 
-    <p>Ensuite, il regarde ensuite si le destinataire est dans le même
+    <p>Ensuite, il regarde si le destinataire est dans le même
  sous-réseau que lui ou pas. Il est dans le sous-réseau 0.0.1.X alors que
  le destinataire est dans le sous-réseau 0.0.3.X, donc ils ne sont pas
  dans le même : il doit donc l’envoyer par un routeur. Sinon, il aurait
@@ -555,9 +555,9 @@ et l’aiguille donc dans sa branche d’en bas à droite.</p>
  </div>
   </li>
   <li>
-    <p>Enfin, l’ordinateur 0.0.3.1 voit arriver une enveloppe liaison avec son
+    <p>Enfin, l’ordinateur 0.0.3.2 voit arriver une enveloppe liaison avec son
 adresse MAC (… :03:02), il l’ouvre donc. Il y trouve une enveloppe
-réseau avec son adresse IP (0.0.3.1), il l’ouvre donc et peux récupérer
+réseau avec son adresse IP (0.0.3.2), il l’ouvre donc et peux récupérer
 le message que lui a envoyé 0.0.1.1. Ouf !</p>
   </li>
 </ol>
@@ -571,7 +571,6 @@ le message que lui a envoyé 0.0.1.1. Ouf !</p>
     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
     var disqus_config = function () {
       this.page.url = "https://qpleple.com/routing/";  // Replace PAGE_URL with your page's canonical URL variable
-      //this.page.identifier = "/routing/"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
     var d = document, s = d.createElement('script');
