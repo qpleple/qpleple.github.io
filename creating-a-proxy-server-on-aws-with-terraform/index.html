@@ -58,7 +58,7 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Creating a Proxy Server on AWS with Terraform: A Step-by-Step Guide</h1>
-  <span class="post-date">13 Dec 2023</span>
+  <span class="post-date">14 Dec 2023</span>
 
   
 
@@ -66,13 +66,13 @@
 
 <h2 id="apache-configuration-script">Apache configuration script</h2>
 
-<p>We are going to launch an EC2 instance with Terraform and automatically executing a bash script <code class="language-plaintext highlighter-rouge">setup-proxy.sh</code> that will configure Apache into a proxy.</p>
+<p>We are going to launch an EC2 instance with Terraform and automatically execute a bash script <code class="language-plaintext highlighter-rouge">setup-proxy.sh</code> to configure Apache.</p>
 
 <p>This script effectively turns the Apache server into a proxy that redirects HTTP traffic to a specified URL over HTTPS. The key lies in the <code class="language-plaintext highlighter-rouge">ProxyPass</code> and <code class="language-plaintext highlighter-rouge">ProxyPassReverse</code> directives, which handle the forwarding and response modification, respectively. Additionally, by using <code class="language-plaintext highlighter-rouge">mod_ssl</code> and configuring SSL settings, it ensures that the traffic between the proxy and the backend server remains encrypted, enhancing security.</p>
 
 <p>Please note that every situation is different, and the effectiveness and appropriateness of this setup may vary depending on your specific requirements and the unique characteristics of your network environment.</p>
 
-<p>Let’s break down what each part of the script does and how it contributes to setting up a web proxy.</p>
+<p>Let’s break down what each part of the script does.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum update <span class="nt">-y</span>
 yum <span class="nb">install</span> <span class="nt">-y</span> httpd mod_ssl
@@ -80,12 +80,7 @@ yum <span class="nb">install</span> <span class="nt">-y</span> httpd mod_ssl
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">yum update -y</code>: This command updates the package manager’s database on the server. It ensures that you have the latest updates and security patches.</li>
-  <li><code class="language-plaintext highlighter-rouge">yum install -y httpd mod_ssl</code>: Installs two key components:
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">httpd</code>: The Apache HTTP Server, a widely-used web server software.</li>
-      <li><code class="language-plaintext highlighter-rouge">mod_ssl</code>: An Apache module that provides SSL/TLS support, essential for secure communication.</li>
-    </ul>
-  </li>
+  <li><code class="language-plaintext highlighter-rouge">yum install -y httpd mod_ssl</code>: Installs <code class="language-plaintext highlighter-rouge">httpd</code>, the Apache HTTP Server, and <code class="language-plaintext highlighter-rouge">mod_ssl</code>, an Apache module that provides SSL/TLS support.</li>
 </ul>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">EOF</span><span class="sh">' &gt; /etc/httpd/conf.d/proxy.conf
@@ -106,38 +101,31 @@ yum <span class="nb">install</span> <span class="nt">-y</span> httpd mod_ssl
 </span><span class="no">EOF
 </span></code></pre></div></div>
 
-<p>This block creates a new configuration file for Apache (<code class="language-plaintext highlighter-rouge">proxy.conf</code>) and writes the following settings into it.</p>
-
-<p><code class="language-plaintext highlighter-rouge">&lt;VirtualHost *:80&gt;</code>: This line begins the definition of a virtual host listening on port 80 (HTTP). It means that the proxy will handle HTTP traffic.</p>
-
-<p>Inside the <code class="language-plaintext highlighter-rouge">&lt;VirtualHost&gt;</code> block:</p>
-
+<p>This block creates a new configuration file for Apache:</p>
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">&lt;Proxy *&gt;</code>: The <code class="language-plaintext highlighter-rouge">&lt;Proxy&gt;</code> directive specifies a block of proxy settings.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;VirtualHost *:80&gt;</code>: This line begins the definition of a virtual host listening on port 80 (HTTP).</li>
   <li><code class="language-plaintext highlighter-rouge">Require all granted</code>: This allows all traffic to pass through the proxy.</li>
-  <li><code class="language-plaintext highlighter-rouge">ProxyPass / https://target-url.com/</code>: This line tells Apache to forward all requests received at the root path (/) to <code class="language-plaintext highlighter-rouge">https://target-url.com/</code>. It effectively redirects traffic to the specified URL.</li>
+  <li><code class="language-plaintext highlighter-rouge">ProxyPass / https://target-url.com/</code>: This line tells Apache to forward all requests received at the root path to the target URL.</li>
   <li><code class="language-plaintext highlighter-rouge">ProxyPassReverse / https://target-url.com/</code>: This line ensures that any redirection instructions received from the backend server are modified to point to the proxy, maintaining the illusion that the proxy is the origin of the data.</li>
   <li><code class="language-plaintext highlighter-rouge">SSLProxyEngine On</code>: Enables SSL/TLS for the proxy.</li>
   <li><code class="language-plaintext highlighter-rouge">SSLProxyCheckPeerCN off</code>, <code class="language-plaintext highlighter-rouge">SSLProxyCheckPeerName off</code>, <code class="language-plaintext highlighter-rouge">SSLProxyCheckPeerExpire off</code>: These directives disable various checks for the SSL certificates of the proxied requests. It’s important in scenarios where the backend services use self-signed or non-standard certificates.</li>
   <li><code class="language-plaintext highlighter-rouge">SSLProxyVerify none</code>: Disables SSL verification entirely.</li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl <span class="nb">enable </span>httpd
-systemctl start httpd
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl <span class="nb">enable </span>httpd  <span class="c"># start automatically at system's boot</span>
+systemctl start httpd   <span class="c"># start immediately</span>
 </code></pre></div></div>
 
-<p>Enable and Start Apache:</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">systemctl enable httpd</code>: This command ensures that the Apache service will start automatically upon the system’s boot.</li>
-  <li><code class="language-plaintext highlighter-rouge">systemctl start httpd</code>: Starts the Apache service immediately.</li>
-</ul>
+<p>And we finish by enabling and starting Apache.</p>
 
 <h2 id="configure-a-security-group">Configure a security group</h2>
 
 <p>After setting up the Apache configuration for our proxy server, it’s crucial to ensure that the server is secure and accessible as intended. This leads us to the next essential component of our setup: defining the security group rules in AWS using Terraform.</p>
 
+<p>Here we assume that the proxy should only be accessible from the VPC. Feel free to change the rules to match your exact use case.</p>
+
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_security_group"</span> <span class="s2">"proxy"</span> <span class="p">{</span>
-  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="s2">"XXXXXX"</span>   <span class="c1"># your VPC id</span>
   <span class="nx">name</span>   <span class="p">=</span> <span class="s2">"proxy-security-group"</span>
 
   <span class="c1"># Allow all outbound traffic.</span>
@@ -189,10 +177,10 @@ systemctl start httpd
 
 <p>Copy the entire output of the public key; it will start with <code class="language-plaintext highlighter-rouge">ssh-rsa</code> followed by a long string of characters.</p>
 
-<p>We are now ready to create the key pair in AWS:</p>
+<p>We are now ready to import the public key in AWS:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_key_pair"</span> <span class="s2">"ec2"</span> <span class="p">{</span>
-  <span class="c1"># This is how we will identify the key pair within Amazon EC2.</span>
+  <span class="c1"># this is how the key will be identified in AWS</span>
   <span class="nx">key_name</span> <span class="p">=</span> <span class="s2">"imported-key"</span>
 
   <span class="c1"># The public key portion of the key pair</span>
@@ -220,7 +208,9 @@ systemctl start httpd
 
 <p>A few comments about this code:</p>
 <ul>
+  <li><code class="language-plaintext highlighter-rouge">ami</code>: you can use this one (which is a basic small linux), or <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html">use another one</a></li>
   <li><code class="language-plaintext highlighter-rouge">t2.micro</code> is chosen here, which is a good starting point for small-scale applications and testing purposes.</li>
+  <li><code class="language-plaintext highlighter-rouge">subnet_id</code>: the id of the subnet in which you want to start your instance</li>
   <li><code class="language-plaintext highlighter-rouge">key_name</code>: Refers to the SSH key pair for secure access to the instance. This is the key pair we created earlier.</li>
   <li><code class="language-plaintext highlighter-rouge">user_data</code>: This is a script that runs when the instance is first started. In our setup, it refers to <code class="language-plaintext highlighter-rouge">setup-proxy.sh</code>, which configures Apache as a proxy.</li>
 </ul>
