@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Setting Up a Robust AWS VPC From Scratch: A Terraform Guide &middot; Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/network/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Setting Up a Robust AWS VPC From Scratch: A Terraform Guide</h1>
+  <span class="post-date">Dec 15th, 2023</span>
+
+  
+
+  <p>Today, we’re diving into the world of netwoking in AWS, particularly focusing on setting up a Virtual Private Cloud (VPC) using Terraform. This guide is aimed at those who are familiar with AWS and are looking to expand their infrastructure using infrastructure as code (IaC).</p>
+
+<h2 id="what-is-a-vpc">What is a VPC?</h2>
+
+<p>A VPC is a foundational component in AWS. Essentially, it’s a private, isolated space within the AWS cloud infrastructure where you can launch AWS resources, such as virtual servers (EC2 instances), in a network that you have defined. This concept of a VPC revolutionized how businesses and individuals could leverage cloud computing.</p>
+
+<p>The beauty of a VPC lies in its flexibility and control. Users can customize their virtual networking environment to suit their specific needs, including selecting their own IP address range, creating subnets, and configuring route tables and network gateways. This level of control is crucial for various applications, from hosting a simple website to running complex, multi-tier, web-scale applications.</p>
+
+<p>And this is exactly what we are going to do in this post: we’ll delve into creating and configuring a VPC from scratch that you can then tweak to our specific requirements. We’ll walk through the process of setting up subnets, route tables, an internet gateway, a NAT gateway and flow logs. This setup ensures optimal configuration for internet connectivity, correct traffic routing, and enhanced network monitoring.</p>
+
+<h2 id="key-components-of-our-vpc-setup">Key components of our VPC setup</h2>
+
+<ol>
+  <li>
+    <p><strong>Creating the VPC</strong>: We start by defining the VPC with a specific CIDR block.</p>
+  </li>
+  <li>
+    <p><strong>Subnets and AZs</strong>: AWS recommends distributing resources across Availability Zones (AZs) for resilience. We’ll discuss how to create public and private subnets in different AZs.</p>
+  </li>
+  <li>
+    <p><strong>Route Tables</strong>: Setting up route tables for both public and private subnets is crucial. We’ll show how to direct traffic correctly through these tables.</p>
+  </li>
+  <li>
+    <p><strong>Internet Gateway &amp; NAT Gateway</strong>: These components are essential for enabling internet access in our VPC. The Internet Gateway connects the public subnet to the internet, while the NAT Gateway allows private subnet instances to access external services.</p>
+  </li>
+  <li>
+    <p><strong>Flow Logs</strong>: For monitoring and troubleshooting, we enable flow logs to capture information about the IP traffic in our VPC.</p>
+  </li>
+</ol>
+
+<p>Ready? Let’s go!</p>
+
+<h2 id="dont-use-default-networking-resources">Don’t use default networking resources</h2>
+
+<p>When you create a new AWS account, a <a href="https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html">default VPC</a> is automatically set up in each AWS region. This VPC comes with several network resources: default subnets in each Availability Zone, a default route table, a network access control list (ACL), and a default security group. These resources are configured to enable immediate use, allowing you to quickly deploy and run instances.</p>
+
+<p class="figure-sm">
+<img src="/img/2023-12-15-network/default-vpc-resources.png" />
+<small>Key components existing for a default VPC (<a href="https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html">documentation</a>)</small>
+</p>
+
+<p>However, it is best practice to <a href="https://www.trendmicro.com/cloudoneconformity/knowledge-base/aws/VPC/default-vpc-in-use.html">not use these default resources</a> for production environments. The main reason is that these defaults are configured with a broad set of permissions and settings aimed at ease of use and initial accessibility. For example, default security groups are generally more permissive.</p>
+
+<p>In Terraform, we are going to “adopt” these existing default resources, reset them, and rename them to align with our specific configurations and naming conventions. This process involves identifying these default resources in Terraform scripts and then applying configurations to meet our requirements.</p>
+
+<p>This approach not only helps in keeping the Terraform state in sync with the AWS environment but also ensures that our infrastructure is set up following our defined best practices.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Adopt and rename the default VPC</span>
+<span class="k">resource</span> <span class="s2">"aws_default_vpc"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"default-vpc"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Retrieve available AZ for the current region</span>
+<span class="k">data</span> <span class="s2">"aws_availability_zones"</span> <span class="s2">"all"</span> <span class="p">{}</span>
+
+<span class="c1"># For each AZ in the region, adopt and rename the default subnet associated</span>
+<span class="k">resource</span> <span class="s2">"aws_default_subnet"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">count</span> <span class="p">=</span> <span class="nx">length</span><span class="p">(</span><span class="k">data</span><span class="p">.</span><span class="nx">aws_availability_zones</span><span class="p">.</span><span class="nx">all</span><span class="p">.</span><span class="nx">names</span><span class="p">)</span>
+
+  <span class="nx">availability_zone</span> <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_availability_zones</span><span class="p">.</span><span class="nx">all</span><span class="p">.</span><span class="nx">names</span><span class="p">[</span><span class="nx">count</span><span class="p">.</span><span class="nx">index</span><span class="p">]</span>
+
+  <span class="c1"># ensure that instances launched in this subnet won't have</span>
+  <span class="c1"># a public IP address associated by default</span>
+  <span class="nx">map_public_ip_on_launch</span> <span class="p">=</span> <span class="kc">false</span>
+
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"default-vpc-</span><span class="k">${data</span><span class="p">.</span><span class="nx">aws_availability_zones</span><span class="p">.</span><span class="nx">all</span><span class="p">.</span><span class="nx">names</span><span class="p">[</span><span class="nx">count</span><span class="p">.</span><span class="nx">index</span><span class="p">]</span><span class="k">}</span><span class="s2">"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Adopt and rename the default route table associated with the default VPC</span>
+<span class="k">resource</span> <span class="s2">"aws_default_route_table"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">default_route_table_id</span> <span class="p">=</span> <span class="nx">aws_default_vpc</span><span class="p">.</span><span class="nx">default</span><span class="p">.</span><span class="nx">default_route_table_id</span>
+
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"default-vpc-route-table"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Adopt and rename the default network access control list (ACL)</span>
+<span class="c1"># associated with the default VPC</span>
+<span class="k">resource</span> <span class="s2">"aws_default_network_acl"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">default_network_acl_id</span> <span class="p">=</span> <span class="nx">aws_default_vpc</span><span class="p">.</span><span class="nx">default</span><span class="p">.</span><span class="nx">default_network_acl_id</span>
+
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"default-vpc-network-acl"</span> <span class="p">}</span>
+
+  <span class="c1">// Ignore "subnet_ids" changes to avoid the known issue below.</span>
+  <span class="c1">// https://github.com/hashicorp/terraform/issues/9824</span>
+  <span class="c1">// https://github.com/terraform-providers/terraform-provider-aws/issues/346</span>
+  <span class="nx">lifecycle</span> <span class="p">{</span>
+    <span class="nx">ignore_changes</span> <span class="p">=</span> <span class="p">[</span><span class="nx">subnet_ids</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Adopt and rename the default security group associated with the default VPC</span>
+<span class="c1"># When Terraform first adopts the default security group, it immediately</span>
+<span class="c1"># removes all ingress and egress rules</span>
+<span class="k">resource</span> <span class="s2">"aws_default_security_group"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_default_vpc</span><span class="p">.</span><span class="nx">default</span><span class="p">.</span><span class="nx">id</span>
+
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"default-vpc-default-security-group"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="our-main-vpc">Our main VPC</h2>
+
+<p>We are now ready to create our own VPC.</p>
+
+<p>We need to define the IP range used by our VPC in the form of a CIDR block. For simplicity and efficient organization, I recommend using <code class="language-plaintext highlighter-rouge">10.0.0.0/8</code>. This range is widely used for private networks and is ideal for creating a intuitive and structured subnet layout.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_vpc"</span> <span class="s2">"this"</span> <span class="p">{</span>
+  <span class="nx">cidr_block</span> <span class="p">=</span> <span class="s2">"10.0.0.0/16"</span>
+
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-vpc"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It is considered good practice to name all resources created in your infrastructure using tags, as it greatly enhances manageability, clarity, and tracking of resources within a complex cloud environment.</p>
+
+<h2 id="public-and-private-subnets">Public and private subnets</h2>
+
+<p>With our VPC now in place, the next step is creating subnets. Subnets are subdivisions of a VPC helping to organize and secure our resources by distributing them across different AZs within an AWS Region.</p>
+
+<p>In the context of a multi-account infrastructure (<a href="/why-embracing-aws-multi-account-strategy-is-essential/">see why it is best practice</a>), we need to share resources across accounts in a common VPC. However, the mapping of AZs (like <code class="language-plaintext highlighter-rouge">eu-west-1a</code>, <code class="language-plaintext highlighter-rouge">eu-west-1b</code>, etc.) is unique to each AWS account. This means that <code class="language-plaintext highlighter-rouge">eu-west-1a</code> in one account may not correspond to the same physical location as <code class="language-plaintext highlighter-rouge">eu-west-1a</code> in another account. Therefore, we will be using the AZ IDs, unique and consistent identifiers for each AZ.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"main_public1"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>                  <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span>              <span class="p">=</span> <span class="s2">"10.0.101.0/24"</span>
+  <span class="nx">availability_zone_id</span>    <span class="p">=</span> <span class="s2">"euw1-az1"</span>
+  <span class="nx">map_public_ip_on_launch</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">tags</span>                    <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-public1"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"main_public2"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>                  <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span>              <span class="p">=</span> <span class="s2">"10.0.102.0/24"</span>
+  <span class="nx">availability_zone_id</span>    <span class="p">=</span> <span class="s2">"euw1-az2"</span>
+  <span class="nx">map_public_ip_on_launch</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">tags</span>                    <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-public2"</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"main_private1"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>                  <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span>              <span class="p">=</span> <span class="s2">"10.0.1.0/24"</span>
+  <span class="nx">availability_zone_id</span>    <span class="p">=</span> <span class="s2">"euw1-az1"</span>
+  <span class="nx">map_public_ip_on_launch</span> <span class="p">=</span> <span class="kc">false</span>
+  <span class="nx">tags</span>                    <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-private1"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"main_private2"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>                  <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span>              <span class="p">=</span> <span class="s2">"10.0.2.0/24"</span>
+  <span class="nx">availability_zone_id</span>    <span class="p">=</span> <span class="s2">"euw1-az2"</span>
+  <span class="nx">map_public_ip_on_launch</span> <span class="p">=</span> <span class="kc">false</span>
+  <span class="nx">tags</span>                    <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-private2"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="public-and-private-route-tables">Public and private route tables</h2>
+
+<p>Route tables are essential components within a VPC, containing rules (routes) that guide network traffic from your subnet or gateway.</p>
+
+<p>Here are some key concepts abour route tables:</p>
+
+<ul>
+  <li>
+    <p><strong>Implicit router</strong>: A VPC has an implicit router, and route tables control the flow of network traffic.</p>
+  </li>
+  <li>
+    <p><strong>Subnet association</strong>: Each subnet in the VPC must be associated with a route table, which is known as a subnet route table. This association dictates the routing for that particular subnet. A single route table can be associated with multiple subnets.</p>
+  </li>
+  <li>
+    <p><strong>Main route table</strong>: By default, a VPC comes with a main route table. Subnets without an explicit route table association use this main route table. For enhanced security, it’s advised not to use this main route table.</p>
+  </li>
+</ul>
+
+<p>Let’s create two distinct route tables:</p>
+
+<ul>
+  <li>
+    <p><strong>A public route table</strong>: This table is linked to public subnets and will include a route to an Internet Gateway. This setup enables resources within these subnets to access the internet directly.</p>
+  </li>
+  <li>
+    <p><strong>A private route table</strong>: This table is linked to private subnets and will include a route to a NAT Gateway. This configuration allows resources in private subnets to reach external services, like software updates, without being directly accessible from the internet.</p>
+  </li>
+</ul>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Route tables</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route_table"</span> <span class="s2">"public"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">tags</span>   <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"public-route-table"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route_table"</span> <span class="s2">"private"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">tags</span>   <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"private-route-table"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Subnet associations to route tables</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"public1"</span> <span class="p">{</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="p">.</span><span class="nx">public</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="p">.</span><span class="nx">main_public1</span><span class="p">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"public2"</span> <span class="p">{</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="p">.</span><span class="nx">public</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="p">.</span><span class="nx">main_public2</span><span class="p">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"private1"</span> <span class="p">{</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="p">.</span><span class="nx">private</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="p">.</span><span class="nx">main_private1</span><span class="p">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"private2"</span> <span class="p">{</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="p">.</span><span class="nx">private</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="p">.</span><span class="nx">main_private2</span><span class="p">.</span><span class="nx">id</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="internet-gateway-for-public-subnets">Internet Gateway for public subnets</h2>
+
+<p>An Internet Gateway (IGW) in AWS is a critical piece that allows communication between instances in your VPC and the internet. After creating the IGW, to enable internet access for the public subnets, we add a specific route to it in their route table.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_internet_gateway"</span> <span class="s2">"this"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">tags</span>   <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-vpc-igw"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route"</span> <span class="s2">"public_internet_gateway"</span> <span class="p">{</span>
+  <span class="nx">route_table_id</span>         <span class="p">=</span> <span class="nx">aws_route_table</span><span class="p">.</span><span class="nx">public</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">destination_cidr_block</span> <span class="p">=</span> <span class="s2">"0.0.0.0/0"</span>
+  <span class="nx">gateway_id</span>             <span class="p">=</span> <span class="nx">aws_internet_gateway</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nat-gateway-for-private-subnets">NAT Gateway for private subnets</h2>
+
+<p>A NAT Gateway is a managed service that facilitates instances in a private subnet to initiate outbound traffic to the internet or other AWS services, while preventing the internet from initiating connections with those instances. This service is essential for maintaining the security and privacy of your private subnet resources.</p>
+
+<p>Our approach consists in:</p>
+
+<ol>
+  <li>
+    <p><strong>Allocating an elastic IP (EIP)</strong>: This EIP is associated with the NAT Gateway, representing its public-facing IP address. Traffic from your VPC that goes through the NAT Gateway appears to external services as originating from this EIP.</p>
+  </li>
+  <li>
+    <p><strong>Setting up the NAT Gateway</strong>: The NAT Gateway is created within a public subnet, using the allocated EIP.</p>
+  </li>
+  <li>
+    <p><strong>Routing trafic to the NAT Gateway</strong>: we add a route in the private route table to route the trafic to <code class="language-plaintext highlighter-rouge">0.0.0.0/0</code> (meaning all internet-bound traffic) to the NAT Gateway.</p>
+  </li>
+</ol>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_eip"</span> <span class="s2">"nat"</span> <span class="p">{</span>
+  <span class="nx">domain</span> <span class="p">=</span> <span class="s2">"vpc"</span>
+  <span class="nx">tags</span>   <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-vpc-nat"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_nat_gateway"</span> <span class="s2">"this"</span> <span class="p">{</span>
+  <span class="nx">allocation_id</span> <span class="p">=</span> <span class="nx">aws_eip</span><span class="p">.</span><span class="nx">nat</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">subnet_id</span>     <span class="p">=</span> <span class="nx">aws_subnet</span><span class="p">.</span><span class="nx">common_public1</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">tags</span>          <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"main-vpc-nat-gw"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_route"</span> <span class="s2">"private_nat_gateway"</span> <span class="p">{</span>
+  <span class="nx">route_table_id</span>         <span class="p">=</span> <span class="nx">aws_route_table</span><span class="p">.</span><span class="nx">private</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">destination_cidr_block</span> <span class="p">=</span> <span class="s2">"0.0.0.0/0"</span>
+  <span class="nx">nat_gateway_id</span>         <span class="p">=</span> <span class="nx">aws_nat_gateway</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="flow-logs">Flow logs</h2>
+
+<p>Flow logs capture information about the IP traffic going to and from network interfaces in a VPC, enabling network traffic monitoring and analysis.</p>
+
+<p>It is best practice to set up flow logs: they provide valuable insights into network traffic patterns and potential security issues within a VPC, enhancing network visibility and security management.</p>
+
+<p>Before setting up flow logs, we need a IAM role that have the permissions to publish these logs.</p>
+
+<h3 id="iam-role-vpcflowlogspublisher">IAM role VPCFlowLogsPublisher</h3>
+
+<p>To create this role, we declare:</p>
+
+<ul>
+  <li>
+    <p><strong>IAM Policy Document</strong>: A policy allowing the VPC Flow Logs service to assume an IAM role.</p>
+  </li>
+  <li>
+    <p><strong>IAM Role</strong>: A role named VPCFlowLogsPublisher configured with the above policy.</p>
+  </li>
+  <li>
+    <p><strong>Flow Logs Publish Policy</strong>: A policy document granting permissions for operations like creating and managing log groups and streams in CloudWatch Logs.</p>
+  </li>
+  <li>
+    <p><strong>Policy Attachment</strong>: Attaching the flow logs policy to the IAM role, enabling it to publish logs to CloudWatch.</p>
+  </li>
+</ul>
+
+<p>See more in the <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html#flow-logs-iam">AWS documentation</a>.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Allow the vpc-flow-logs service to assume an IAM role</span>
+<span class="k">data</span> <span class="s2">"aws_iam_policy_document"</span> <span class="s2">"flow_logs_publisher_assume_role_policy"</span> <span class="p">{</span>
+  <span class="nx">statement</span> <span class="p">{</span>
+    <span class="nx">principals</span> <span class="p">{</span>
+      <span class="nx">type</span>        <span class="p">=</span> <span class="s2">"Service"</span>
+      <span class="nx">identifiers</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"vpc-flow-logs.amazonaws.com"</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="nx">actions</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"sts:AssumeRole"</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Create an IAM role</span>
+<span class="k">resource</span> <span class="s2">"aws_iam_role"</span> <span class="s2">"flow_logs_publisher"</span> <span class="p">{</span>
+  <span class="nx">name</span>               <span class="p">=</span> <span class="s2">"VPCFlowLogsPublisher"</span>
+  <span class="nx">assume_role_policy</span> <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_iam_policy_document</span><span class="p">.</span><span class="nx">flow_logs_publisher_assume_role_policy</span><span class="p">.</span><span class="nx">json</span>
+<span class="p">}</span>
+
+<span class="c1"># Grant necessary permissions for publishing VPC Flow Logs to CloudWatch</span>
+<span class="k">data</span> <span class="s2">"aws_iam_policy_document"</span> <span class="s2">"flow_logs_publish_policy"</span> <span class="p">{</span>
+  <span class="nx">statement</span> <span class="p">{</span>
+    <span class="nx">actions</span> <span class="p">=</span> <span class="p">[</span>
+      <span class="s2">"logs:CreateLogGroup"</span><span class="p">,</span>
+      <span class="s2">"logs:CreateLogStream"</span><span class="p">,</span>
+      <span class="s2">"logs:PutLogEvents"</span><span class="p">,</span>
+      <span class="s2">"logs:DescribeLogGroups"</span><span class="p">,</span>
+      <span class="s2">"logs:DescribeLogStreams"</span>
+    <span class="p">]</span>
+    <span class="nx">resources</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"*"</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Attach the policy to the role</span>
+<span class="k">resource</span> <span class="s2">"aws_iam_role_policy"</span> <span class="s2">"flow_logs_publish_policy"</span> <span class="p">{</span>
+  <span class="nx">name</span> <span class="p">=</span> <span class="s2">"VPCFlowLogsPublishPolicy"</span>
+  <span class="nx">role</span> <span class="p">=</span> <span class="nx">aws_iam_role</span><span class="p">.</span><span class="nx">flow_logs_publisher</span><span class="p">.</span><span class="nx">id</span>
+
+  <span class="nx">policy</span> <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_iam_policy_document</span><span class="p">.</span><span class="nx">flow_logs_publish_policy</span><span class="p">.</span><span class="nx">json</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="activate-flow-logs-for-our-vpc">Activate flow logs for our VPC</h3>
+
+<p>Next we create a Cloudwatch log group for our flow logs and we activate the flow logs with the IAM role that we just created.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_log_group"</span> <span class="s2">"main_vpc_flow_logs"</span> <span class="p">{</span>
+  <span class="nx">name</span>              <span class="p">=</span> <span class="s2">"main-vpc-flow-logs"</span>
+  <span class="nx">retention_in_days</span> <span class="p">=</span> <span class="mi">365</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_flow_log"</span> <span class="s2">"main_vpc_flow_logs"</span> <span class="p">{</span>
+  <span class="nx">log_destination</span> <span class="p">=</span> <span class="nx">aws_cloudwatch_log_group</span><span class="p">.</span><span class="nx">main_vpc_flow_logs</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">iam_role_arn</span>    <span class="p">=</span> <span class="nx">aws_iam_role</span><span class="p">.</span><span class="nx">flow_log_publisher_role</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">vpc_id</span>          <span class="p">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">traffic_type</span>    <span class="p">=</span> <span class="s2">"ALL"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="activate-flow-logs-for-the-default-vpc">Activate flow logs for the default VPC</h3>
+
+<p>It is also a good idea to activate flow logs for the default VPC. We are not planning to use it, so there should be anything in it. Therefore, if for any reason there is netwok trafic in it, then we want to be able to inspect it!</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_log_group"</span> <span class="s2">"default_vpc_flow_logs"</span> <span class="p">{</span>
+  <span class="nx">name</span>              <span class="p">=</span> <span class="s2">"default-vpc-flow-logs"</span>
+  <span class="nx">retention_in_days</span> <span class="p">=</span> <span class="mi">365</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_flow_log"</span> <span class="s2">"default_vpc_flow_logs"</span> <span class="p">{</span>
+  <span class="nx">log_destination</span>      <span class="p">=</span> <span class="nx">aws_cloudwatch_log_group</span><span class="p">.</span><span class="nx">default_vpc_flow_logs</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">iam_role_arn</span>         <span class="p">=</span> <span class="nx">aws_iam_role</span><span class="p">.</span><span class="nx">flow_logs_publisher</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">vpc_id</span>               <span class="p">=</span> <span class="nx">aws_default_vpc</span><span class="p">.</span><span class="nx">default</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">traffic_type</span>         <span class="p">=</span> <span class="s2">"ALL"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/network/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>
