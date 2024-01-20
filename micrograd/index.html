@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Demystifying Backpropagation by Building a Basic Autograd Engine &middot; Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/micrograd/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Demystifying Backpropagation by Building a Basic Autograd Engine</h1>
+  <span class="post-date">Jan 19th, 2024</span>
+
+  
+
+  <p>Welcome! Our goal in this post is to implement from scratch a very basic autograd engine based on <a href="https://github.com/karpathy/micrograd">micrograd</a> (released by Andrej Karpathy for educational purposes).</p>
+
+<p>By doing so, we will gain a better understanding of the backpropagation algorithm and autograd engines.</p>
+
+<p>Ready? Let’s go! 🚀</p>
+
+<h1 id="what-is-an-autograd-engine">What is an autograd engine?</h1>
+
+<p>An autograd engine is a component in many deep learning frameworks, such as PyTorch, that simplifies training neural networks by automating derivative calculations for backpropagation.</p>
+
+<p>Here is a minimalist example with Pytorch where we define a loss as an expression of variables <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>. Then by calling <code class="language-plaintext highlighter-rouge">backward()</code>, the autograd engine computes the partial derivatives of the loss with respect to all variables involved (here, <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>) and stores them in each variable’s <code class="language-plaintext highlighter-rouge">.grad</code> attribute.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">torch</span>
+
+<span class="n">w1</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">tensor</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">loss</span><span class="p">.</span><span class="nf">backward</span><span class="p">()</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">∂loss/∂w1 = </span><span class="si">{</span><span class="n">w1</span><span class="p">.</span><span class="n">grad</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">∂loss/∂w2 = </span><span class="si">{</span><span class="n">w2</span><span class="p">.</span><span class="n">grad</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>∂loss/∂w1 = 1.0
+∂loss/∂w2 = -2.0
+</code></pre></div></div>
+
+<h1 id="training-a-neural-network-using-backpropagation">Training a neural network using backpropagation</h1>
+
+<p>Let’s first have a quick look at the backpropagation algorithm in order to understand what role the autograd engine plays in it.</p>
+
+<h2 id="1️⃣-forward-pass">1️⃣ Forward pass</h2>
+<p>During the forward pass, the neural network makes predictions using the current set of weights. The autograd engine keeps track of all the operations (like addition, multiplication, etc.) that were performed and the structure of the computational graph. A computational graph is a representation of all the operations and variables (like weights and biases) in your network.</p>
+
+<p>Here is the computational graph for the expression <code class="language-plaintext highlighter-rouge">loss = ((w1 - 1)**2 + (w2 - 5)**2) * 0.5</code> with <code class="language-plaintext highlighter-rouge">w1 = 2</code> and <code class="language-plaintext highlighter-rouge">w2 = 3</code>:</p>
+
+<p><img src="../img/2024-01-19-micrograd/computational-graph.png" alt="" /></p>
+
+<h2 id="2️⃣-backward-pass">2️⃣ Backward Pass</h2>
+<p>Once the loss is calculated, the backward pass begins. This is where the autograd engine really shines. ✨</p>
+
+<p>For each operation in the graph, the autograd engine knows how to compute the derivative of that operation. It uses the chain rule to propagate these derivatives by traversing the computational graph in reverse order.</p>
+
+<p>As a result, you get the gradient of the loss with respect to each weight. In our example, they are:</p>
+
+\[\frac{\partial \text{loss}}{\partial w_1}
+    \qquad
+    \frac{\partial \text{loss}}{\partial w_2}\]
+
+<h2 id="3️⃣-update-weights">3️⃣ Update Weights</h2>
+
+<p>Finally, these gradients are used to update the weights of the network, usually with some kind of gradient descent (with a learning rate $\alpha$):</p>
+
+\[\left\{
+\begin{aligned}
+w_1 &amp;\leftarrow w_1 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_1} \\
+w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
+\end{aligned}
+\right.\]
+
+<h1 id="implementing-a-basic-autograd-engine">Implementing a basic autograd engine</h1>
+
+<h2 id="-doing-calculations">🧮 Doing calculations</h2>
+
+<p>First we need to be able to do arithmetic operations. We want instances of <code class="language-plaintext highlighter-rouge">Value</code> to be used seamlessly in mathematical expressions, behaving like numeric types:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+</code></pre></div></div>
+
+<p>For that, we start our class <code class="language-plaintext highlighter-rouge">Value</code> with the operations addition, subtraction, multiplication and power by a constant.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">Value(data=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">data</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span>
+    
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="k">else</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">other</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="k">else</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="n">k</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>And now we can do calculations:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value(data=2.50)
+</code></pre></div></div>
+
+<h2 id="-keeping-track-of-the-computational-graph">🔗 Keeping track of the computational graph</h2>
+
+<p>In order to backpropagate the gradients to all weights of the network, we need to keep track of the computational graph: every time we do a operation, we keep a reference to the inputs of that operations in a property <code class="language-plaintext highlighter-rouge">children</code> of the new instance of <code class="language-plaintext highlighter-rouge">Value</code> holding the result.</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> class Value(object):
+<span class="gd">-    def __init__(self, data):
+</span><span class="gi">+    def __init__(self, data, children={}):
+</span>         self.data = data
+<span class="gi">+        self.children = children
+</span>        
+     def __repr__(self):
+         return f"Value(data={self.data:.2f})"
+     
+     def __add__(self, other):
+         other = Value(other) if isinstance(other, (int, float)) else other
+<span class="gd">-        return Value(self.data + other.data)
+</span><span class="gi">+        return Value(self.data + other.data, children={self, other})
+</span><span class="err">
+</span>     def __radd__(self, other):
+         return self + other 
+<span class="err">
+</span>     def __sub__(self, other):
+         return self + (-1 * other)
+    
+     def __mul__(self, other):
+         other = Value(other) if isinstance(other, (int, float)) else other
+<span class="gd">-        return Value(self.data * other.data)
+</span><span class="gi">+        return Value(self.data * other.data, children={self, other})
+</span>    
+     def __rmul__(self, other):
+         return self * other
+<span class="err">
+</span>     def __pow__(self, k):
+<span class="gd">-        return Value(self.data ** k)
+</span><span class="gi">+        return Value(self.data ** k, children={self})
+</span></code></pre></div></div>
+
+<p>Now after doing a calculation, we can inspect the children of the result:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">w1</span><span class="p">.</span><span class="n">children</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{Value(data=2.00), Value(data=3.00)}
+</code></pre></div></div>
+
+<h2 id="-storing-the-gradients">💾 Storing the gradients</h2>
+
+<p>Let’s add a <code class="language-plaintext highlighter-rouge">grad</code> property to our class that will hold the gradient of each instance:</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> def __init__(self, data, children={}):
+     self.data = data
+     self.children = children
+<span class="gi">+    self.grad = 0.0
+</span></code></pre></div></div>
+
+<h2 id="-backpropagating-the-gradients">⏪ Backpropagating the gradients</h2>
+
+<p>This is the core of the backpropagation algorithm. We want to compute the derivatives of our loss with respect to all weights of the network:</p>
+
+\[\text{grad}_{w_i} = \frac{\partial \text{loss}}{\partial w_i}\]
+
+<p>To do so, the end of the computational graph, holding the result of the loss. This derivative is simply 1:</p>
+
+\[\frac{\partial \text{loss}}{\partial \text{loss}} = 1\]
+
+<p>Then we go back at every node: given that we know the partial derivative of the loss with respect to the result of the computation, we compute the partial derivatives of the loss with respect to each of the children.</p>
+
+<h3 id="-addition">➕ Addition</h3>
+
+<p>In the expression $y = w_1 + w_2$, we suppose we know the gradient $\text{grad}_y$
+of the result $y$ and we want to backpropagate it to the inputs to compute $\text{grad}_{w_1}$ and $\text{grad}_{w_2}$.</p>
+
+<p>By applying the chain rule:</p>
+
+\[\text{grad}_{w_1}
+= \frac{\partial \text{loss}}{\partial w_1}
+= \frac{\partial \text{loss}}{\partial y} \times \frac{\partial y}{\partial w_1}
+= \text{grad}_y \times 1
+= \text{grad}_y\]
+
+<p>and the same way, we get that $\text{grad}_{w_2} = \text{grad}_y$.</p>
+
+<p>In other words, addition is simply forwarding the gradient to all of its inputs without changing it.</p>
+
+<p>In our code, when we perform an addition, let’s then define a <code class="language-plaintext highlighter-rouge">backward()</code> function to forward the gradient to its input. Now here is our method <code class="language-plaintext highlighter-rouge">Value.__add__</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">backward</span><span class="p">():</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span>
+        <span class="n">other</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">backward</span>
+
+    <span class="k">return</span> <span class="n">v</span>
+</code></pre></div></div>
+
+<p>However, we need to address a special case not yet covered: when an input node appears multiple times in the computational graph. Take, for instance, the simple expression $y = w_1 + w_1$. If we use the assignment <code class="language-plaintext highlighter-rouge">y.grad = w1.grad</code>, it would be executed twice, with the second execution overwriting the first. This would incorrectly result in $\text{grad}_{w_1} = \text{grad}_y$ instead of the correct  $\text{grad}_{w_1}  = 2 \text{grad}_y$.</p>
+
+<p>By switching to an incremental update with <code class="language-plaintext highlighter-rouge">+=</code>, we ensure proper accumulation of the gradient for each variable across all instances where it affects the final output.</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> def __add__(self, other):
+     if isinstance(other, int) or isinstance(other, float):
+         other = Value(other)
+ 
+     v = Value(self.data + other.data, children={self, other})
+     def backward():
+<span class="gd">-         self.grad = v.grad
+</span><span class="gi">+         self.grad += v.grad
+</span><span class="gd">-         other.grad = v.grad
+</span><span class="gi">+         other.grad += v.grad
+</span>     v.backward = backward
+ 
+     return v
+</code></pre></div></div>
+
+<p>To ensure this process functions correctly, it’s essential to reset the gradients to zero before commencing their computation (we will do it later).</p>
+
+<h3 id="️-multiplication">✖️ Multiplication</h3>
+
+<p>Doing the first operation (addition) was the hardest part. Now we just follow the same principle.</p>
+
+<p>In the expression $y = w_1 \times w_2$, we suppose we know the gradient $\text{grad}_y$ of the result $y$ and we want to backpropagate it to the inputs to compute $\text{grad}_{w_1}$ and $\text{grad}_{w_2}$.</p>
+
+<p>By applying the chain rule:</p>
+
+\[\text{grad}_{w_1}
+= \frac{\partial \text{loss}}{\partial w_1}
+= \frac{\partial \text{loss}}{\partial y} \times \frac{\partial y}{\partial w_1}
+= \text{grad}_y \times y\]
+
+<p>and the same way, we get that $\text{grad}_{w_2} = \text{grad}_y \times x$.</p>
+
+<p>In our code, when we perform an multiplication, the same way we did with addition, we define a <code class="language-plaintext highlighter-rouge">backward()</code> function to propagate the gradient to its input:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        
+    <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">backward</span><span class="p">():</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span>
+        <span class="n">other</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">data</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">backward</span>
+
+    <span class="k">return</span> <span class="n">v</span>
+</code></pre></div></div>
+
+<h3 id="-power">🔝 Power</h3>
+
+<p>We follow also the same idea for the power operator: in the expression $y = w^k$, we suppose we know the gradient $\text{grad}<em>y$ of the result $y$ and we want to backpropagate to compute $\text{grad}</em>{w}$.</p>
+
+<p>By applying the chain rule:</p>
+
+\[\text{grad}_{w}
+= \frac{\partial \text{loss}}{\partial w}
+= \frac{\partial \text{loss}}{\partial y} \times \frac{\partial y}{\partial w}
+= \text{grad}_y \times kw^{k-1}\]
+
+<p>We can then update the <code class="language-plaintext highlighter-rouge">Value.__pow__</code> method to:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="n">k</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">backward</span><span class="p">():</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">backward</span>
+
+    <span class="k">return</span> <span class="n">v</span>
+</code></pre></div></div>
+
+<h3 id="️-other-nodes">⚛️ Other nodes</h3>
+
+<p>All other nodes of the computational graph will have nothing to backpropagate. Let’s define a default empty method backward in the constructor of the class for all these nodes:</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> def __init__(self, data, children={}):
+     self.data = data
+     self.children = children
+     self.grad = 0.0
+<span class="gi">+    self.backward = lambda: None
+</span></code></pre></div></div>
+
+<h3 id="-wrapping-up">🌀 Wrapping up</h3>
+<p>And that’s it for the <code class="language-plaintext highlighter-rouge">Value</code> class! Here is the complete code of this class:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">None</span>
+        
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">Value(data=</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">data</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span>
+    
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">})</span>
+        <span class="k">def</span> <span class="nf">backward</span><span class="p">():</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span>
+            <span class="n">other</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">backward</span>
+
+        <span class="k">return</span> <span class="n">v</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">other</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            
+        <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">})</span>
+
+        <span class="k">def</span> <span class="nf">backward</span><span class="p">():</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span>
+            <span class="n">other</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">data</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">backward</span>
+
+        <span class="k">return</span> <span class="n">v</span>
+    
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="n">k</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">})</span>
+
+        <span class="k">def</span> <span class="nf">backward</span><span class="p">():</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">v</span><span class="p">.</span><span class="n">grad</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">backward</span>
+
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div></div>
+
+<h2 id="-computing-the-gradients-for-all-the-nodes">📊 Computing the gradients for all the nodes</h2>
+
+<p>To compute the gradients across the entire computational graph, it’s necessary to invoke the <code class="language-plaintext highlighter-rouge">backward()</code> function on all nodes. However, when this function is activated on a given node, it’s essential to be sure that the gradient of the node’s output has been already determined.</p>
+
+<p>This requirement dictates a specific sequence for processing nodes. In a scenario where we need to process all child nodes prior to their parent, a <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological sort</a> of the graph is employed. However, for our purposes, where the parent must be processed before its children, we adopt the reverse topological sort of the graph.</p>
+
+<p>Below is an implementation of the reverse topological sort:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">revtopo</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">walk</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">g</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">g</span><span class="p">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="nf">walk</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="n">visited</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="nf">walk</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">visited</span><span class="p">.</span><span class="nf">reverse</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">visited</span>
+</code></pre></div></div>
+
+<p>Now we are ready. We initialize the gradient of the last node to 1 because:</p>
+
+\[\text{grad}_\text{loss} = \frac{\partial \text{loss}}{\partial \text{loss}} = 1\]
+
+<p>and we call <code class="language-plaintext highlighter-rouge">backward()</code> on all nodes in reverse topological order:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+<span class="n">loss</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nf">revtopo</span><span class="p">(</span><span class="n">loss</span><span class="p">):</span>
+    <span class="n">node</span><span class="p">.</span><span class="nf">backward</span><span class="p">()</span>
+    
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">∂loss/∂w1 = </span><span class="si">{</span><span class="n">w1</span><span class="p">.</span><span class="n">grad</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">∂loss/∂w2 = </span><span class="si">{</span><span class="n">w2</span><span class="p">.</span><span class="n">grad</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>∂loss/∂w1 = 1.0
+∂loss/∂w2 = -2.0
+</code></pre></div></div>
+
+<p>We get the same result as the PyTorch code presented in the introduction! 🎉</p>
+
+<h2 id="-optimizing-the-loss-with-respect-to-the-parameters">🎯 Optimizing the loss with respect to the parameters</h2>
+
+<p>Now that we’ve computed the gradients for all the parameters with respect to the loss, we can proceed with optimizing the loss.</p>
+
+<p>In each epoch, the process begins with the forward pass, where we compute the loss using the current parameter values (in this case, <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>). Following this, we initiate the backward pass by setting all gradients to zero, except for the loss gradient, which is set to 1. We then invoke the <code class="language-plaintext highlighter-rouge">backward()</code> method on each node of the computational graph, following a reverse topological order. The final step involves updating the parameters according to the gradient descent rule: $w \leftarrow w - \alpha \times \text{grad}_w$. In the following example, we utilize a learning rate $\alpha$ of 0.5.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+    <span class="c1"># forward pass
+</span>    <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+    <span class="c1"># backward pass
+</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">loss</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">1.0</span>  
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nf">revtopo</span><span class="p">(</span><span class="n">loss</span><span class="p">):</span>
+        <span class="n">node</span><span class="p">.</span><span class="nf">backward</span><span class="p">()</span>
+
+    <span class="c1"># update gradients
+</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">data</span> <span class="o">-=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">grad</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value(data=2.5000)
+Value(data=0.6250)
+Value(data=0.1562)
+Value(data=0.0391)
+Value(data=0.0098)
+Value(data=0.0024)
+Value(data=0.0006)
+Value(data=0.0002)
+Value(data=0.0000)
+Value(data=0.0000)
+</code></pre></div></div>
+
+<p>The loss converged to zero and <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code> converged to their optimal value:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value(data=1.0010) Value(data=4.9980)
+</code></pre></div></div>
+
+<h1 id="further-reading">Further reading</h1>
+
+<p>I recommend watching the excellent lecture made by Andrej Karpathy, the author of micrograd, in which he is reimplementing micrograd from scratch step by step and goes up to building a feed-forward neural network and training it on data using micrograd!</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VMj-3S1tku0?si=9NKYD2I_n7JY6s3P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/micrograd/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>
