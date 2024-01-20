@@ -309,7 +309,7 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
 
 <h3 id="️-multiplication">✖️ Multiplication</h3>
 
-<p>Doing the first operation (addition) was the hardest part. Now we just follow the same principle.</p>
+<p>Doing the first operation (addition) was the hardest part 😮‍💨. Now we just follow the same principle.</p>
 
 <p>In the expression $y = w_1 \times w_2$, we suppose we know the gradient $\text{grad}_y$ of the result $y$ and we want to backpropagate it to the inputs to compute $\text{grad}_{w_1}$ and $\text{grad}_{w_2}$.</p>
 
@@ -339,7 +339,7 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
 
 <h3 id="-power">🔝 Power</h3>
 
-<p>We follow also the same idea for the power operator: in the expression $y = w^k$, we suppose we know the gradient $\text{grad}<em>y$ of the result $y$ and we want to backpropagate to compute $\text{grad}</em>{w}$.</p>
+<p>We follow also the same idea for the power operator: in the expression $y = w^k$, we suppose we know the gradient $\text{grad}_y$ of the result $y$ and we want to backpropagate to compute $\text{grad}_{w}$.</p>
 
 <p>By applying the chain rule:</p>
 
@@ -481,23 +481,23 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
-<span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="c1"># forward pass
 </span>    <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
     <span class="nf">print</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
     <span class="c1"># backward pass
-</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="n">p</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">loss</span><span class="p">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">1.0</span>  
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nf">revtopo</span><span class="p">(</span><span class="n">loss</span><span class="p">):</span>
         <span class="n">node</span><span class="p">.</span><span class="nf">backward</span><span class="p">()</span>
 
     <span class="c1"># update gradients
-</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
-        <span class="n">p</span><span class="p">.</span><span class="n">data</span> <span class="o">-=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">grad</span>
+</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">data</span> <span class="o">-=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span><span class="p">.</span><span class="n">grad</span>
 </code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value(data=2.5000)
 Value(data=0.6250)
