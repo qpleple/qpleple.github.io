@@ -14,13 +14,13 @@
   </title>
 
   
-  <link rel="canonical" href="https://qpleple.com/schedule-aws-lambda-functions-using-terraform/">
+  <link rel="canonical" href="http://localhost:4000/schedule-aws-lambda-functions-using-terraform/">
   
 
-  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/lanyon.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/style.css">
 
   
   
@@ -67,9 +67,9 @@
 <p>Below is a basic usage example, where the module is configured to trigger an AWS Lambda function named <code class="language-plaintext highlighter-rouge">lambda-function-name</code> at 3 AM UTC every day:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="s2">"schedule-lambda-update-reporting"</span> <span class="p">{</span>
-  <span class="nx">source</span>              <span class="p">=</span> <span class="s2">"../path/to/modules/schedule-lambda"</span>
-  <span class="nx">function_name</span>       <span class="p">=</span> <span class="s2">"lambda-function-name"</span>
-  <span class="nx">schedule_expression</span> <span class="p">=</span> <span class="s2">"cron(0 3 * * ? *)"</span>
+  <span class="nx">source</span>              <span class="o">=</span> <span class="s2">"../path/to/modules/schedule-lambda"</span>
+  <span class="nx">function_name</span>       <span class="o">=</span> <span class="s2">"lambda-function-name"</span>
+  <span class="nx">schedule_expression</span> <span class="o">=</span> <span class="s2">"cron(0 3 * * ? *)"</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -88,12 +88,12 @@
 <p>The module fixes versions of Terraform and AWS prodiver, ensuring compatibility with the latest AWS features and best practices.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">terraform</span> <span class="p">{</span>
-  <span class="nx">required_version</span> <span class="p">=</span> <span class="s2">"&gt;= 1.5"</span>
+  <span class="nx">required_version</span> <span class="o">=</span> <span class="s2">"&gt;= 1.5"</span>
 
   <span class="nx">required_providers</span> <span class="p">{</span>
-    <span class="nx">aws</span> <span class="p">=</span> <span class="p">{</span>
-      <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/aws"</span>
-      <span class="nx">version</span> <span class="p">=</span> <span class="s2">"&gt;= 4.67.0"</span>
+    <span class="nx">aws</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">source</span>  <span class="o">=</span> <span class="s2">"hashicorp/aws"</span>
+      <span class="nx">version</span> <span class="o">=</span> <span class="s2">"&gt;= 4.67.0"</span>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -102,34 +102,34 @@
 <p>First, retrieve details of an existing AWS Lambda function from its name using the <code class="language-plaintext highlighter-rouge">aws_lambda_function</code> data source. This step ensures that the module targets the correct Lambda function for scheduling.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">data</span> <span class="s2">"aws_lambda_function"</span> <span class="s2">"this"</span> <span class="p">{</span>
-  <span class="nx">function_name</span> <span class="p">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span>
+  <span class="nx">function_name</span> <span class="o">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <p>Next, create a CloudWatch Event Rule. This rule defines when the Lambda function should be triggered. The <code class="language-plaintext highlighter-rouge">schedule_expression</code> variable allows for flexible scheduling configurations (see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html">AWS documentation for expressions</a>).</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_event_rule"</span> <span class="s2">"this"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"schedule-</span><span class="k">${</span><span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span><span class="k">}</span><span class="s2">"</span>
-  <span class="nx">schedule_expression</span> <span class="p">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">schedule_expression</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"schedule-</span><span class="k">${</span><span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span><span class="k">}</span><span class="s2">"</span>
+  <span class="nx">schedule_expression</span> <span class="o">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">schedule_expression</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <p>Then create a <code class="language-plaintext highlighter-rouge">aws_cloudwatch_event_target</code> resource linking the created Event Rule to the Lambda function. It specifies the Lambda function as the target for the events generated based on the defined schedule.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_event_target"</span> <span class="s2">"this"</span> <span class="p">{</span>
-  <span class="nx">target_id</span> <span class="p">=</span> <span class="s2">"event-target-</span><span class="k">${</span><span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span><span class="k">}</span><span class="s2">"</span>
-  <span class="nx">rule</span>      <span class="p">=</span> <span class="nx">aws_cloudwatch_event_rule</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">arn</span>       <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_lambda_function</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">target_id</span> <span class="o">=</span> <span class="s2">"event-target-</span><span class="k">${</span><span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span><span class="k">}</span><span class="s2">"</span>
+  <span class="nx">rule</span>      <span class="o">=</span> <span class="nx">aws_cloudwatch_event_rule</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">arn</span>       <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_lambda_function</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">arn</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <p>Lastly, for the CloudWatch Event Rule to invoke the Lambda function, the correct permissions must be set. This is accomplished through the <code class="language-plaintext highlighter-rouge">aws_lambda_permission</code> resource.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_lambda_permission"</span> <span class="s2">"lambda-update-reporting"</span> <span class="p">{</span>
-  <span class="nx">action</span>        <span class="p">=</span> <span class="s2">"lambda:InvokeFunction"</span>
-  <span class="nx">function_name</span> <span class="p">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span>
-  <span class="nx">principal</span>     <span class="p">=</span> <span class="s2">"events.amazonaws.com"</span>
-  <span class="nx">source_arn</span>    <span class="p">=</span> <span class="nx">aws_cloudwatch_event_rule</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">action</span>        <span class="o">=</span> <span class="s2">"lambda:InvokeFunction"</span>
+  <span class="nx">function_name</span> <span class="o">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span>
+  <span class="nx">principal</span>     <span class="o">=</span> <span class="s2">"events.amazonaws.com"</span>
+  <span class="nx">source_arn</span>    <span class="o">=</span> <span class="nx">aws_cloudwatch_event_rule</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">arn</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

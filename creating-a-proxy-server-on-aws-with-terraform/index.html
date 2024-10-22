@@ -14,13 +14,13 @@
   </title>
 
   
-  <link rel="canonical" href="https://qpleple.com/creating-a-proxy-server-on-aws-with-terraform/">
+  <link rel="canonical" href="http://localhost:4000/creating-a-proxy-server-on-aws-with-terraform/">
   
 
-  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/lanyon.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/style.css">
 
   
   
@@ -125,38 +125,38 @@ systemctl start httpd   <span class="c"># start immediately</span>
 <p>Here we assume that the proxy should only be accessible from the VPC. Feel free to change the rules to match your exact use case.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_security_group"</span> <span class="s2">"proxy"</span> <span class="p">{</span>
-  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="s2">"XXXXXX"</span>   <span class="c1"># your VPC id</span>
-  <span class="nx">name</span>   <span class="p">=</span> <span class="s2">"proxy-security-group"</span>
+  <span class="nx">vpc_id</span> <span class="o">=</span> <span class="s2">"XXXXXX"</span>   <span class="c1"># your VPC id</span>
+  <span class="nx">name</span>   <span class="o">=</span> <span class="s2">"proxy-security-group"</span>
 
   <span class="c1"># Allow all outbound traffic.</span>
   <span class="nx">egress</span> <span class="p">{</span>
-    <span class="nx">from_port</span>   <span class="p">=</span> <span class="mi">0</span>
-    <span class="nx">protocol</span>    <span class="p">=</span> <span class="s2">"-1"</span>
-    <span class="nx">to_port</span>     <span class="p">=</span> <span class="mi">0</span>
-    <span class="nx">cidr_blocks</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"0.0.0.0/0"</span><span class="p">]</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">0</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"-1"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">0</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"0.0.0.0/0"</span><span class="p">]</span>
   <span class="p">}</span>
 
   <span class="c1"># Allow inbound SSH (port 22), HTTP (port 80), and HTTPS (port 443) traffic from the VPC's IP range.</span>
   <span class="nx">ingress</span> <span class="p">{</span>
-    <span class="nx">from_port</span>   <span class="p">=</span> <span class="mi">22</span>
-    <span class="nx">protocol</span>    <span class="p">=</span> <span class="s2">"tcp"</span>
-    <span class="nx">to_port</span>     <span class="p">=</span> <span class="mi">22</span>
-    <span class="nx">cidr_blocks</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">22</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"tcp"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">22</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
   <span class="p">}</span>
   <span class="nx">ingress</span> <span class="p">{</span>
-    <span class="nx">from_port</span>   <span class="p">=</span> <span class="mi">80</span>
-    <span class="nx">protocol</span>    <span class="p">=</span> <span class="s2">"tcp"</span>
-    <span class="nx">to_port</span>     <span class="p">=</span> <span class="mi">80</span>
-    <span class="nx">cidr_blocks</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">80</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"tcp"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">80</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
   <span class="p">}</span>
   <span class="nx">ingress</span> <span class="p">{</span>
-    <span class="nx">from_port</span>   <span class="p">=</span> <span class="mi">443</span>
-    <span class="nx">protocol</span>    <span class="p">=</span> <span class="s2">"tcp"</span>
-    <span class="nx">to_port</span>     <span class="p">=</span> <span class="mi">443</span>
-    <span class="nx">cidr_blocks</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">443</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"tcp"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">443</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
   <span class="p">}</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="p">=</span> <span class="s2">"proxy-security-group"</span> <span class="p">}</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="o">=</span> <span class="s2">"proxy-security-group"</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -181,10 +181,10 @@ systemctl start httpd   <span class="c"># start immediately</span>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_key_pair"</span> <span class="s2">"ec2"</span> <span class="p">{</span>
   <span class="c1"># this is how the key will be identified in AWS</span>
-  <span class="nx">key_name</span> <span class="p">=</span> <span class="s2">"imported-key"</span>
+  <span class="nx">key_name</span> <span class="o">=</span> <span class="s2">"imported-key"</span>
 
   <span class="c1"># The public key portion of the key pair</span>
-  <span class="nx">public_key</span> <span class="p">=</span> <span class="s2">"ssh-rsa XXXXXXXX"</span>
+  <span class="nx">public_key</span> <span class="o">=</span> <span class="s2">"ssh-rsa XXXXXXXX"</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -193,16 +193,16 @@ systemctl start httpd   <span class="c"># start immediately</span>
 <p>With the security group in place and the SSH key pair created, we are now ready to define the AWS EC2 instance that will serve as our proxy server.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_instance"</span> <span class="s2">"proxy"</span> <span class="p">{</span>
-  <span class="nx">ami</span>           <span class="p">=</span> <span class="s2">"ami-0ed961fa828560210"</span>
-  <span class="nx">instance_type</span> <span class="p">=</span> <span class="s2">"t2.micro"</span>
+  <span class="nx">ami</span>           <span class="o">=</span> <span class="s2">"ami-0ed961fa828560210"</span>
+  <span class="nx">instance_type</span> <span class="o">=</span> <span class="s2">"t2.micro"</span>
   
-  <span class="nx">key_name</span>               <span class="p">=</span> <span class="nx">aws_key_pair</span><span class="p">.</span><span class="nx">ec2</span><span class="p">.</span><span class="nx">key_name</span>
-  <span class="nx">subnet_id</span>              <span class="p">=</span> <span class="s2">"xxx"</span>
-  <span class="nx">vpc_security_group_ids</span> <span class="p">=</span> <span class="p">[</span><span class="nx">aws_security_group</span><span class="p">.</span><span class="nx">proxy</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span>
+  <span class="nx">key_name</span>               <span class="o">=</span> <span class="nx">aws_key_pair</span><span class="p">.</span><span class="nx">ec2</span><span class="p">.</span><span class="nx">key_name</span>
+  <span class="nx">subnet_id</span>              <span class="o">=</span> <span class="s2">"xxx"</span>
+  <span class="nx">vpc_security_group_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nx">aws_security_group</span><span class="p">.</span><span class="nx">proxy</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span>
 
-  <span class="nx">user_data</span> <span class="p">=</span> <span class="nx">file</span><span class="p">(</span><span class="s2">"setup-proxy.sh"</span><span class="p">)</span>
+  <span class="nx">user_data</span> <span class="o">=</span> <span class="nx">file</span><span class="p">(</span><span class="s2">"setup-proxy.sh"</span><span class="p">)</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span><span class="nx">Name</span> <span class="p">=</span> <span class="s2">"proxy"</span><span class="p">}</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span><span class="nx">Name</span> <span class="o">=</span> <span class="s2">"proxy"</span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
