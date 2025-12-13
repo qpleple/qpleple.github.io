@@ -56,11 +56,28 @@
       </div>
 
       <div class="container content">
-        <h1>Welcome 👋</h1>
+        <style>
+  .profile-pic {
+    float: right;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    object-fit: cover;
+  }
+  @media (max-width: 600px) {
+    .profile-pic { display: none; }
+  }
+</style>
+
+<img src="/img/quentin-2025.jpg" alt="Quentin Pleplé" class="profile-pic">
+
+<h1>Welcome 👋</h1>
 
 <p>I am currently CTO AI Modernization at <a href="https://www.theodo.fr">Theodo</a>, helping CTOs modernize legacy applications 3x faster with AI.</p>
 
-<p style="background: #f4f4f4; border-left: 4px solid #268bd2; padding: 15px; margin: 20px 0;"><b>Have a legacy application to modernize?</b><br>Contact me at <a href="mailto:quentin.pleple@theodo.com">quentin.pleple@theodo.com</a></p>
+<p style="background: #f4f4f4; border-left: 4px solid #268bd2; padding: 15px; margin: 20px 0; overflow: hidden;"><b>Have a legacy application to modernize?</b><br>Contact me at <a href="mailto:quentin.pleple@theodo.com">quentin.pleple@theodo.com</a></p>
 
 <p>I am excited about AI coding assistants, modernizing old systems, Lean methodologies, and LLMs and how they work internally.</p>
 
