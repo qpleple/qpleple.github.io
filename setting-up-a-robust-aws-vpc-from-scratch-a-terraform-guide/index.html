@@ -9,18 +9,18 @@
 
   <title>
     
-      Setting Up a Robust AWS VPC From Scratch: A Terraform Guide · Quentin Pleplé
+      Building an AWS VPC from scratch with Terraform · Quentin Pleplé
     
   </title>
 
   
-  <link rel="canonical" href="https://qpleple.com/setting-up-a-robust-aws-vpc-from-scratch-a-terraform-guide/">
+  <link rel="canonical" href="http://localhost:4000/setting-up-a-robust-aws-vpc-from-scratch-a-terraform-guide/">
   
 
-  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/lanyon.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/style.css">
 
   
   
@@ -51,51 +51,33 @@
         <div class="container">
           <h3 class="masthead-title">
             <a href="/" title="Home">🌱 Quentin Pleplé</a>
-            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem;">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
           </h3>
         </div>
       </div>
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Setting Up a Robust AWS VPC From Scratch: A Terraform Guide</h1>
+  <h1 class="post-title">Building an AWS VPC from scratch with Terraform</h1>
   <span class="post-date">Dec 15th, 2023</span>
 
   
 
-  <p>Today, we’re diving into the world of netwoking in AWS, particularly focusing on setting up a Virtual Private Cloud (VPC) using Terraform. This guide is aimed at those who are familiar with AWS and are looking to expand their infrastructure using infrastructure as code (IaC).</p>
+  <p>This post walks through provisioning a VPC with Terraform: subnets, route tables, an internet gateway, a NAT gateway, and flow logs. The goal is a layout you can drop into a real project and tweak from there.</p>
 
-<h2 id="what-is-a-vpc">What is a VPC?</h2>
+<p>Assumes you’re already familiar with AWS basics and Terraform.</p>
 
-<p>A VPC is a foundational component in AWS. Essentially, it’s a private, isolated space within the AWS cloud infrastructure where you can launch AWS resources, such as virtual servers (EC2 instances), in a network that you have defined. This concept of a VPC revolutionized how businesses and individuals could leverage cloud computing.</p>
-
-<p>The beauty of a VPC lies in its flexibility and control. Users can customize their virtual networking environment to suit their specific needs, including selecting their own IP address range, creating subnets, and configuring route tables and network gateways. This level of control is crucial for various applications, from hosting a simple website to running complex, multi-tier, web-scale applications.</p>
-
-<p>And this is exactly what we are going to do in this post: we’ll delve into creating and configuring a VPC from scratch that you can then tweak to our specific requirements. We’ll walk through the process of setting up subnets, route tables, an internet gateway, a NAT gateway and flow logs. This setup ensures optimal configuration for internet connectivity, correct traffic routing, and enhanced network monitoring.</p>
-
-<h2 id="key-components-of-our-vpc-setup">Key components of our VPC setup</h2>
+<h2 id="what-well-build">What we’ll build</h2>
 
 <ol>
-  <li>
-    <p><strong>Creating the VPC</strong>: We start by defining the VPC with a specific CIDR block.</p>
-  </li>
-  <li>
-    <p><strong>Subnets and AZs</strong>: AWS recommends distributing resources across Availability Zones (AZs) for resilience. We’ll discuss how to create public and private subnets in different AZs.</p>
-  </li>
-  <li>
-    <p><strong>Route Tables</strong>: Setting up route tables for both public and private subnets is crucial. We’ll show how to direct traffic correctly through these tables.</p>
-  </li>
-  <li>
-    <p><strong>Internet Gateway &amp; NAT Gateway</strong>: These components are essential for enabling internet access in our VPC. The Internet Gateway connects the public subnet to the internet, while the NAT Gateway allows private subnet instances to access external services.</p>
-  </li>
-  <li>
-    <p><strong>Flow Logs</strong>: For monitoring and troubleshooting, we enable flow logs to capture information about the IP traffic in our VPC.</p>
-  </li>
+  <li>A VPC with an explicit CIDR block.</li>
+  <li>Public and private subnets spread across two AZs.</li>
+  <li>Separate route tables for public and private subnets.</li>
+  <li>An Internet Gateway for the public subnets, a NAT Gateway for the private ones.</li>
+  <li>VPC flow logs piped to CloudWatch.</li>
 </ol>
 
-<p>Ready? Let’s go!</p>
-
-<h2 id="dont-use-default-networking-resources">Don’t use default networking resources</h2>
+<h2 id="dont-use-the-default-vpc">Don’t use the default VPC</h2>
 
 <p>When you create a new AWS account, a <a href="https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html">default VPC</a> is automatically set up in each AWS region. This VPC comes with several network resources: default subnets in each Availability Zone, a default route table, a network access control list (ACL), and a default security group. These resources are configured to enable immediate use, allowing you to quickly deploy and run instances.</p>
 
@@ -104,11 +86,9 @@
 <small>Key components existing for a default VPC (<a href="https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html">documentation</a>)</small>
 </p>
 
-<p>However, it is best practice to <a href="https://www.trendmicro.com/cloudoneconformity/knowledge-base/aws/VPC/default-vpc-in-use.html">not use these default resources</a> for production environments. The main reason is that these defaults are configured with a broad set of permissions and settings aimed at ease of use and initial accessibility. For example, default security groups are generally more permissive.</p>
+<p>The default VPC is configured for convenience, not safety — broad security groups, public IPs by default, and so on. <a href="https://www.trendmicro.com/cloudoneconformity/knowledge-base/aws/VPC/default-vpc-in-use.html">Don’t use it for production</a>.</p>
 
-<p>In Terraform, we are going to “adopt” these existing default resources, reset them, and rename them to align with our specific configurations and naming conventions. This process involves identifying these default resources in Terraform scripts and then applying configurations to meet our requirements.</p>
-
-<p>This approach not only helps in keeping the Terraform state in sync with the AWS environment but also ensures that our infrastructure is set up following our defined best practices.</p>
+<p>But the default resources still exist in your account, so it’s worth bringing them under Terraform’s control and locking them down. Here we adopt them, strip them of permissive rules, and rename them so they’re clearly marked as “do not use”:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Adopt and rename the default VPC</span>
 <span class="k">resource</span> <span class="s2">"aws_default_vpc"</span> <span class="s2">"default"</span> <span class="p">{</span>
@@ -163,11 +143,9 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="our-main-vpc">Our main VPC</h2>
+<h2 id="the-main-vpc">The main VPC</h2>
 
-<p>We are now ready to create our own VPC.</p>
-
-<p>We need to define the IP range used by our VPC in the form of a CIDR block. For simplicity and efficient organization, I recommend using <code class="language-plaintext highlighter-rouge">10.0.0.0/8</code>. This range is widely used for private networks and is ideal for creating a intuitive and structured subnet layout.</p>
+<p>Pick a CIDR block. <code class="language-plaintext highlighter-rouge">10.0.0.0/16</code> gives you 65k addresses, which is plenty for most setups and leaves the rest of the <code class="language-plaintext highlighter-rouge">10.0.0.0/8</code> private range free for future VPCs.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_vpc"</span> <span class="s2">"this"</span> <span class="p">{</span>
   <span class="nx">cidr_block</span> <span class="o">=</span> <span class="s2">"10.0.0.0/16"</span>
@@ -176,13 +154,13 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>It is considered good practice to name all resources created in your infrastructure using tags, as it greatly enhances manageability, clarity, and tracking of resources within a complex cloud environment.</p>
+<p>Tag every resource — it makes the AWS console usable when you have more than a handful of things in an account.</p>
 
 <h2 id="public-and-private-subnets">Public and private subnets</h2>
 
-<p>With our VPC now in place, the next step is creating subnets. Subnets are subdivisions of a VPC helping to organize and secure our resources by distributing them across different AZs within an AWS Region.</p>
+<p>Two public, two private, spread across two AZs.</p>
 
-<p>In the context of a multi-account infrastructure (<a href="/why-embracing-aws-multi-account-strategy-is-essential/">see why it is best practice</a>), we need to share resources across accounts in a common VPC. However, the mapping of AZs (like <code class="language-plaintext highlighter-rouge">eu-west-1a</code>, <code class="language-plaintext highlighter-rouge">eu-west-1b</code>, etc.) is unique to each AWS account. This means that <code class="language-plaintext highlighter-rouge">eu-west-1a</code> in one account may not correspond to the same physical location as <code class="language-plaintext highlighter-rouge">eu-west-1a</code> in another account. Therefore, we will be using the AZ IDs, unique and consistent identifiers for each AZ.</p>
+<p>A subtlety if you’re running <a href="/why-embracing-aws-multi-account-strategy-is-essential/">multi-account</a>: AZ names like <code class="language-plaintext highlighter-rouge">eu-west-1a</code> are randomized per account, so <code class="language-plaintext highlighter-rouge">eu-west-1a</code> in account A and <code class="language-plaintext highlighter-rouge">eu-west-1a</code> in account B are different physical zones. To make subnets line up across accounts, use <strong>AZ IDs</strong> (<code class="language-plaintext highlighter-rouge">euw1-az1</code>, <code class="language-plaintext highlighter-rouge">euw1-az2</code>) instead of AZ names — they’re stable across accounts.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"main_public1"</span> <span class="p">{</span>
   <span class="nx">vpc_id</span>                  <span class="o">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
@@ -216,33 +194,20 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="public-and-private-route-tables">Public and private route tables</h2>
+<h2 id="route-tables">Route tables</h2>
 
-<p>Route tables are essential components within a VPC, containing rules (routes) that guide network traffic from your subnet or gateway.</p>
-
-<p>Here are some key concepts abour route tables:</p>
+<p>Two things to know:</p>
 
 <ul>
-  <li>
-    <p><strong>Implicit router</strong>: A VPC has an implicit router, and route tables control the flow of network traffic.</p>
-  </li>
-  <li>
-    <p><strong>Subnet association</strong>: Each subnet in the VPC must be associated with a route table, which is known as a subnet route table. This association dictates the routing for that particular subnet. A single route table can be associated with multiple subnets.</p>
-  </li>
-  <li>
-    <p><strong>Main route table</strong>: By default, a VPC comes with a main route table. Subnets without an explicit route table association use this main route table. For enhanced security, it’s advised not to use this main route table.</p>
-  </li>
+  <li>Every subnet has to be associated with a route table. If you don’t attach one explicitly, it falls back to the VPC’s main route table — which you usually want to avoid relying on.</li>
+  <li>The main route table is the one created with the VPC. Better to leave it empty and use explicit, named route tables for each subnet.</li>
 </ul>
 
-<p>Let’s create two distinct route tables:</p>
+<p>Here we create two:</p>
 
 <ul>
-  <li>
-    <p><strong>A public route table</strong>: This table is linked to public subnets and will include a route to an Internet Gateway. This setup enables resources within these subnets to access the internet directly.</p>
-  </li>
-  <li>
-    <p><strong>A private route table</strong>: This table is linked to private subnets and will include a route to a NAT Gateway. This configuration allows resources in private subnets to reach external services, like software updates, without being directly accessible from the internet.</p>
-  </li>
+  <li><strong>Public route table</strong>: attached to the public subnets, with a default route to the Internet Gateway.</li>
+  <li><strong>Private route table</strong>: attached to the private subnets, with a default route to the NAT Gateway (added later).</li>
 </ul>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Route tables</span>
@@ -280,9 +245,9 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="internet-gateway-for-public-subnets">Internet Gateway for public subnets</h2>
+<h2 id="internet-gateway">Internet Gateway</h2>
 
-<p>An Internet Gateway (IGW) in AWS is a critical piece that allows communication between instances in your VPC and the internet. After creating the IGW, to enable internet access for the public subnets, we add a specific route to it in their route table.</p>
+<p>The IGW lets instances in the public subnets reach the internet. Create it and add a <code class="language-plaintext highlighter-rouge">0.0.0.0/0</code> route to it in the public route table:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_internet_gateway"</span> <span class="s2">"this"</span> <span class="p">{</span>
   <span class="nx">vpc_id</span> <span class="o">=</span> <span class="nx">aws_vpc</span><span class="p">.</span><span class="nx">this</span><span class="p">.</span><span class="nx">id</span>
@@ -296,22 +261,14 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="nat-gateway-for-private-subnets">NAT Gateway for private subnets</h2>
+<h2 id="nat-gateway">NAT Gateway</h2>
 
-<p>A NAT Gateway is a managed service that facilitates instances in a private subnet to initiate outbound traffic to the internet or other AWS services, while preventing the internet from initiating connections with those instances. This service is essential for maintaining the security and privacy of your private subnet resources.</p>
-
-<p>Our approach consists in:</p>
+<p>A NAT Gateway lets instances in private subnets initiate outbound connections (package updates, calling external APIs) without being reachable from the internet. Three steps:</p>
 
 <ol>
-  <li>
-    <p><strong>Allocating an elastic IP (EIP)</strong>: This EIP is associated with the NAT Gateway, representing its public-facing IP address. Traffic from your VPC that goes through the NAT Gateway appears to external services as originating from this EIP.</p>
-  </li>
-  <li>
-    <p><strong>Setting up the NAT Gateway</strong>: The NAT Gateway is created within a public subnet, using the allocated EIP.</p>
-  </li>
-  <li>
-    <p><strong>Routing trafic to the NAT Gateway</strong>: we add a route in the private route table to route the trafic to <code class="language-plaintext highlighter-rouge">0.0.0.0/0</code> (meaning all internet-bound traffic) to the NAT Gateway.</p>
-  </li>
+  <li>Allocate an Elastic IP — this becomes the source IP for outbound traffic.</li>
+  <li>Create the NAT Gateway in a public subnet, attached to the EIP.</li>
+  <li>Add a <code class="language-plaintext highlighter-rouge">0.0.0.0/0</code> route to the NAT Gateway in the private route table.</li>
 </ol>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_eip"</span> <span class="s2">"nat"</span> <span class="p">{</span>
@@ -334,32 +291,17 @@
 
 <h2 id="flow-logs">Flow logs</h2>
 
-<p>Flow logs capture information about the IP traffic going to and from network interfaces in a VPC, enabling network traffic monitoring and analysis.</p>
+<p>Flow logs record metadata about IP traffic going through the VPC. Worth turning on — you’ll want them the first time you have to debug a connectivity issue or investigate suspicious traffic.</p>
 
-<p>It is best practice to set up flow logs: they provide valuable insights into network traffic patterns and potential security issues within a VPC, enhancing network visibility and security management.</p>
-
-<p>Before setting up flow logs, we need a IAM role that have the permissions to publish these logs.</p>
-
-<h3 id="iam-role-vpcflowlogspublisher">IAM role VPCFlowLogsPublisher</h3>
-
-<p>To create this role, we declare:</p>
+<p>First, an IAM role the flow logs service can assume to write into CloudWatch. We need:</p>
 
 <ul>
-  <li>
-    <p><strong>IAM Policy Document</strong>: A policy allowing the VPC Flow Logs service to assume an IAM role.</p>
-  </li>
-  <li>
-    <p><strong>IAM Role</strong>: A role named VPCFlowLogsPublisher configured with the above policy.</p>
-  </li>
-  <li>
-    <p><strong>Flow Logs Publish Policy</strong>: A policy document granting permissions for operations like creating and managing log groups and streams in CloudWatch Logs.</p>
-  </li>
-  <li>
-    <p><strong>Policy Attachment</strong>: Attaching the flow logs policy to the IAM role, enabling it to publish logs to CloudWatch.</p>
-  </li>
+  <li>An assume-role policy trusting <code class="language-plaintext highlighter-rouge">vpc-flow-logs.amazonaws.com</code>.</li>
+  <li>The role itself.</li>
+  <li>A policy granting CloudWatch Logs write permissions.</li>
 </ul>
 
-<p>See more in the <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html#flow-logs-iam">AWS documentation</a>.</p>
+<p>See <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html#flow-logs-iam">the AWS docs</a> for the canonical reference.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Allow the vpc-flow-logs service to assume an IAM role</span>
 <span class="k">data</span> <span class="s2">"aws_iam_policy_document"</span> <span class="s2">"flow_logs_publisher_assume_role_policy"</span> <span class="p">{</span>
@@ -401,9 +343,9 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="activate-flow-logs-for-our-vpc">Activate flow logs for our VPC</h3>
+<h3 id="enable-flow-logs-on-the-main-vpc">Enable flow logs on the main VPC</h3>
 
-<p>Next we create a Cloudwatch log group for our flow logs and we activate the flow logs with the IAM role that we just created.</p>
+<p>Create a log group and turn on flow logs, using the role from above:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_log_group"</span> <span class="s2">"main_vpc_flow_logs"</span> <span class="p">{</span>
   <span class="nx">name</span>              <span class="o">=</span> <span class="s2">"main-vpc-flow-logs"</span>
@@ -418,9 +360,9 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="activate-flow-logs-for-the-default-vpc">Activate flow logs for the default VPC</h3>
+<h3 id="enable-flow-logs-on-the-default-vpc">Enable flow logs on the default VPC</h3>
 
-<p>It is also a good idea to activate flow logs for the default VPC. We are not planning to use it, so there should be anything in it. Therefore, if for any reason there is netwok trafic in it, then we want to be able to inspect it!</p>
+<p>Also worth turning on for the default VPC. Nothing should be running there — so if anything <em>does</em> show up in the logs, you want to know about it.</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_log_group"</span> <span class="s2">"default_vpc_flow_logs"</span> <span class="p">{</span>
   <span class="nx">name</span>              <span class="o">=</span> <span class="s2">"default-vpc-flow-logs"</span>

@@ -9,18 +9,18 @@
 
   <title>
     
-      Simplify AWS CLI Troubleshooting with My Custom Debug Script · Quentin Pleplé
+      A Bash script to debug AWS CLI credentials · Quentin Pleplé
     
   </title>
 
   
-  <link rel="canonical" href="https://qpleple.com/debugging-aws-cli-credentials-problems/">
+  <link rel="canonical" href="http://localhost:4000/debugging-aws-cli-credentials-problems/">
   
 
-  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/lanyon.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/style.css">
 
   
   
@@ -51,24 +51,21 @@
         <div class="container">
           <h3 class="masthead-title">
             <a href="/" title="Home">🌱 Quentin Pleplé</a>
-            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem;">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
           </h3>
         </div>
       </div>
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Simplify AWS CLI Troubleshooting with My Custom Debug Script</h1>
+  <h1 class="post-title">A Bash script to debug AWS CLI credentials</h1>
   <span class="post-date">Dec 11th, 2023</span>
 
   
 
-  <p>Working with AWS CLI can sometimes feel like navigating a maze, especially when it comes to managing credentials and configurations. Misconfigurations or missing credentials can halt your work, leading to frustration and lost productivity. To address this common issue, I’ve crafted a handy Bash script to streamline the debugging process for AWS CLI credentials.</p>
+  <p>Debugging AWS CLI credential issues usually involves checking the same handful of things: env vars, profiles, the config file, and which identity the CLI thinks it’s using. I wrote a small Bash script that dumps all of it at once.</p>
 
-<h2 id="what-does-the-script-do">What Does the Script Do?</h2>
-<p>This script serves as a diagnostic tool, systematically checking various aspects of your AWS configuration. It outputs crucial information regarding your AWS environment, making it easier to identify and fix issues. Here’s a rundown of its features:</p>
-
-<p>Here is an usage example:</p>
+<p>Example output:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./debug-aws-credentials.sh
 
@@ -132,28 +129,20 @@ Your version of Terraform is out of date! The latest version
 is 1.6.6. You can update by downloading from https://www.terraform.io/downloads.html
 </code></pre></div></div>
 
-<h2 id="environment-variables-verification">Environment Variables Verification</h2>
-<p>Firstly, the script checks for the presence of essential AWS environment variables: <code class="language-plaintext highlighter-rouge">AWS_PROFILE</code>, <code class="language-plaintext highlighter-rouge">AWS_ACCESS_KEY_ID</code>, <code class="language-plaintext highlighter-rouge">AWS_SECRET_ACCESS_KEY</code>, and <code class="language-plaintext highlighter-rouge">AWS_SESSION_TOKEN</code>. It reports whether these variables are set and, if so, whether they are populated or empty.</p>
+<h2 id="what-it-checks">What it checks</h2>
 
-<h2 id="aws-configuration-listings">AWS Configuration Listings</h2>
-<p>Next, the script executes <code class="language-plaintext highlighter-rouge">aws configure list</code>, displaying the current configuration status.</p>
+<ul>
+  <li><strong>Environment variables</strong>: <code class="language-plaintext highlighter-rouge">AWS_PROFILE</code>, <code class="language-plaintext highlighter-rouge">AWS_ACCESS_KEY_ID</code>, <code class="language-plaintext highlighter-rouge">AWS_SECRET_ACCESS_KEY</code>, <code class="language-plaintext highlighter-rouge">AWS_SESSION_TOKEN</code> — whether they’re set and populated.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">aws configure list</code></strong>: the active CLI configuration.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code></strong>: which identity AWS actually sees you as.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">aws configure list-profiles</code></strong>: every profile the CLI knows about.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">~/.aws/config</code></strong>: dumped raw, since this is where most issues come from.</li>
+  <li><strong>Tool versions</strong>: AWS CLI, EB CLI, Python, Terraform — version mismatches show up here.</li>
+</ul>
 
-<h2 id="identity-confirmation">Identity Confirmation</h2>
-<p>By running <code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code>, the script confirms the identity that the AWS CLI is operating under and wether or not it is recognized by the AWS API.</p>
+<p>You can also pass a profile name as an argument; it will run <code class="language-plaintext highlighter-rouge">aws configure list</code> and <code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code> scoped to that profile.</p>
 
-<h2 id="profile-listings">Profile Listings</h2>
-<p>The script also lists all the configured profiles through <code class="language-plaintext highlighter-rouge">aws configure list-profiles</code>. This is particularly useful in environments where multiple profiles are used.</p>
-
-<h2 id="config-file-display">Config File Display</h2>
-<p>It prints the contents of the <code class="language-plaintext highlighter-rouge">~/.aws/config</code> file. This file typically contains your AWS CLI configurations and is a common source of issues.</p>
-
-<h2 id="version-checks">Version Checks</h2>
-<p>Finally, the script checks the versions of various AWS-related tools such as AWS CLI, Elastic Beanstalk CLI, Python, and Terraform. Version mismatches can often lead to unexpected errors.</p>
-
-<h2 id="customizable-for-specific-profiles">Customizable for Specific Profiles</h2>
-<p>An additional feature of the script is its ability to take a profile name as an argument. If provided, it will run the <code class="language-plaintext highlighter-rouge">aws configure list</code> and <code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code> commands for that specific profile, further aiding in debugging issues related to specific AWS CLI profiles.</p>
-
-<h2 id="script-code">Script code</h2>
+<h2 id="script">Script</h2>
 
 <script src="https://gist.github.com/qpleple/0340df38042e0907e920fdff28379a26.js"></script>
 

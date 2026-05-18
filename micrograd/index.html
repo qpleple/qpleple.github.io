@@ -9,18 +9,18 @@
 
   <title>
     
-      Demystifying Backpropagation by Building a Basic Autograd Engine · Quentin Pleplé
+      Building a basic autograd engine from scratch · Quentin Pleplé
     
   </title>
 
   
-  <link rel="canonical" href="https://qpleple.com/micrograd/">
+  <link rel="canonical" href="http://localhost:4000/micrograd/">
   
 
-  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/lanyon.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/style.css">
 
   
     
@@ -64,29 +64,25 @@
         <div class="container">
           <h3 class="masthead-title">
             <a href="/" title="Home">🌱 Quentin Pleplé</a>
-            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem;">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
           </h3>
         </div>
       </div>
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Demystifying Backpropagation by Building a Basic Autograd Engine</h1>
+  <h1 class="post-title">Building a basic autograd engine from scratch</h1>
   <span class="post-date">Jan 19th, 2024</span>
 
   
 
-  <p>Welcome! Our goal in this post is to implement from scratch a very basic autograd engine based on <a href="https://github.com/karpathy/micrograd">micrograd</a> (released by Andrej Karpathy for educational purposes).</p>
-
-<p>By doing so, we will gain a better understanding of the backpropagation algorithm and autograd engines.</p>
-
-<p>Ready? Let’s go! 🚀</p>
+  <p>This post reimplements <a href="https://github.com/karpathy/micrograd">micrograd</a> (Andrej Karpathy’s tiny autograd engine, written for teaching) from scratch. The point is to see how backpropagation actually works under the hood of frameworks like PyTorch.</p>
 
 <h1 id="what-is-an-autograd-engine">What is an autograd engine?</h1>
 
-<p>An autograd engine is a component in many deep learning frameworks, such as PyTorch, that simplifies training neural networks by automating derivative calculations for backpropagation.</p>
+<p>An autograd engine is the piece of a deep learning framework that computes derivatives automatically so you don’t have to write them out by hand.</p>
 
-<p>Here is a minimalist example with Pytorch where we define a loss as an expression of variables <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>. Then by calling <code class="language-plaintext highlighter-rouge">backward()</code>, the autograd engine computes the partial derivatives of the loss with respect to all variables involved (here, <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>) and stores them in each variable’s <code class="language-plaintext highlighter-rouge">.grad</code> attribute.</p>
+<p>A minimal PyTorch example — we define a loss in terms of <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>, call <code class="language-plaintext highlighter-rouge">backward()</code>, and PyTorch fills in <code class="language-plaintext highlighter-rouge">.grad</code> on each variable:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">torch</span>
 
@@ -103,31 +99,27 @@
 ∂loss/∂w2 = -2.0
 </code></pre></div></div>
 
-<h1 id="training-a-neural-network-using-backpropagation">Training a neural network using backpropagation</h1>
+<h1 id="where-the-autograd-engine-fits-in-backprop">Where the autograd engine fits in backprop</h1>
 
-<p>Let’s first have a quick look at the backpropagation algorithm in order to understand what role the autograd engine plays in it.</p>
+<p>Quick recap of the three steps in training a network, and where the autograd engine plays a part.</p>
 
-<h2 id="1️⃣-forward-pass">1️⃣ Forward pass</h2>
-<p>During the forward pass, the neural network makes predictions using the current set of weights. The autograd engine keeps track of all the operations (like addition, multiplication, etc.) that were performed and the structure of the computational graph. A computational graph is a representation of all the operations and variables (like weights and biases) in your network.</p>
+<h2 id="forward-pass">Forward pass</h2>
+<p>The network produces a prediction using the current weights. As it does, the autograd engine records every operation (add, mul, etc.) into a computational graph — nodes are values, edges are the operations that produced them.</p>
 
 <p>Here is the computational graph for the expression <code class="language-plaintext highlighter-rouge">loss = ((w1 - 1)**2 + (w2 - 5)**2) * 0.5</code> with <code class="language-plaintext highlighter-rouge">w1 = 2</code> and <code class="language-plaintext highlighter-rouge">w2 = 3</code>:</p>
 
 <p><img src="../img/2024-01-19-micrograd/computational-graph.png" alt="" /></p>
 
-<h2 id="2️⃣-backward-pass">2️⃣ Backward Pass</h2>
-<p>Once the loss is calculated, the backward pass begins. This is where the autograd engine really shines. ✨</p>
-
-<p>For each operation in the graph, the autograd engine knows how to compute the derivative of that operation. It uses the chain rule to propagate these derivatives by traversing the computational graph in reverse order.</p>
-
-<p>As a result, you get the gradient of the loss with respect to each weight. In our example, they are:</p>
+<h2 id="backward-pass">Backward pass</h2>
+<p>Once we have the loss, we walk the graph in reverse. For each operation, the engine knows how to compute its local derivative; the chain rule turns these local derivatives into gradients of the loss with respect to every weight:</p>
 
 \[\frac{\partial \text{loss}}{\partial w_1}
     \qquad
     \frac{\partial \text{loss}}{\partial w_2}\]
 
-<h2 id="3️⃣-update-weights">3️⃣ Update Weights</h2>
+<h2 id="update-weights">Update weights</h2>
 
-<p>Finally, these gradients are used to update the weights of the network, usually with some kind of gradient descent (with a learning rate $\alpha$):</p>
+<p>Use the gradients to nudge each weight, typically with gradient descent (learning rate $\alpha$):</p>
 
 \[\left\{
 \begin{aligned}
@@ -136,11 +128,11 @@ w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
 \end{aligned}
 \right.\]
 
-<h1 id="implementing-a-basic-autograd-engine">Implementing a basic autograd engine</h1>
+<h1 id="implementing-the-engine">Implementing the engine</h1>
 
-<h2 id="-doing-calculations">🧮 Doing calculations</h2>
+<h2 id="arithmetic-on-value">Arithmetic on <code class="language-plaintext highlighter-rouge">Value</code></h2>
 
-<p>First we need to be able to do arithmetic operations. We want instances of <code class="language-plaintext highlighter-rouge">Value</code> to be used seamlessly in mathematical expressions, behaving like numeric types:</p>
+<p>We want a <code class="language-plaintext highlighter-rouge">Value</code> class that behaves like a number, so we can write normal math expressions:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
@@ -148,7 +140,7 @@ w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
 <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">w1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">w2</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
 </code></pre></div></div>
 
-<p>For that, we start our class <code class="language-plaintext highlighter-rouge">Value</code> with the operations addition, subtraction, multiplication and power by a constant.</p>
+<p>A first pass with addition, subtraction, multiplication, and power by a constant:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -178,7 +170,7 @@ w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
         <span class="k">return</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="n">k</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>And now we can do calculations:</p>
+<p>Calculations now work:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
@@ -189,9 +181,9 @@ w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value(data=2.50)
 </code></pre></div></div>
 
-<h2 id="-keeping-track-of-the-computational-graph">🔗 Keeping track of the computational graph</h2>
+<h2 id="tracking-the-computational-graph">Tracking the computational graph</h2>
 
-<p>In order to backpropagate the gradients to all weights of the network, we need to keep track of the computational graph: every time we do a operation, we keep a reference to the inputs of that operations in a property <code class="language-plaintext highlighter-rouge">children</code> of the new instance of <code class="language-plaintext highlighter-rouge">Value</code> holding the result.</p>
+<p>To backpropagate later, every result needs to remember which <code class="language-plaintext highlighter-rouge">Value</code>s it came from. We add a <code class="language-plaintext highlighter-rouge">children</code> set on each new <code class="language-plaintext highlighter-rouge">Value</code> that holds references to its inputs:</p>
 
 <div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> class Value(object):
 <span class="gd">-    def __init__(self, data):
@@ -226,16 +218,16 @@ w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
 </span><span class="gi">+        return Value(self.data ** k, children={self})
 </span></code></pre></div></div>
 
-<p>Now after doing a calculation, we can inspect the children of the result:</p>
+<p>We can now inspect what produced a result:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">w1</span><span class="p">.</span><span class="n">children</span><span class="p">)</span>
 </code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{Value(data=2.00), Value(data=3.00)}
 </code></pre></div></div>
 
-<h2 id="-storing-the-gradients">💾 Storing the gradients</h2>
+<h2 id="storing-gradients">Storing gradients</h2>
 
-<p>Let’s add a <code class="language-plaintext highlighter-rouge">grad</code> property to our class that will hold the gradient of each instance:</p>
+<p>Add a <code class="language-plaintext highlighter-rouge">grad</code> field, initialized to zero:</p>
 
 <div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> def __init__(self, data, children={}):
      self.data = data
@@ -243,24 +235,21 @@ w_2 &amp;\leftarrow w_2 - \alpha \cdot \frac{\partial \text{loss}}{\partial w_2}
 <span class="gi">+    self.grad = 0.0
 </span></code></pre></div></div>
 
-<h2 id="-backpropagating-the-gradients">⏪ Backpropagating the gradients</h2>
+<h2 id="backpropagation">Backpropagation</h2>
 
-<p>This is the core of the backpropagation algorithm. We want to compute the derivatives of our loss with respect to all weights of the network:</p>
+<p>The goal is to compute, for every weight $w_i$:</p>
 
 \[\text{grad}_{w_i} = \frac{\partial \text{loss}}{\partial w_i}\]
 
-<p>To do so, the end of the computational graph, holding the result of the loss. This derivative is simply 1:</p>
+<p>We start at the end of the graph, where the derivative of the loss with respect to itself is trivially 1:</p>
 
 \[\frac{\partial \text{loss}}{\partial \text{loss}} = 1\]
 
-<p>Then we go back at every node: given that we know the partial derivative of the loss with respect to the result of the computation, we compute the partial derivatives of the loss with respect to each of the children.</p>
+<p>Then at each node, knowing the gradient of the loss with respect to that node’s output, we push gradients back into its inputs using the chain rule.</p>
 
-<h3 id="-addition">➕ Addition</h3>
+<h3 id="addition">Addition</h3>
 
-<p>In the expression $y = w_1 + w_2$, we suppose we know the gradient $\text{grad}_y$
-of the result $y$ and we want to backpropagate it to the inputs to compute $\text{grad}_{w_1}$ and $\text{grad}_{w_2}$.</p>
-
-<p>By applying the chain rule:</p>
+<p>Given $y = w_1 + w_2$ and the gradient $\text{grad}_y$ of the output, find $\text{grad}_{w_1}$ and $\text{grad}_{w_2}$. Chain rule:</p>
 
 \[\text{grad}_{w_1}
 = \frac{\partial \text{loss}}{\partial w_1}
@@ -268,11 +257,9 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
 = \text{grad}_y \times 1
 = \text{grad}_y\]
 
-<p>and the same way, we get that $\text{grad}_{w_2} = \text{grad}_y$.</p>
+<p>and symmetrically $\text{grad}_{w_2} = \text{grad}_y$. Addition just forwards the output gradient to each input.</p>
 
-<p>In other words, addition is simply forwarding the gradient to all of its inputs without changing it.</p>
-
-<p>In our code, when we perform an addition, let’s then define a <code class="language-plaintext highlighter-rouge">backward()</code> function to forward the gradient to its input. Now here is our method <code class="language-plaintext highlighter-rouge">Value.__add__</code>:</p>
+<p>We attach a <code class="language-plaintext highlighter-rouge">backward()</code> closure to the result that does this when called:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
     <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
@@ -287,9 +274,9 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
     <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></div>
 
-<p>However, we need to address a special case not yet covered: when an input node appears multiple times in the computational graph. Take, for instance, the simple expression $y = w_1 + w_1$. If we use the assignment <code class="language-plaintext highlighter-rouge">y.grad = w1.grad</code>, it would be executed twice, with the second execution overwriting the first. This would incorrectly result in $\text{grad}_{w_1} = \text{grad}_y$ instead of the correct  $\text{grad}_{w_1}  = 2 \text{grad}_y$.</p>
+<p>There’s a bug to fix: when a variable appears multiple times in the graph (e.g. $y = w_1 + w_1$), the assignment <code class="language-plaintext highlighter-rouge">self.grad = v.grad</code> overwrites on the second visit. We’d get $\text{grad}_{w_1} = \text{grad}_y$ instead of the correct $2\,\text{grad}_y$.</p>
 
-<p>By switching to an incremental update with <code class="language-plaintext highlighter-rouge">+=</code>, we ensure proper accumulation of the gradient for each variable across all instances where it affects the final output.</p>
+<p>Switching to <code class="language-plaintext highlighter-rouge">+=</code> accumulates contributions from every path the variable participates in:</p>
 
 <div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> def __add__(self, other):
      if isinstance(other, int) or isinstance(other, float):
@@ -306,24 +293,18 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
      return v
 </code></pre></div></div>
 
-<p>To ensure this process functions correctly, it’s essential to reset the gradients to zero before commencing their computation (we will do it later).</p>
+<p>Side effect of using <code class="language-plaintext highlighter-rouge">+=</code>: gradients have to be reset to zero before each backward pass. We’ll do that later.</p>
 
-<h3 id="️-multiplication">✖️ Multiplication</h3>
+<h3 id="multiplication">Multiplication</h3>
 
-<p>Doing the first operation (addition) was the hardest part 😮‍💨. Now we just follow the same principle.</p>
-
-<p>In the expression $y = w_1 \times w_2$, we suppose we know the gradient $\text{grad}_y$ of the result $y$ and we want to backpropagate it to the inputs to compute $\text{grad}_{w_1}$ and $\text{grad}_{w_2}$.</p>
-
-<p>By applying the chain rule:</p>
+<p>Same idea, different derivative. For $y = w_1 \times w_2$, the chain rule gives:</p>
 
 \[\text{grad}_{w_1}
 = \frac{\partial \text{loss}}{\partial w_1}
 = \frac{\partial \text{loss}}{\partial y} \times \frac{\partial y}{\partial w_1}
 = \text{grad}_y \times y\]
 
-<p>and the same way, we get that $\text{grad}_{w_2} = \text{grad}_y \times x$.</p>
-
-<p>In our code, when we perform an multiplication, the same way we did with addition, we define a <code class="language-plaintext highlighter-rouge">backward()</code> function to propagate the gradient to its input:</p>
+<p>and symmetrically $\text{grad}_{w_2} = \text{grad}_y \cdot w_1$. The <code class="language-plaintext highlighter-rouge">backward()</code> closure becomes:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
     <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
@@ -338,18 +319,16 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
     <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></div>
 
-<h3 id="-power">🔝 Power</h3>
+<h3 id="power">Power</h3>
 
-<p>We follow also the same idea for the power operator: in the expression $y = w^k$, we suppose we know the gradient $\text{grad}_y$ of the result $y$ and we want to backpropagate to compute $\text{grad}_{w}$.</p>
-
-<p>By applying the chain rule:</p>
+<p>For $y = w^k$ (with $k$ a constant), the chain rule gives:</p>
 
 \[\text{grad}_{w}
 = \frac{\partial \text{loss}}{\partial w}
 = \frac{\partial \text{loss}}{\partial y} \times \frac{\partial y}{\partial w}
 = \text{grad}_y \times kw^{k-1}\]
 
-<p>We can then update the <code class="language-plaintext highlighter-rouge">Value.__pow__</code> method to:</p>
+<p>The <code class="language-plaintext highlighter-rouge">__pow__</code> becomes:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">**</span> <span class="n">k</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{</span><span class="n">self</span><span class="p">})</span>
@@ -361,9 +340,9 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
     <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></div>
 
-<h3 id="️-other-nodes">⚛️ Other nodes</h3>
+<h3 id="leaf-nodes">Leaf nodes</h3>
 
-<p>All other nodes of the computational graph will have nothing to backpropagate. Let’s define a default empty method backward in the constructor of the class for all these nodes:</p>
+<p>Inputs and constants have no children, so their <code class="language-plaintext highlighter-rouge">backward()</code> does nothing. Set a no-op default in the constructor:</p>
 
 <div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code> def __init__(self, data, children={}):
      self.data = data
@@ -372,8 +351,7 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
 <span class="gi">+    self.backward = lambda: None
 </span></code></pre></div></div>
 
-<h3 id="-wrapping-up">🌀 Wrapping up</h3>
-<p>And that’s it for the <code class="language-plaintext highlighter-rouge">Value</code> class! Here is the complete code of this class:</p>
+<h3 id="full-value-class">Full <code class="language-plaintext highlighter-rouge">Value</code> class</h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Value</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">{}):</span>
@@ -429,13 +407,9 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
         <span class="k">return</span> <span class="n">v</span>
 </code></pre></div></div>
 
-<h2 id="-computing-the-gradients-for-all-the-nodes">📊 Computing the gradients for all the nodes</h2>
+<h2 id="gradients-across-the-whole-graph">Gradients across the whole graph</h2>
 
-<p>To compute the gradients across the entire computational graph, it’s necessary to invoke the <code class="language-plaintext highlighter-rouge">backward()</code> function on all nodes. However, when this function is activated on a given node, it’s essential to be sure that the gradient of the node’s output has been already determined.</p>
-
-<p>This requirement dictates a specific sequence for processing nodes. In a scenario where we need to process all child nodes prior to their parent, a <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological sort</a> of the graph is employed. However, for our purposes, where the parent must be processed before its children, we adopt the reverse topological sort of the graph.</p>
-
-<p>Below is an implementation of the reverse topological sort:</p>
+<p>To run <code class="language-plaintext highlighter-rouge">backward()</code> on a node, its output’s gradient must already be set. That means we need to process parents before children — a reverse <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological sort</a> of the graph.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">revtopo</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
     <span class="n">visited</span> <span class="o">=</span> <span class="p">[]</span>
@@ -449,11 +423,7 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
     <span class="k">return</span> <span class="n">visited</span>
 </code></pre></div></div>
 
-<p>Now we are ready. We initialize the gradient of the last node to 1 because:</p>
-
-\[\text{grad}_\text{loss} = \frac{\partial \text{loss}}{\partial \text{loss}} = 1\]
-
-<p>and we call <code class="language-plaintext highlighter-rouge">backward()</code> on all nodes in reverse topological order:</p>
+<p>Seed the loss with gradient 1 (since $\partial \text{loss} / \partial \text{loss} = 1$), then call <code class="language-plaintext highlighter-rouge">backward()</code> on every node in reverse topological order:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
@@ -472,13 +442,11 @@ of the result $y$ and we want to backpropagate it to the inputs to compute $\tex
 ∂loss/∂w2 = -2.0
 </code></pre></div></div>
 
-<p>We get the same result as the PyTorch code presented in the introduction! 🎉</p>
+<p>Same numbers as the PyTorch snippet at the top.</p>
 
-<h2 id="-optimizing-the-loss-with-respect-to-the-parameters">🎯 Optimizing the loss with respect to the parameters</h2>
+<h2 id="optimizing-the-loss">Optimizing the loss</h2>
 
-<p>Now that we’ve computed the gradients for all the parameters with respect to the loss, we can proceed with optimizing the loss.</p>
-
-<p>In each epoch, the process begins with the forward pass, where we compute the loss using the current parameter values (in this case, <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code>). Following this, we initiate the backward pass by setting all gradients to zero, except for the loss gradient, which is set to 1. We then invoke the <code class="language-plaintext highlighter-rouge">backward()</code> method on each node of the computational graph, following a reverse topological order. The final step involves updating the parameters according to the gradient descent rule: $w \leftarrow w - \alpha \times \text{grad}_w$. In the following example, we utilize a learning rate $\alpha$ of 0.5.</p>
+<p>The training loop is the same pattern PyTorch uses: forward → zero grads → seed loss grad to 1 → backward → update with $w \leftarrow w - \alpha \cdot \text{grad}_w$. Below with $\alpha = 0.5$:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w1</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">w2</span> <span class="o">=</span> <span class="nc">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
@@ -512,7 +480,7 @@ Value(data=0.0000)
 Value(data=0.0000)
 </code></pre></div></div>
 
-<p>The loss converged to zero and <code class="language-plaintext highlighter-rouge">w1</code> and <code class="language-plaintext highlighter-rouge">w2</code> converged to their optimal value:</p>
+<p>Loss collapses to zero and the parameters converge to their optima ($w_1 = 1$, $w_2 = 5$):</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span>
 </code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value(data=1.0010) Value(data=4.9980)
@@ -520,7 +488,7 @@ Value(data=0.0000)
 
 <h1 id="further-reading">Further reading</h1>
 
-<p>I recommend watching the excellent lecture made by Andrej Karpathy, the author of micrograd, in which he is reimplementing micrograd from scratch step by step and goes up to building a feed-forward neural network and training it on data using micrograd!</p>
+<p>Karpathy’s own lecture goes much further — he builds micrograd from scratch and then trains a small feed-forward network with it. Worth watching:</p>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/VMj-3S1tku0?si=9NKYD2I_n7JY6s3P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
 

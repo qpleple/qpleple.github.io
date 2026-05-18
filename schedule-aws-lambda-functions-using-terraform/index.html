@@ -14,13 +14,13 @@
   </title>
 
   
-  <link rel="canonical" href="https://qpleple.com/schedule-aws-lambda-functions-using-terraform/">
+  <link rel="canonical" href="http://localhost:4000/schedule-aws-lambda-functions-using-terraform/">
   
 
-  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
-  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/lanyon.css">
+  <link rel="stylesheet" href="http://localhost:4000/css/style.css">
 
   
   
@@ -51,7 +51,7 @@
         <div class="container">
           <h3 class="masthead-title">
             <a href="/" title="Home">🌱 Quentin Pleplé</a>
-            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem;">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
           </h3>
         </div>
       </div>
@@ -63,9 +63,9 @@
 
   
 
-  <p>Managing AWS Lambda functions efficiently is crucial for modern cloud architectures. In this post, we’ll show how to make a simple homemade Terraform module that simplifies the scheduling of AWS Lambda functions using CloudWatch Events. This approach is particularly useful for tasks like periodic data processing, automated backups, or any other operation that requires regular execution.</p>
+  <p>Here’s a small Terraform module that wraps the CloudWatch Events plumbing needed to schedule a Lambda. Useful for periodic data processing, backups, or anything else that needs to run on a cron.</p>
 
-<p>Below is a basic usage example, where the module is configured to trigger an AWS Lambda function named <code class="language-plaintext highlighter-rouge">lambda-function-name</code> at 3 AM UTC every day:</p>
+<p>Usage — trigger the Lambda <code class="language-plaintext highlighter-rouge">lambda-function-name</code> at 3 AM UTC every day:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="s2">"schedule-lambda-update-reporting"</span> <span class="p">{</span>
   <span class="nx">source</span>              <span class="o">=</span> <span class="s2">"../path/to/modules/schedule-lambda"</span>
@@ -75,18 +75,15 @@
 </code></pre></div></div>
 
 <h2 id="variables">Variables</h2>
-<p>The module utilizes two variables:</p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">function_name</code>: The name of the Lambda function to be scheduled.</li>
-  <li><code class="language-plaintext highlighter-rouge">schedule_expression</code>: A cron or rate expression that defines the schedule.</li>
+  <li><code class="language-plaintext highlighter-rouge">function_name</code>: the Lambda function to schedule.</li>
+  <li><code class="language-plaintext highlighter-rouge">schedule_expression</code>: a cron or rate expression.</li>
 </ul>
-
-<p>These variables offer flexibility, allowing for easy integration into various workflows.</p>
 
 <h2 id="module-code">Module code</h2>
 
-<p>The module fixes versions of Terraform and AWS prodiver, ensuring compatibility with the latest AWS features and best practices.</p>
+<p>Pin Terraform and the AWS provider:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">terraform</span> <span class="p">{</span>
   <span class="nx">required_version</span> <span class="o">=</span> <span class="s2">"&gt;= 1.5"</span>
@@ -100,14 +97,14 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>First, retrieve details of an existing AWS Lambda function from its name using the <code class="language-plaintext highlighter-rouge">aws_lambda_function</code> data source. This step ensures that the module targets the correct Lambda function for scheduling.</p>
+<p>Look up the target Lambda by name using the <code class="language-plaintext highlighter-rouge">aws_lambda_function</code> data source:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">data</span> <span class="s2">"aws_lambda_function"</span> <span class="s2">"this"</span> <span class="p">{</span>
   <span class="nx">function_name</span> <span class="o">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Next, create a CloudWatch Event Rule. This rule defines when the Lambda function should be triggered. The <code class="language-plaintext highlighter-rouge">schedule_expression</code> variable allows for flexible scheduling configurations (see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html">AWS documentation for expressions</a>).</p>
+<p>Create a CloudWatch Event Rule with the schedule (see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html">AWS docs on schedule expressions</a>):</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_event_rule"</span> <span class="s2">"this"</span> <span class="p">{</span>
   <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"schedule-</span><span class="k">${</span><span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span><span class="k">}</span><span class="s2">"</span>
@@ -115,7 +112,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Then create a <code class="language-plaintext highlighter-rouge">aws_cloudwatch_event_target</code> resource linking the created Event Rule to the Lambda function. It specifies the Lambda function as the target for the events generated based on the defined schedule.</p>
+<p>Link the rule to the Lambda with an <code class="language-plaintext highlighter-rouge">aws_cloudwatch_event_target</code>:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cloudwatch_event_target"</span> <span class="s2">"this"</span> <span class="p">{</span>
   <span class="nx">target_id</span> <span class="o">=</span> <span class="s2">"event-target-</span><span class="k">${</span><span class="kd">var</span><span class="p">.</span><span class="nx">function_name</span><span class="k">}</span><span class="s2">"</span>
@@ -124,7 +121,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Lastly, for the CloudWatch Event Rule to invoke the Lambda function, the correct permissions must be set. This is accomplished through the <code class="language-plaintext highlighter-rouge">aws_lambda_permission</code> resource.</p>
+<p>Finally, give the Event Rule permission to invoke the Lambda:</p>
 
 <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_lambda_permission"</span> <span class="s2">"lambda-update-reporting"</span> <span class="p">{</span>
   <span class="nx">action</span>        <span class="o">=</span> <span class="s2">"lambda:InvokeFunction"</span>
@@ -135,8 +132,6 @@
 </code></pre></div></div>
 
 <h2 id="complete-code">Complete code</h2>
-
-<p>Here is the complete code for the module</p>
 
 <script src="https://gist.github.com/qpleple/64befaababa03878a373dc69ff300055.js"></script>
 
