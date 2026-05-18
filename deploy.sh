@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -x
+set -xe
 
 cd /Users/qt/github/qpleple
-jekyll build
+bundle exec jekyll build
 git add --all .
 git ci -m "Modif `date +"%y-%m-%d %T"`"
 
