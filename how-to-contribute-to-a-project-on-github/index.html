@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      How To Contribute To A Project On Github · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/how-to-contribute-to-a-project-on-github/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">How To Contribute To A Project On Github</h1>
+  <span class="post-date">Nov 11th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This is a step-by-step tutorial going through how to easily submit a patch to a github project.</p>
+
+<p>I assume you have already an account on <a href="http://github.com">github</a>. Let’s say you want to contribute to <a href="http://github.com/qpleple/wordpress-on-dotcloud">Wordpress on Dotcloud</a>.</p>
+
+<ol>
+  <li>
+    <p>Make your own working copy of the project by forking it: go on the project page
+(<a href="http://github.com/qpleple/wordpress-on-dotcloud">http://github.com/qpleple/wordpress-on-dotcloud</a>) and click “Fork”. You can access you copy at:
+<a href="http://github.com/YOUR_USERNAME/wordpress-on-dotcloud">http://github.com/YOUR_USERNAME/wordpress-on-dotcloud</a></p>
+  </li>
+  <li>
+    <p>Clone your fork git repository on your local computer:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git clone git@github.com:YOUR_USERNAME/wordpress-on-dotcloud.git
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Create a new branch for your patch:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git branch my-awesome-patch
+</code></pre></div>    </div>
+
+    <p>This is very important, create one branch per patch. And never submit a
+ patch that has been done on the branch <code class="language-plaintext highlighter-rouge">master</code>!</p>
+  </li>
+  <li>
+    <p>Do your trick, make your patch, change the code, fix a bug, have a coffee, add a cool
+feature, etc.</p>
+  </li>
+  <li>
+    <p>When you are done, commit your changes:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git add <span class="nt">-u</span>
+ git commit <span class="nt">-m</span> <span class="s2">"fixing this broken feature"</span>
+</code></pre></div>    </div>
+
+    <p>Try to keep commit message short, less than 100 characters.</p>
+  </li>
+  <li>
+    <p>Push your new branch to github:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git push origin my-awesome-patch
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Go on your fork page (<a href="http://github.com/YOUR_USERNAME/wordpress-on-dotcloud">http://github.com/YOUR_USERNAME/wordpress-on-dotcloud</a>), then select <code class="language-plaintext highlighter-rouge">my-awesome-patch</code> in the branch list and click “Pull Request”.</p>
+  </li>
+  <li>
+    <p>Check the diff, write a message explaining what you have
+done and why the repository owner should accept your pull request and
+submit.</p>
+  </li>
+</ol>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/how-to-contribute-to-a-project-on-github/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

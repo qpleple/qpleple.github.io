@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Run Symfony2 on AppFog? · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/run-symfony2-on-appfog/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Run Symfony2 on AppFog?</h1>
+  <span class="post-date">Mar 12th, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p><strong>TL;DR</strong> You can’t (no shell access to run commands).</p>
+
+<p>I have been trying to deploy a Symfony2 application on AppFog. I tried first <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">a PHP Hello World</a>, it was pretty easy. Then <a href="/deploy-a-new-wordpress-blog-on-appfog/" title="Deploy a new WordPress blog on AppFog">deploying a Wordpress</a> was a little bit more challenging as you have to automatically hook up the database to Wordpress and <a href="/have-your-wordpress-static-files-on-amazon-s3/" title="Have your WordPress static files on Amazon S3">tell Wordpress to use S3</a> to host any static content (AppFog does not offer persistent storage yet). But a complete Symfony2 application is a lot harder.</p>
+
+<p>Here is my checklist of things a Paas have to support in order to run a complete Symfony2 application.</p>
+
+<h3 id="open-questions">Open questions</h3>
+
+<p>I would be really interested if you have a way to go around one of these
+problems.</p>
+
+<ul>
+  <li>
+    <p>Run Symfony2 commands</p>
+
+    <p>With Symfony2, you absolutely need to run commands in the production environment (cache, migrations, assets, vendors, …) and there is no shell access in AppFog. I haven’t found any way to get around this.</p>
+  </li>
+  <li>
+    <p>Run post deploy hooks</p>
+
+    <p>Same idea as previously, there is no way to do that in AppFog yet.</p>
+  </li>
+  <li>
+    <p>Run cron jobs</p>
+
+    <p>Same idea, there is <a href="https://docs.appfog.com/customize/task-scheduling">some way to run crons</a> but they can’t call a Symfony2 command. Vote for <a href="https://support.appfog.com/entries/22471463-af-run-run-local-command-e-g-af-run-python-manage-py">the feature request</a> on AppFog support website!</p>
+  </li>
+</ul>
+
+<h3 id="solved-issues">Solved issues</h3>
+
+<ul>
+  <li>
+    <p>Set <code class="language-plaintext highlighter-rouge">web/</code> as the Document Root</p>
+
+    <p>On AppFog, we can’t edit the virtual host configuration but we achieve the same goal by <a href="/change-the-document-root-for-php-application-in-appfog/" title="Change the Document Root for PHP application in AppFog">using URL rewritting</a> with another <code class="language-plaintext highlighter-rouge">.htaccess</code> at the root directory.</p>
+  </li>
+  <li>
+    <p>Exclude <code class="language-plaintext highlighter-rouge">app/cache</code>, <code class="language-plaintext highlighter-rouge">app/logs</code> and <code class="language-plaintext highlighter-rouge">web/bundles</code> when deploying</p>
+
+    <p>AppFog does not deploy with git but uses its own tool, af, which is similar to rsync. We can <a href="https://docs.appfog.com/getting-started/af-cli/afignore">specify a <code class="language-plaintext highlighter-rouge">.afignore</code> file</a> in the root directory that will be the equivalent of <code class="language-plaintext highlighter-rouge">.gitignore</code>.</p>
+  </li>
+  <li>
+    <p>Set the database parameters</p>
+
+    <p>AppFog launches the database instance at the same time we deploy and <a href="https://docs.appfog.com/services">passes the database parameters into the <code class="language-plaintext highlighter-rouge">VCAP_SERVICES</code> environment variable</a>. So we can have <a href="http://symfony.com/doc/2.0/cookbook/configuration/external_parameters.html#miscellaneous-configuration">a PHP config file</a> (instead of Yaml) that reads the environment variable and save the parameters in the service container, <a href="/deploy-a-new-wordpress-blog-on-appfog/" title="Deploy a new WordPress blog on AppFog">like in the Wordpress example</a>.</p>
+  </li>
+  <li>
+    <p>Have persistent storage for <code class="language-plaintext highlighter-rouge">web/uploads</code></p>
+
+    <p>AppFog does not offer persistent storage yet. We can use <a href="https://github.com/KnpLabs/Gaufrette">Gaufrette</a> to use S3 as our file system. It does require to change our application code though.</p>
+  </li>
+</ul>
+
+<h3 id="available-out-of-the-box">Available out of the box</h3>
+
+<ul>
+  <li>
+    <p>Make <code class="language-plaintext highlighter-rouge">app/cache</code> and <code class="language-plaintext highlighter-rouge">app/logs</code> writeable</p>
+
+    <p>In AppFog, all the root directory and all subdirectories are writeable. <a href="https://docs.appfog.com/faq#persistentfs">Files are just not persistent</a> but it doesn’t matter for those two directories.</p>
+  </li>
+  <li>
+    <p>Use root domain names</p>
+
+    <p><a href="https://docs.appfog.com/customize/custom-domain-names">AppFog supports root domain names</a> out of the box.</p>
+  </li>
+  <li>
+    <p>Use <code class="language-plaintext highlighter-rouge">web/app.php</code> as front controller</p>
+
+    <p>AppFog is using Apache with the directive <code class="language-plaintext highlighter-rouge">AllowOverride All</code> so the standard <code class="language-plaintext highlighter-rouge">.htaccess</code> is working to redirect all trafic to <code class="language-plaintext highlighter-rouge">app.php</code>.</p>
+  </li>
+</ul>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/run-symfony2-on-appfog/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

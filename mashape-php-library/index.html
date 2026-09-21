@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Project: Mashape PHP Library · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/mashape-php-library/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Project: Mashape PHP Library</h1>
+  <span class="post-date">Jun 15th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>These are some changes I made on the OpenSource <a href="https://github.com/Mashape/mashape-php-library">Mashape PHP Library</a>.</p>
+
+<p><a href="http://github.com/qpleple/mashape-php-library">See project on github</a></p>
+
+<p><strong>Warning</strong>: this is not ready to be used, there is a lot more work to do to make it
+stable, this is just a proof of concept.</p>
+
+<h3 id="change-annotations-instead-of-xml">Change: annotations instead of XML</h3>
+
+<p>Declare your API and routing pattern right into your PHP code:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cd">/**
+ * @GET
+ * @Route("/hello/{name}")
+ * @Result({"text", "author" = {"id", "email", "password"}})
+ */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="n">sayHello</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">"Hello "</span> <span class="mf">.</span> <span class="nv">$name</span> <span class="mf">.</span> <span class="s2">"!"</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="change-front-controller">Change: front controller</h3>
+
+<p>In the original Mashape PHP Library, the front controller is <code class="language-plaintext highlighter-rouge">api.php</code>
+which is also the file where the user is supposed to write the API. In
+this version, the front controller is <code class="language-plaintext highlighter-rouge">index.php</code> and the user does not
+need to open or edit it. He only has to edit <code class="language-plaintext highlighter-rouge">api.php</code> which can not be
+more simple:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">define</span><span class="p">(</span><span class="s2">"SERVER_KEY"</span><span class="p">,</span> <span class="s2">"the-server-key"</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nc">ComponentAPI</span> <span class="kd">extends</span> <span class="nc">MashapeRestAPI</span> <span class="p">{</span>
+    <span class="cd">/**
+     * @GET
+     * @Route("/hello/{name}")
+     * @Result({"text", "author" = {"id", "email", "password"}})
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">sayHello</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s2">"Hello "</span> <span class="mf">.</span> <span class="nv">$name</span> <span class="mf">.</span> <span class="s2">"!"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="original-code">Original code</h3>
+
+<p>Forked from
+<a href="https://github.com/Mashape/mashape-php-library">Mashape/mashape-php-library</a></p>
+
+<blockquote>
+  <p>The Mashape PHP Library is:</p>
+
+  <ul>
+    <li>it’s a dead simple PHP framework for generating RESTful APIs</li>
+    <li>it supports everything from custom routes to custom errors,
+following the DRY (Don’t Repeat Yourself) principle: reuse your
+existing code</li>
+    <li>it’s fully integrated with Mashape: distribute your components,
+get traction and make money!</li>
+  </ul>
+</blockquote>
+
+<p>See the <a href="http://www.mashape.com/guide/publish/php">complete documentation</a> of the library.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/mashape-php-library/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

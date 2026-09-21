@@ -1,0 +1,65 @@
+html, h1, h2, h3, h4, h5, h6, .sidebar {
+    font-family: 'Roboto', sans-serif;
+}
+
+@media (min-width: 38em) {
+    html {
+        font-size: 18px;
+    }
+}
+
+html {
+    font-weight: 300;
+}
+
+@media print {
+    .container {
+        max-width: none;
+    }
+}
+
+@media (min-width: 56em) {
+    .container {
+        max-width: 44rem;
+    }
+}
+
+ul {
+    padding-left: 20px;
+}
+
+ul li::marker {
+    color: #D26D26;
+}
+
+.check {
+    color:firebrick;
+}
+
+b, strong {
+    font-weight: 400;
+}
+
+.message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+
+p.figure, p.figure-sm {
+    text-align: center;
+}
+
+p.figure-sm img {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+p.figure img {
+    margin: 0 auto;
+}
+
+/* Hide line numbers in gists */
+.js-line-number {
+    display: none;
+}

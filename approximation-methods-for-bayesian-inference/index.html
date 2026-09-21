@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Approximation Methods For Bayesian Inference · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/approximation-methods-for-bayesian-inference/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Approximation Methods For Bayesian Inference</h1>
+  <span class="post-date">Apr 16th, 2013</span>
+
+  
+
+  <p>There are two method families to approximate intractable posterior distributions: deterministic methods such as variational inference, and stochastic methods such as sampling methods.</p>
+
+<h2 id="deterministic-methods">Deterministic methods</h2>
+<p>Variational methods come from the mathematical field calculus of variations where the goal is to find the function that optimizes a given numerical quantity. One common variational method is Variational Expectation-Maximization (EM). Standard EM is used to get Maximum Likelihood estimates</p>
+
+\[\hat{\boldsymbol{z}}
+    = \mathop{\arg\max}_{\boldsymbol{z}} p(\boldsymbol{x} |\boldsymbol{z}).\]
+
+<p>But when the model gets complicated,
+computing the posterior $p(\boldsymbol{z}|\boldsymbol{x})$ in the E step becomes computationally intractable. Variational Bayes approximates the posterior by removing some dependencies between some variables of the model to get a tractable distribution $q(\boldsymbol z)$ over the space of hidden variables $\boldsymbol z$. Variational EM approach approximates the posterior by considering a parameterized family of tractable distributions [<a href="/bib#Bishop06">Bishop06</a>].</p>
+
+<h2 id="stochastic-methods">Stochastic methods</h2>
+<p>Gibbs sampling is a Markov Chain Monte Carlo algorithm [<a href="/bib#Geman84">Geman84</a>] that repeatedly picks one hidden variable $z_i$ at random and samples it from the distribution of that variable conditioned on all other hidden variables $\boldsymbol{z}_{-i}$ and the observation $\boldsymbol x$.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>initialize z randomly
+repeat until convergence:
+    pick i randomly
+    draw z_i from p(z_i | z_-i, x)
+</code></pre></div></div>
+
+<p>We refer to convergence loosely here, as Gibbs sampling doesn’t converge and will eventually visit all possible state, maybe in an exponential number of iterations. We’ll usually assume convergence when the state is not changing too much over a reasonable number of iterations.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/approximation-methods-for-bayesian-inference/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

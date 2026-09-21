@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Fetch Online Friends List With Facebook Graph Api · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/fetch-online-friends-list-with-facebook-graph-api/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Fetch Online Friends List With Facebook Graph Api</h1>
+  <span class="post-date">Sep 29th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This article is a step-by-step PHP tutorial explaining how to use the Facebook PHP SDK to get the list of the online friends of the current user.</p>
+
+<p>To get the list of online friends in PHP, first you need to <a href="/authenticate-users-with-their-facebook-account">authenticate users with their Facebook account</a> asking for the permission <code class="language-plaintext highlighter-rouge">friends_online_presence</code>. This is done using the Facebook PHP SDK (<a href="http://github.com/facebook/php-sdk">see on github</a>) adding <code class="language-plaintext highlighter-rouge">friends_online_presence</code> to the scope while generating the login link:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">"facebook.php"</span><span class="p">;</span>
+<span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">'appId'</span>  <span class="o">=&gt;</span> <span class="no">YOUR_APP_ID</span><span class="p">,</span>
+    <span class="s1">'secret'</span> <span class="o">=&gt;</span> <span class="no">YOUR_APP_SECRET</span><span class="p">,</span>
+<span class="p">));</span>
+
+<span class="nv">$user</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">getUser</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">api</span><span class="p">(</span><span class="s1">'/me'</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">FacebookApiException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$user</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$args</span><span class="p">[</span><span class="s1">'scope'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'friends_online_presence'</span><span class="p">;</span>
+    <span class="nv">$loginUrl</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">getLoginUrl</span><span class="p">(</span><span class="nv">$args</span><span class="p">);</span>
+    
+    <span class="c1">// display login link</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Then, if the user is logged in, you can make the request:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$fql</span> <span class="o">=</span> <span class="s2">"SELECT uid, name, pic_square, online_presence
+            FROM user
+            WHERE online_presence IN ('active', 'idle')
+            AND uid IN (
+                SELECT uid2 FROM friend WHERE uid1 = </span><span class="nv">$user</span><span class="s2">
+            )"</span><span class="p">;</span>
+
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">api</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+        <span class="s1">'method'</span> <span class="o">=&gt;</span> <span class="s1">'fql.query'</span><span class="p">,</span>
+        <span class="s1">'query'</span> <span class="o">=&gt;</span> <span class="nv">$fql</span><span class="p">,</span>
+    <span class="p">));</span>
+    
+    <span class="c1">// read results</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The results will be like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array(
+    [0] =&gt; Array(
+        [uid] =&gt; 1536397056
+        [name] =&gt; Quentin Pleplé
+        [pic_square] =&gt; http://...jpg
+        [online_presence] =&gt; active
+    )
+    [1] =&gt; ...
+    [2] =&gt; ...
+    ...
+)
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">online_presence</code> property can take 4 values: <code class="language-plaintext highlighter-rouge">active</code>, <code class="language-plaintext highlighter-rouge">idle</code>,
+<code class="language-plaintext highlighter-rouge">offline</code>, or <code class="language-plaintext highlighter-rouge">error</code>.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/fetch-online-friends-list-with-facebook-graph-api/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

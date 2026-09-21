@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Add verbosity to your Symfony2 commands · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/add-verbosity-to-your-symfony2-commands/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Add verbosity to your Symfony2 commands</h1>
+  <span class="post-date">Nov 15th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>Here is how to use Symfony2’s built-in verbose command line parameter to control verbosity in your commands.</p>
+
+<h2 id="your-need">Your need</h2>
+
+<p>Let’s say you want a lot of detail when you run a command manually in
+order to debug or even to see what is happening. But you don’t want so
+much detail in other situations, for the same command. For instance:</p>
+
+<ul>
+  <li>this command is made to be used by a cron and you want the output to
+be logged but you don’t want as much detail as previously in logs</li>
+  <li>if something is wrong you want the command to output about it (and
+maybe send an email), otherwise you don’t want any output</li>
+</ul>
+
+<h2 id="the-solution">The solution</h2>
+
+<p>Symfony2’s command component has a built-in verbose option for command
+that you can find with <code class="language-plaintext highlighter-rouge">list</code> commande</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ app/console list
+Symfony version 2.0.0 - app/dev/debug
+
+Usage:
+  [options] command [arguments]
+
+Options:
+...
+  --verbose        -v Increase verbosity of messages.
+...
+</code></pre></div></div>
+
+<p>In your command, just check if the option <code class="language-plaintext highlighter-rouge">verbose</code> is given by the user
+with no need declare it in <code class="language-plaintext highlighter-rouge">configure()</code>:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">if</span> <span class="p">(</span><span class="nv">$input</span><span class="o">-&gt;</span><span class="nf">getOption</span><span class="p">(</span><span class="s1">'verbose'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$output</span><span class="o">-&gt;</span><span class="nf">writeln</span><span class="p">(</span><span class="s2">"blah blah"</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>So you can call your command with the verbose option:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/console acme:mycommand --verbose
+</code></pre></div></div>
+
+<p>Or even with the shortcut given by Symfony2:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/console acme:mycommand -v
+</code></pre></div></div>
+
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/add-verbosity-to-your-symfony2-commands/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

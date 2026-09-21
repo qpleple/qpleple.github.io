@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      APC warnings: M/G suffixes · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/apc-warnings-on-php-startup/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">APC warnings: M/G suffixes</h1>
+  <span class="post-date">Jun 24th, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p>Here is how to fix APC warnings complaining about M/G suffixes.</p>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>The following line gets printed everytime PHP starts (either in your log, in the command line, etc.):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PHP Warning:  PHP Startup: apc.shm_size now uses M/G suffixes, please update your ini files in Unknown on line 0
+</code></pre></div></div>
+
+<p>It means that in your <code class="language-plaintext highlighter-rouge">php.ini</code> file, the value of the key <code class="language-plaintext highlighter-rouge">apc.shm_size</code> doesn’t have a unit suffix: <code class="language-plaintext highlighter-rouge">M</code> for megabyte or <code class="language-plaintext highlighter-rouge">G</code> for gigabyte.</p>
+
+<h2 id="the-fix">The fix</h2>
+
+<p>Locate your <code class="language-plaintext highlighter-rouge">php.ini</code> file. You may have two of them: one for the web server, the other for the command line (CLI).</p>
+
+<p>First, for the web server. If you don’t know where it is, you can make a phpinfo page</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"&lt;?php phpinfo();"</span> <span class="o">&gt;</span> /var/www/phpinfo.php
+</code></pre></div></div>
+
+<p>Then visit it at http://localhost/phpinfo.php and look for the string <code class="language-plaintext highlighter-rouge">php.ini</code> in the page.</p>
+
+<p>Then, for the command line <code class="language-plaintext highlighter-rouge">php.ini</code>, the equivalent of <code class="language-plaintext highlighter-rouge">phpinfo()</code> is <code class="language-plaintext highlighter-rouge">php -i</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ php -i | grep ini
+Loaded Configuration File =&gt; /etc/php5/cli/php.ini
+Scan this dir for additional .ini files =&gt; /etc/php5/cli/conf.d
+...
+</code></pre></div></div>
+
+<p>Look for <code class="language-plaintext highlighter-rouge">apc</code> keys in both <code class="language-plaintext highlighter-rouge">php.ini</code>. If you can’t find it, PHP scans a directory (you can find which with <code class="language-plaintext highlighter-rouge">phpinfo()</code> or <code class="language-plaintext highlighter-rouge">php -i</code>) for addtional <code class="language-plaintext highlighter-rouge">.ini</code> files.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ grep apc /etc/php5/cli/conf.d/*
+/etc/php5/cli/conf.d/apc.ini:extension=apc.so
+/etc/php5/cli/conf.d/apc.ini:apc.enabled=1
+/etc/php5/cli/conf.d/apc.ini:apc.shm_size=30
+</code></pre></div></div>
+
+<p>Then edit the key <code class="language-plaintext highlighter-rouge">apc.shm_size</code> to add the <code class="language-plaintext highlighter-rouge">M</code> size suffix:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apc.shm_size=30M
+</code></pre></div></div>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/apc-warnings-on-php-startup/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

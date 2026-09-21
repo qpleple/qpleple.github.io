@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Webprofilerbundleextra A Must Have Tool For Symfony2 Developers · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Webprofilerbundleextra A Must Have Tool For Symfony2 Developers</h1>
+  <span class="post-date">Jul 4th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>When I started with Symfony2, I was confused by these kind of things I could read :</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'doctrine.orm.entity_manager'</span><span class="p">);</span>
+<span class="nv">$request</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'request'</span><span class="p">);</span></code></pre></figure>
+
+<p>I could understand it when I was reading the code but I did not feel
+safe to reuse them some place else. I could not find any list of all the
+services I could call and I was not sure about what I would get by
+calling something. There is no reference or documentation for that.</p>
+
+<p>WebProfilerBundleExtra is an enhancement of the debug toolbar of
+Symfony2 that add some reference info by making list of stuff you can
+use and debugging info. It is a bundle that you add to your project (and
+load only in the <code class="language-plaintext highlighter-rouge">dev</code> environment) that will add 4 tabs to the Web
+Profiler displaying some precious info :</p>
+
+<ul>
+  <li>Container : use this as a reference when developing, it lists all
+the parameters and service for the container that is used</li>
+  <li>Routing : for routing info and debugging</li>
+  <li>Twig : use this as a reference when developing, it lists all the
+extensions, tests filters and functions that you can use (loaded)</li>
+  <li>Assetic : display assets collection</li>
+</ul>
+
+<p>To install it, follow the instructions on <a href="https://github.com/Elao/WebProfilerExtraBundle">the project home on github</a>.</p>
+
+<h2 id="container">Container</h2>
+
+<p>If you are not familiar with containers in Symfony2, you should first
+read the Symfony2 book chapter <a href="http://symfony.com/doc/2.0/book/service_container.html">Service
+Container</a> (you
+can then go further with the <a href="http://components.symfony-project.org/dependency-injection/documentation">Symfony2 Dependency Injection
+documentation</a>).
+You will find in that tab two sections : <strong>Container Parameters</strong> and
+<strong>Container Services</strong>.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Container-Parameters.png" />
+</div>
+
+<p><strong>Container Parameters</strong> is the list of all the parameters that have
+been defined in your applications. You can access parameters in your
+controller by adding that it implements the interface
+<code class="language-plaintext highlighter-rouge">ContainerAwareInterface</code> :</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="kn">use</span> <span class="nc">Symfony\Component\DependencyInjection\ContainerAwareInterface</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">PostController</span> <span class="kd">extends</span> <span class="nc">Controller</span> <span class="kd">implements</span> <span class="nc">ContainerAwareInterface</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">indexAction</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$container</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">;</span>
+        <span class="nv">$param</span> <span class="o">=</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="nf">getParameter</span><span class="p">(</span><span class="s1">'database_name'</span><span class="p">));</span>
+        
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>Container Services</strong> are all the services you can access in you
+container.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Container-services.png" />
+</div>
+
+<p>To access one service in a controller :</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">get</span><span class="p">(</span><span class="s1">'doctrine.orm.entity_manager'</span><span class="p">);</span></code></pre></figure>
+
+<h2 id="routing">Routing</h2>
+
+<p>You will find in that tab two sections : <strong>Sources</strong> and <strong>Routes</strong>.
+<strong>Sources</strong> is the list of all file that SF2 process to make the routing
+table. It’s a good start to debug if a route does not work: first check
+if the file in which you declare the route is processed by SF2.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/sources.png" />
+</div>
+
+<p><strong>Routes</strong> is the list of all the routes of your project. It gives you
+the same info than the command :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/console router:debug
+</code></pre></div></div>
+
+<p>but add also the controller that goes which each route. It is a good way
+to have an overview of your routing for your app, as you define routes
+in a lot of different files.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/routes.png" />
+</div>
+
+<h2 id="assetic">Assetic</h2>
+
+<p>This tab display all the assets information of the assetic collections
+being used. Use that tabs when debugging problems with assets.</p>
+
+<h2 id="twig">Twig</h2>
+
+<p>This tab is very useful when writing templates, use it as a reference.
+There is 4 sections : <strong>Twig Extensions</strong>, <strong>Twig Tests available</strong>,
+<strong>Twig Filters available</strong> and <strong>Twig Functions available</strong>. <strong>Twig
+Extensions</strong> is the list of all the Twig extensions loaded. Useful to
+debug when some filters or functions don’t work.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Twig-Extensions.png" />
+</div>
+
+<p><strong>Twig Tests available</strong> is the list of the tests you can use in your Twig templates.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Twig-tests.png" />
+</div>
+
+<p>For example, to test if an number is divisible by 3 :</p>
+
+<pre><code class="language-html+jinja">{% if loop.index is divisibleby(3) %}
+</code></pre>
+
+<p><strong>Twig Filters available</strong> is the list of the filters you can use in
+your Twig templates.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Twig-Filters.png" />
+</div>
+
+<p>For example, to truncate a string :</p>
+
+<pre><code class="language-html+jinja">{{ post.content | truncate(150) }}
+</code></pre>
+
+<p>Finally, <strong>Twig Functions available</strong> are the functions available.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/Twig-Functions.png" />
+</div>
+
+<p>For example, the function <code class="language-plaintext highlighter-rouge">range</code> to have a range :</p>
+
+<pre><code class="language-html+jinja">{% for i in range(0, 3) %}
+</code></pre>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/webprofilerbundleextra-a-must-have-tool-for-symfony2-developers/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

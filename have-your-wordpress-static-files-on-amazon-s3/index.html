@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Have Your Wordpress Static Files On Amazon S3 · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/have-your-wordpress-static-files-on-amazon-s3/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Have Your Wordpress Static Files On Amazon S3</h1>
+  <span class="post-date">Mar 12th, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p>You can have many reasons to host your Wordpress static files on Amazon S3: your local storage is not persistent, you want to unload your webserver, you have multiple Wordpress server instances sharing the same satic files, S3 is cheaper than EBS, etc.</p>
+
+<p>First, <a href="http://www.hongkiat.com/blog/amazon-s3-the-beginners-guide/#Gettting_an_Amazon_S3_Account">get an Amazon S3 account</a>.
+On Amazon S3 you can have sorts of drives (buckets) in the cloud that
+you can use to store data. When creating your S3 account, record your
+Access Key ID and Secret Access Key, they will be needed to connect your
+Wordpress to your S3.</p>
+
+<h2 id="s3-bucket">S3 bucket</h2>
+
+<p>Once you created your S3 account, go on S3 at
+<a href="https://console.aws.amazon.com/s3">console.aws.console.com/s3</a> and
+create a new bucket for your blog that you can name whatever you want.
+I’ll name mine say <code class="language-plaintext highlighter-rouge">my-blog-drink-coffee</code>. When you’re done you should
+see your new bucket in your bucket list:</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-have-your-wordpress-static-files-on-amazon-s3/bucket.png" />
+</div>
+
+<p>As we want to serve our Wordpress static files from that bucket, we have
+to make all content publicly available. Select your bucket and click on
+“Edit bucket policy”, paste this policy (which is making everything
+public) replacing <code class="language-plaintext highlighter-rouge">my-blog-drink-coffee</code> by your bucket name and save.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2008-10-17"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowPublicRead"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"AWS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:GetObject"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::my-blog-drink-coffee/*"</span><span class="w">
+  </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="wordpress-s3-plugin">Wordpress S3 plugin</h2>
+
+<p>Now, we are going to tell our Worpress to store static files (medias,
+plugins and themes) on S3 instead of the local server. In the plugin
+page, click on “Add new”, search the plugin “Amazon S3 for WordPress
+with CloudFront”, install it and activate it. In the newly created
+section “Amazon S3”, under “Settings”, fill in the values like this:</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-have-your-wordpress-static-files-on-amazon-s3/wp-s3.png" />
+</div>
+
+<ul>
+  <li>Paste your Access Key ID and Secret Access Key from your Amazon
+account</li>
+  <li>Choose the bucket you just created in the bucket list</li>
+  <li>Select “File uploads” and “File permissions”</li>
+</ul>
+
+<p>Save and you’re all set.</p>
+
+<h2 id="test-your-configuration">Test your configuration</h2>
+
+<p>Create a new post and add any image to it (upload it from your
+computer). Go on S3 at
+<a href="https://console.aws.amazon.com/s3">console.aws.console.com/s3</a>, you
+should see the file in your bucket (under the directory <code class="language-plaintext highlighter-rouge">wp-content</code>).
+The image should display correctly in your post when you publish it and
+when you look at the source of your page, the URL of the image should be
+something like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://my-blog-drink-coffee.s3.amazonaws.com/...
+</code></pre></div></div>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/have-your-wordpress-static-files-on-amazon-s3/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

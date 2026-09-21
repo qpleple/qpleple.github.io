@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Internet, comment ça marche ? · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/internet/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Internet, comment ça marche ?</h1>
+  <span class="post-date">Aug 26th, 2010</span>
+
+  
+
+  <p>Dans cet article je vais tenter d’expliquer avec mes mots, en utilisant
+le moins de jargon technique possible, ce qui se passe entre le moment
+où l’on tape “www.google.fr” dans son navigateur et le moment où la page
+de Google s’affiche.</p>
+
+<h3 id="les-acteurs">Les acteurs</h3>
+
+<p>Voyons déjà ceux qui ont un rôle dans l’histoire. Déjà, il y a le
+logiciel que vous utilisez pour aller sur internet : le navigateur. Chez
+vous, il peut s’appeler Firefox, Chrome ou Internet Explorer. Il est
+execute tous vos ordres : lorsque vous entrez “www.google.fr”, c’est ce
+logicel qui est chargé d’aller récupérer la page quelque part dans le
+monde et de vous l’afficher. Voici les icônes de quelques navigateurs.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-internet/browsers.png" style="height: 100px" />
+</div>
+
+<p>Ensuite il y a les ordinateurs sur lesquels sont enregistrés les site
+internet. Vous vous doutez bien que les sites ne sont pas enregistrés
+dans votre ordinateur.</p>
+
+<blockquote>
+  <p>Mais alors, ils sont enregistrés où, au juste, les sites internet ?</p>
+</blockquote>
+
+<p>Les sites internet sont enregistrés dans dans serveurs. Pour se
+représenter un serveur, il faut s’imaginer un ordinateur sans écran ni
+clavier ni souris branché à internet. Les serveurs sont en général
+empilés par milliers et rangés dans de gros hangars comme sur la photo.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img class="img-polaroid" src="/img/post-internet/Data-Center-Servers-photo.jpeg" />
+</div>
+
+<p>Disons que vous voulez aller sur le site de Google. Vous de votre côté,
+vous allez taper “www.google.fr” dans votre navigateur et Google de son
+côté a son site enregistré sur un de ses serveurs. C’est donc ces deux
+là qui vont dialoguer entre eux, d’un côté votre navigateur et de
+l’autre le serveur.</p>
+
+<h3 id="adresses-ip--les-numéros-de-téléphone-du-web">Adresses IP : les numéros de téléphone du web</h3>
+
+<blockquote>
+  <p>Mais il y a des millions de serveurs et d’ordinateurs sur internet.
+Comment font mon ordinateur et le serveur pour se trouver et pour se
+parler alors ?</p>
+</blockquote>
+
+<p><img class="pull-right" style="margin: 0 0 20px 20px" src="/img/post-internet/envelope1.png" /></p>
+
+<p>Chaque ordinateur branché a internet à une adresse IP qui ressemble à
+129.104.201.51. Il faut voir ces adresses comme un numéro de téléphone
+ou une adresse postale. Si un ordinateur veut envoyer un message à un
+autre, il suffit qu’il envoie sur le réseau son message en précisant
+l’adresse IP du destinataire. Le destinataire va recevoir le message une
+fraction de seconde plus tard, comme par magie (en tout cas, on ne
+cherche pas à comprendre ici).</p>
+
+<div style="clear: both"></div>
+
+<h3 id="serveurs-dns--des-annuaires-du-web">Serveurs DNS : des annuaires du web</h3>
+
+<blockquote>
+  <p>Et comment on connait l’adresse IP du serveur de Google ?</p>
+</blockquote>
+
+<p>Nous on ne s’en occupe pas, c’est le navigateur qui fait tout le boulot.
+Le navigateur va déjà contacter des serveurs qui connaissent toutes les
+adresses IP de tous les sites. Ce sont les serveurs DNS, pour Domain
+Name Server, serveur de nom de domaine en français (par ce que
+“www.google.fr” s’appelle un nom de domaine). Chaque ordinateur connecté
+à internet connaît l’adresse IP d’au moins un serveur DNS. C’est le
+fournisseur d’accès à internet (comme Free, Orange ou Neuf) qui le donne
+à l’ordinateur automatiquement. Le navigateur va donc envoyer le message
+au serveur DNS :</p>
+
+<p><em>Quel est l’adresse IP de www.google.fr ?</em></p>
+
+<p>et le serveur DNS va répondre un quelque chose comme :</p>
+
+<p><em>L’adresse IP de www.google.fr est 209.85.229.104</em></p>
+
+<p>C’est un peu comme les pages jaunes : c’est une sorte d’annuaire du web.
+Pratique, non ?</p>
+
+<h3 id="vous-parlez-lhttp-">Vous parlez l’HTTP ?</h3>
+
+<p><img class="pull-right" style="margin: 0 0 20px 20px" src="/img/post-internet/hypertext-transfer-protocol.png" /></p>
+
+<p>Le navigateur a maintenant l’adresse IP du serveur sur lequel est
+enregistré le site Google, il n’a plus qu’à lui demander (gentiment) de
+lui envoyer la page d’accueil. Pour cela, le navigateur et le serveur
+dialogue en utilisant un langage très précis. En informatique, un
+langage utilisé par des programme pour communiquer s’appelle un
+protocole. Le protocole utilisé pour dialoguer avec des serveurs web
+(ceux qui ont les sites web) est le protocole HTTP, pour HyperText
+Transfert Protocol. En fait, quand vous tapez “http://www.google.fr”,
+vous dites à votre navigateur :</p>
+
+<p><em>Contacte le serveur www.google.fr en lui parlant en HTTP et demande lui sa page d’accueil.</em></p>
+
+<p>Il existe d’autres protocoles, vous avez peut être entendu parlé de FTP
+(File Transfert Protocol — protocole de transfert de fichier), TCP
+(Transmission Control Protocol — un protocole utilisé pour transporter
+de l’information de manière fiable), etc.</p>
+
+<div style="clear: both"></div>
+
+<h3 id="un-site-web--le-voici">Un site web ? Le voici.</h3>
+
+<blockquote>
+  <p>Donc mon navigateur demande au serveur le site internet. Et ensuite ?</p>
+</blockquote>
+
+<p><img class="pull-right" style="margin: 0 0 20px 20px; height: 100px" src="/img/post-internet/HTML.png" /></p>
+
+<p>Ensuite, le serveur répond en lui renvoyant la page d’accueil du site. Il lui
+envoie en parlant encore avec un autre langage : le HTML. C’est un
+langage compréhensible par les navigateurs, qui “explique” au navigateur
+ce qu’il y a écrit sur la page du site, ou est ce que c’est placé, de
+quelle couleur, vers quoi vont les liens, etc. Du HTML, ça ressemble à
+ça :</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;h1&gt;</span>Un titre<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;p&gt;</span>Un paragraphe<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>Quand le navigateur reçoit le site en HTML, il va le dessiner à l’écran
+pour qu’il soit lisible par vous. Et voila, vous avez votre site !</p>
+
+<div style="clear: both"></div>
+
+<h3 id="bilan--lecture-dune-adresse-web">Bilan : lecture d’une adresse web</h3>
+
+<p>Donc finalement, vous pouvez comprendre toutes les partie des addresses
+web que vous tapez dans le navigateur :</p>
+
+<pre><strong class="text-error">http</strong>://<strong class="text-success">www.lemonde.fr</strong>/<strong class="text-info">on-a-marché-sur-la-lune.html</strong>
+</pre>
+<p>Vous avez :</p>
+
+<ul>
+  <li>en <strong class="text-error">rouge</strong>, le protocole utilisé pour demander au serveur la page
+web</li>
+  <li>en <strong class="text-success">vert</strong>, le nom du serveur, qui sera traduit en adresses IP par
+les serveurs DNS</li>
+  <li>en <strong class="text-info">bleu</strong>, le nom de la page sur le serveur, avec en bleu clair le
+langage dans lequel est écrit la page (HTML ici, mais il existe
+d’autres langages)</li>
+</ul>
+
+<h3 id="et-après-">Et après ?</h3>
+
+<p>Après, lorsque vous cliquez sur un lien, le navigateur sait à quel
+serveur demander la page. Derrière chaque lien, il y a l’adresse d’une
+page. Par exemple, si vous cliquez sur un lien derrière lequel il y a
+l’adresse :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://www.lemonde.fr/on-a-marché-sur-la-lune.html
+</code></pre></div></div>
+
+<p>voila ce qui se passera :</p>
+
+<ol>
+  <li>le navigateur contactera le serveur DNS pour avoir l’adresse IP du
+serveur www.lemonde.fr</li>
+  <li>le navigateur enverra une requête avec le protocole HTTP au serveur
+www.lemonde.fr en lui demandant de lui renvoyer la page
+“on-a-marché-sur-la-lune.html”</li>
+  <li>le serveur enverra la page au navigateur en HTML</li>
+  <li>le navigateur vous l’affichera</li>
+</ol>
+
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/internet/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

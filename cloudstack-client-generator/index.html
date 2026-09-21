@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Project: Cloudstack Client Generator · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/cloudstack-client-generator/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Project: Cloudstack Client Generator</h1>
+  <span class="post-date">Aug 15th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This is command line tool that fetches and parses the online reference for
+CloudStack API and generates the client class in PHP with in-code
+documentation.</p>
+
+<p><a href="https://github.com/qpleple/cloudstack-client-generator">See project on github</a></p>
+
+<p>You can generate a client in any language (Java, python, C++, ObjectiveC, etc.) by adding class templates to the <code class="language-plaintext highlighter-rouge">templates/</code> directory. See <a href="https://github.com/qpleple/cloudstack-php-client">the last PHP client generated</a>.</p>
+
+<h3 id="description">Description</h3>
+
+<p>The table of content of the API reference lists all the methods. Each
+method has its own page. The data that the script fetches for each
+method is:</p>
+
+<ul>
+  <li>the method name</li>
+  <li>the method description</li>
+  <li>for each argument:
+    <ul>
+      <li>the argument name</li>
+      <li>the argument description</li>
+      <li>wether if the argument is required or not</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Here is an example of a method generated that has one arugment required
+(<code class="language-plaintext highlighter-rouge">$id</code>) and one not (<code class="language-plaintext highlighter-rouge">$forced</code>):</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cd">/**
+ * Stops a virtual machine.
+ *
+ * @param string $id The ID of the virtual machine
+ * @param string $forced Force stop the VM.
+ *     The caller knows the VM is stopped.
+ */</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="n">stopVirtualMachine</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="nv">$forced</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">request</span><span class="p">(</span><span class="s2">"stopVirtualMachine"</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">,</span>
+        <span class="s1">'forced'</span> <span class="o">=&gt;</span> <span class="nv">$forced</span><span class="p">,</span>
+    <span class="p">));</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="usage">Usage</h3>
+
+<p>Just run the script, it will generate all the methods.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php generate.php class
+</code></pre></div></div>
+
+<p>Output:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">abstract</span> <span class="kd">class</span> <span class="nc">BaseCloudStackClient</span> <span class="p">{</span>
+    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="n">request</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span> <span class="nv">$args</span><span class="p">);</span>
+
+    <span class="cd">/**
+     * Stops a virtual machine.
+     *
+     * @param string $id The ID of the virtual machine
+     * @param string $forced Force stop the VM.
+     *     The caller knows the VM is stopped.
+     */</span>
+    
+    <span class="k">public</span> <span class="k">function</span> <span class="n">stopVirtualMachine</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="nv">$forced</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">request</span><span class="p">(</span><span class="s2">"stopVirtualMachine"</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">,</span>
+            <span class="s1">'forced'</span> <span class="o">=&gt;</span> <span class="nv">$forced</span><span class="p">,</span>
+        <span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="mf">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>The configuration is set in <code class="language-plaintext highlighter-rouge">config.yml</code> with the Yaml format:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># URL of the API reference table of contents</span>
+<span class="na">api_ref_toc_url</span><span class="pi">:</span> <span class="s">http://download.cloud.com/releases/2.2.0/api_2.2.4/TOC_User.html</span>
+
+<span class="c1"># Configuration for the PHP generated code</span>
+<span class="na">php</span><span class="pi">:</span>
+    <span class="na">class_name</span><span class="pi">:</span> <span class="s">BaseCloudStackClient</span>
+    <span class="na">use_camel_case</span><span class="pi">:</span> <span class="kc">true</span>
+
+<span class="c1"># Camel case values</span>
+<span class="na">camel_case</span><span class="pi">:</span>
+    <span class="na">account</span><span class="pi">:</span> <span class="s">account</span>
+    <span class="na">accounts</span><span class="pi">:</span> <span class="s">accounts</span>
+    <span class="na">accounttype</span><span class="pi">:</span> <span class="s">accountType</span>
+    <span class="s">...</span>
+</code></pre></div></div>
+
+<h3 id="camel-case">Camel Case</h3>
+
+<p>You can either choose to have generated code with the same variable
+names than in the documentation, <code class="language-plaintext highlighter-rouge">securitygroupnames</code> for instance, or
+to have them in camel case, like <code class="language-plaintext highlighter-rouge">securityGroupNames</code> by setting
+<code class="language-plaintext highlighter-rouge">use_camel_case</code> to <code class="language-plaintext highlighter-rouge">true</code> in the configuration file.</p>
+
+<h3 id="debuging">Debuging</h3>
+
+<p>As the DOM of the online documentation may change, here is some tools to
+inquire the change. Three steps are crucial:</p>
+
+<ol>
+  <li>
+    <p>The URL of the online documentation table of content of the
+**latest** version of the API. To be modified in the config file.</p>
+  </li>
+  <li>
+    <p>The link black list: links to ignore in all the links from the table of
+content. To be modified in the function <code class="language-plaintext highlighter-rouge">getAllLinks()</code> of
+<code class="language-plaintext highlighter-rouge">generate.php</code>.</p>
+  </li>
+  <li>
+    <p>The page scraper if the DOM change, to be modified in the function
+<code class="language-plaintext highlighter-rouge">fetchMethodData()</code> in <code class="language-plaintext highlighter-rouge">generate.php</code>.</p>
+  </li>
+</ol>
+
+<p>The code is well documented, it should not be too difficult to
+understand and tweak it.</p>
+
+<h3 id="dump-links">Dump links</h3>
+
+<p>This command is great to debug a change in the URL pattern of the online
+documentation. It should output all the links that are on the table of
+contents (the URL is in the config file):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php generate.php dump-links
+</code></pre></div></div>
+
+<p>Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ php generate.php dump-links
+user/deployVirtualMachine.html
+user/destroyVirtualMachine.html
+user/rebootVirtualMachine.html
+user/startVirtualMachine.html
+user/stopVirtualMachine.html
+user/resetPasswordForVirtualMachine.html
+...
+</code></pre></div></div>
+
+<h3 id="dump-method-data">Dump method data</h3>
+
+<p>This command shows what data is fetched from the page of one method.
+Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ php generate.php dump-method-data stopVirtualMachine
+Array
+(
+    [name] =&gt; stopVirtualMachine
+    [description] =&gt; Stops a virtual machine.
+    [params] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [name] =&gt; id
+                    [description] =&gt; The ID of the virtual machine
+                    [required] =&gt; true
+                )
+
+            [1] =&gt; Array
+                (
+                    [name] =&gt; forced
+                    [description] =&gt; Force stop the VM.  The caller knows the VM is stopped.
+                    [required] =&gt; false
+                )
+
+        )
+
+)
+</code></pre></div></div>
+
+<h3 id="method">Method</h3>
+
+<p>This command generates the PHP code for that method. The following
+example will output the code given at the begin of the README:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php generate.php method stopVirtualMachine
+</code></pre></div></div>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/cloudstack-client-generator/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

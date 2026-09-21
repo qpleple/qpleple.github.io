@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      A Bash script to debug AWS CLI credentials · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/debugging-aws-cli-credentials-problems/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">A Bash script to debug AWS CLI credentials</h1>
+  <span class="post-date">Dec 11th, 2023</span>
+
+  
+
+  <p>Debugging AWS CLI credential issues usually involves checking the same handful of things: env vars, profiles, the config file, and which identity the CLI thinks it’s using. I wrote a small Bash script that dumps all of it at once.</p>
+
+<p>Example output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./debug-aws-credentials.sh
+
+================== Environment variables =======================================
+AWS_PROFILE not set
+AWS_ACCESS_KEY_ID not set
+AWS_SECRET_ACCESS_KEY not set
+AWS_SESSION_TOKEN not set
+
+================== aws configure list ==========================================
+      Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile                &lt;not set&gt;             None    None
+access_key                &lt;not set&gt;             None    None
+secret_key                &lt;not set&gt;             None    None
+    region                &lt;not set&gt;             None    None
+
+================== aws sts get-caller-identity =================================
+
+Unable to locate credentials. You can configure credentials by running "aws configure".
+
+================== aws configure list-profiles =================================
+terraform
+management-admin
+security-admin
+
+================== ~/.aws/config ===============================================
+[profile terraform]
+sso_start_url = https://aws-short-edition.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 866109354512
+sso_role_name = AdministratorRole
+region = eu-west-1
+output = yaml
+
+[profile management-admin]
+sso_start_url = https://aws-short-edition.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 866109354512
+sso_role_name = AdministratorRole
+region = eu-west-1
+output = yaml
+
+[profile security-admin]
+sso_start_url = https://aws-short-edition.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 274407225643
+sso_role_name = AdministratorRole
+region = eu-west-1
+output = yaml
+
+
+================== versions ====================================================
+aws-cli/2.3.1 Python/3.8.8 Darwin/21.6.0 exe/x86_64 prompt/off
+EB CLI 3.20.9 (Python 3.11.5 (main, Aug 24 2023, 15:23:30) [Clang 14.0.0 (clang-1400.0.29.202)])
+Python 3.11.5
+Terraform v1.5.0
+on darwin_amd64
+
+Your version of Terraform is out of date! The latest version
+is 1.6.6. You can update by downloading from https://www.terraform.io/downloads.html
+</code></pre></div></div>
+
+<h2 id="what-it-checks">What it checks</h2>
+
+<ul>
+  <li><strong>Environment variables</strong>: <code class="language-plaintext highlighter-rouge">AWS_PROFILE</code>, <code class="language-plaintext highlighter-rouge">AWS_ACCESS_KEY_ID</code>, <code class="language-plaintext highlighter-rouge">AWS_SECRET_ACCESS_KEY</code>, <code class="language-plaintext highlighter-rouge">AWS_SESSION_TOKEN</code> — whether they’re set and populated.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">aws configure list</code></strong>: the active CLI configuration.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code></strong>: which identity AWS actually sees you as.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">aws configure list-profiles</code></strong>: every profile the CLI knows about.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">~/.aws/config</code></strong>: dumped raw, since this is where most issues come from.</li>
+  <li><strong>Tool versions</strong>: AWS CLI, EB CLI, Python, Terraform — version mismatches show up here.</li>
+</ul>
+
+<p>You can also pass a profile name as an argument; it will run <code class="language-plaintext highlighter-rouge">aws configure list</code> and <code class="language-plaintext highlighter-rouge">aws sts get-caller-identity</code> scoped to that profile.</p>
+
+<h2 id="script">Script</h2>
+
+<script src="https://gist.github.com/qpleple/0340df38042e0907e920fdff28379a26.js"></script>
+
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/debugging-aws-cli-credentials-problems/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>
