@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Greedy Algorithms · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/greedy-algorithms/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Greedy Algorithms</h1>
+  <span class="post-date">Jun 3rd, 2013</span>
+
+  
+
+  <p>This article presents the two most common startegies to prove the correctness of Greedy algorithms.</p>
+
+<h3 id="exchange-argument-for-greedy-algorithms">Exchange argument for Greedy algorithms</h3>
+<p>The Greedy solution $\text{Gr}$ makes a sequence of choices, and an optimal solution $\text{OPT}_0$ makes another sequence of choices.</p>
+
+\[\left\{
+\begin{array}{ll}
+    \text{Gr} &amp; = C_1, C_2, ... \\
+    \text{OPT}_0 &amp; = C_1', C_2', ...
+\end{array}
+\right.\]
+
+<p>We are going to build by induction a sequence of optimal solutions where the last one agrees with $\text{Gr}$ on all the choices (proving that $\text{Gr}$ is optimal)</p>
+
+\[\text{OPT}_0 \to \text{OPT}_1 \to ... \to \text{OPT}_n = \text{Gr}\]
+
+<p>and $\text{OPT}_i$ agrees with $\text{Gr}$ up to the $i$th choice:</p>
+
+\[\left\{
+\begin{array}{ll}
+    \text{Gr} &amp; = C_1, C_2, ..., C_i, C_{i+1},... \\
+    \text{OPT}_i &amp; = C_1, C_2, ..., C_i, C_{i+1}',...
+\end{array}
+\right.\]
+
+<ul>
+  <li>
+    <p><strong>Base case.</strong> $\text{OPT}_0$ agrees with $\text{Gr}$ up to choice zero (vacuously true).</p>
+  </li>
+  <li>
+    <p><strong>Inductive step.</strong> Suppose we have an optimal solution $\text{OPT}_i$ agreeing with $\text{Gr}$ up to choice $i$. We need to transform</p>
+
+\[\text{OPT}_i \to \text{OPT}_{i+1}\]
+
+    <p>such that it agrees also on choice $i+1$ and it is still optimal. Here, it is problem specific.</p>
+  </li>
+  <li>
+    <p><strong>Conclusion.</strong> We have built an optimal solution $\text{OPT}_n$ agreeing with $\text{Gr}$ on all choices. Therefore, $\text{Gr} = \text{OPT}_n$ is optimal.</p>
+  </li>
+</ul>
+
+<h3 id="greedy-stays-ahead">Greedy stays ahead</h3>
+<p>The method is good when there is a value that we are maximizing (or minimizing). We show that the Greedy algorithm produces, at each step of the algorithm, a larger (or lower) value than any other algorithm.</p>
+
+<p>Let $V_0 = 0, V_1, V_2, …$ the values of the Greedy algorithm after each choice, and $V_0’ = 0, V_1’, V_2’, …$ the values of any other algorithm. Let’s prove by induction on $i$, that after each choice $i$, $V_i \geq V_i’$.</p>
+
+<ul>
+  <li>
+    <p><strong>Base case.</strong> $V_0 = 0 = V_0’$ so Greedy is ahead before any choice.</p>
+  </li>
+  <li>
+    <p><strong>Inductive step.</strong> Assume $V_i \geq V_i’$ (Greedy was ahead before the choice $i+1$). We need to show that $V_{i+1} \geq V_{i+1}’$ (Greedy is ahead after the choice $i+1$)<br />
+Here, it is problem specific.</p>
+  </li>
+  <li>
+    <p><strong>Conclusion.</strong> Because Greedy is ahead after each choice, Greedy is ahead at the end of the algorithm, and therefore produces an optimal solution.</p>
+  </li>
+</ul>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/greedy-algorithms/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

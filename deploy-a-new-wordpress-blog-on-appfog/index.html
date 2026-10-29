@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Deploy A New Wordpress Blog On AppFog · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/deploy-a-new-wordpress-blog-on-appfog/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Deploy A New Wordpress Blog On AppFog</h1>
+  <span class="post-date">Mar 11th, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p>This is a tutorial to get you started with Wordpress on AppFog.</p>
+
+<p>I’m assuming that you already have your environment configured to
+use AppFog. If not, read my other post on how to <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">deploy a toy PHP application on AppFog</a>.</p>
+
+<h2 id="get-the-code">Get the code</h2>
+
+<p>First, download Wordpress</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget http://wordpress.org/latest.zip
+<span class="nv">$ </span>unzip latest.zip
+<span class="nv">$ </span><span class="nb">cd </span>wordpress
+</code></pre></div></div>
+
+<h2 id="database-configuration">Database configuration</h2>
+
+<p>The MySQL database will be added and automatically binded to the app as
+a service, so you don’t know the database parameters (host, user,
+password) before deploying. However, AppFog will feed the environment
+variable ` VCAP_SERVICES` on the server with a JSON hash, including the
+database parameters, like this one:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"mysql-5.1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="s2">"d6d665aa69817406d8901cd1345e05e3c6"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"hostname"</span><span class="p">:</span><span class="s2">"mysql-node02.us-east-1.aws.af.cm"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"user"</span><span class="p">:</span><span class="s2">"uB7CoL4Hxv9eNy"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"username"</span><span class="p">:</span><span class="s2">"uB7CoL4DHxv9Ny"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"password"</span><span class="p">:</span><span class="s2">"pzAxz0iaOp2yKB"</span><span class="p">,</span><span class="w">
+      </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="p">]}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>You can read a environment variable in PHP with</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">getenv</span><span class="p">(</span><span class="s2">"VCAP_SERVICES"</span><span class="p">)</span></code></pre></figure>
+
+<p>and decode a JSON string to an associative array with</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">json_decode</span><span class="p">(</span><span class="nv">$json_string</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span></code></pre></figure>
+
+<p>We need to configure Wordpress to use a MySQL database. Create a
+configuration file from the example given:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp </span>wp-config-sample.php wp-config.php
+</code></pre></div></div>
+
+<p>Then in <code class="language-plaintext highlighter-rouge">wp-config.php</code>, look for the lines with the database parameters</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">define</span><span class="p">(</span><span class="s1">'DB_NAME'</span><span class="p">,</span>     <span class="s1">'database_name_here'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_USER'</span><span class="p">,</span>     <span class="s1">'username_here'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_PASSWORD'</span><span class="p">,</span> <span class="s1">'password_here'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_HOST'</span><span class="p">,</span>     <span class="s1">'localhost'</span><span class="p">);</span></code></pre></figure>
+
+<p>and instead of setting manually those values, we are going to read the
+environment variable <code class="language-plaintext highlighter-rouge">VCAP_SERVICES</code> and feed the parameters directly
+here, so replace the previous lines by</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$services</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s2">"VCAP_SERVICES"</span><span class="p">);</span>
+<span class="nv">$services_json</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$services</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+<span class="nv">$mysql_config</span> <span class="o">=</span> <span class="nv">$services_json</span><span class="p">[</span><span class="s2">"mysql-5.1"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"credentials"</span><span class="p">];</span>
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_NAME'</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_USER'</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_PASSWORD'</span><span class="p">,</span> <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_HOST'</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"hostname"</span><span class="p">]);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'DB_PORT'</span><span class="p">,</span>     <span class="nv">$mysql_config</span><span class="p">[</span><span class="s2">"port"</span><span class="p">]);</span></code></pre></figure>
+
+<h2 id="deploy-to-appfog">Deploy to AppFog</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>af push my-blog
+Would you like to deploy from the current directory? <span class="o">[</span>Yn]:
+Detected a PHP Application, is this correct? <span class="o">[</span>Yn]:
+1: AWS US East - Virginia
+2: AWS EU West - Ireland
+3: AWS Asia SE - Singapore
+4: Rackspace AZ 1 - Dallas
+5: HP AZ 2 - Las Vegas
+Select Infrastructure: 1
+Application Deployed URL <span class="o">[</span>my-blog.aws.af.cm]:
+Memory reservation <span class="o">(</span>128M, 256M, 512M, 1G, 2G<span class="o">)</span> <span class="o">[</span>128M]:
+How many instances? <span class="o">[</span>1]:
+</code></pre></div></div>
+
+<p>When asked about creating services to bind to your app, say yes, you
+need a MySQL database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Create services to <span class="nb">bind </span>to <span class="s1">'my-blog'</span>? <span class="o">[</span>yN]: y
+1: mongodb
+2: mysql
+3: postgresql
+4: rabbitmq
+5: redis
+What kind of service?: 2
+Specify the name of the service <span class="o">[</span>mysql-740c4]:
+Create another? <span class="o">[</span>yN]:
+Would you like to save this configuration? <span class="o">[</span>yN]:
+Creating Application: OK
+Creating Service <span class="o">[</span>mysql-740c4]: OK
+Binding Service <span class="o">[</span>mysql-740c4]: OK
+Uploading Application:
+  Checking <span class="k">for </span>available resources: OK
+  Processing resources: OK
+  Packing application: OK
+  Uploading <span class="o">(</span>22K<span class="o">)</span>: OK
+Push Status: OK
+Staging Application <span class="s1">'my-blog'</span>: OK
+Starting Application <span class="s1">'my-blog'</span>: OK
+</code></pre></div></div>
+
+<h2 id="web-install">Web install</h2>
+
+<p>Now go to your app, you should be welcomed by Wordpress.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-deploy-a-new-wordpress-blog-on-appfog/install.png" />
+</div>
+
+<p>Follow the steps and you should have a running installation of Wordpress
+on AppFog.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-deploy-a-new-wordpress-blog-on-appfog/home.png" />
+</div>
+
+<h2 id="store-uploaded-files-to-s3">Store uploaded files to S3</h2>
+
+<p>The storage on AppFog is not persistent (yet). That means that all the
+files created on the server may disappear at any time. For Wordpress it
+can be three things: media uploads (like images of your posts), plugins,
+and themes. So you have to tell Wordpress to store your static files
+somewhere else. Here is another post I wrote to
+<a href="/have-your-wordpress-static-files-on-amazon-s3/" title="have your WordPress static files on Amazon S3">Have your WordPress static files on Amazon S3</a>.</p>
+
+<h2 id="further-reading">Further reading</h2>
+
+<ol>
+  <li><a href="https://docs.appfog.com/languages/php/wordpress">Wordpress on AppFog official documentation</a></li>
+  <li><a href="https://docs.appfog.com/services">Dealing with services with the VCAP_SERVICES environment variable.</a></li>
+</ol>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/deploy-a-new-wordpress-blog-on-appfog/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

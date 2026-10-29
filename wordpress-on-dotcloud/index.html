@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Project: Wordpress On Dotcloud · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/wordpress-on-dotcloud/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Project: Wordpress On Dotcloud</h1>
+  <span class="post-date">Jul 25th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This is a package with the scripts and configuration files needed to deploy Wordpress on Dotcloud.</p>
+
+<p><a href="https://github.com/qpleple/wordpress-on-dotcloud">See project on github</a></p>
+
+<p>Copy all the files of this package in the
+root of your Wordpress directory and push to Dotcloud:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd wordpress
+git clone https://github.com/qpleple/wordpress-on-dotcloud
+mv wordpress-on-dotcloud/* .
+dotcloud create myblog
+dotcloud push myblog
+</code></pre></div></div>
+
+<p>Due to a Dotcloud issue, you may have to push twice the first time:
+<code class="language-plaintext highlighter-rouge">dotcloud push myblog</code>. Push local modifications to remote server with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotcloud push myblog
+</code></pre></div></div>
+
+<p>Note that remote <code class="language-plaintext highlighter-rouge">wp-content/</code> will not be overwritten. so uploaded
+static files will be kept and local plugins and themes will not be
+pushed remotely.</p>
+
+<h3 id="under-the-hood">Under the hood</h3>
+
+<p>The package contains:</p>
+
+<ol>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">dotcloud.yml</code> file required to push to Dotcloud declaring 2 services:</p>
+
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">www</span><span class="pi">:</span>
+   <span class="na">type</span><span class="pi">:</span> <span class="s">php</span>
+ <span class="na">db</span><span class="pi">:</span>
+   <span class="na">type</span><span class="pi">:</span> <span class="s">mysql</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">nginx.conf</code> file telling Nginx to redirect everything to
+Wordpress front controller as Dotcloud does not support <code class="language-plaintext highlighter-rouge">.htaccess</code>
+files (included in Wordpress):</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> try_files $uri $uri/ /index.php;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">postinstall</code> script that is a post-install hook and will be
+executed by Dotcloud after each push. It executes the scripts in the
+<code class="language-plaintext highlighter-rouge">dotcloud-scripts/</code> directory.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">feed-wp-config.php</code> script (executed by the post-install hook) that gets the parameters of the just
+created MySQL Dotcloud service, write them into the <code class="language-plaintext highlighter-rouge">wp-config.php</code> file
+and create the database if it does not exist. If <code class="language-plaintext highlighter-rouge">wp-config.php</code> does
+not exist, it will create it from <code class="language-plaintext highlighter-rouge">wp-config-sample.php</code>.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">persist-wp-content.sh</code> script (executed by the post-install hook) that
+persists the <code class="language-plaintext highlighter-rouge">wp-content/</code> directory containing uploads, installed
+plugins and themes. It moves the directory from <code class="language-plaintext highlighter-rouge">~/code/wp-content</code> it
+to <code class="language-plaintext highlighter-rouge">~/data/wp-content</code> and makes a symlink to it, because <code class="language-plaintext highlighter-rouge">~/code</code> will
+be overwritten at each push.</p>
+  </li>
+</ol>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/wordpress-on-dotcloud/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

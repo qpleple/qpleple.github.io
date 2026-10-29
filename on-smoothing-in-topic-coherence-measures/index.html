@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      On Smoothing In Topic Coherence Measures · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/on-smoothing-in-topic-coherence-measures/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">On Smoothing In Topic Coherence Measures</h1>
+  <span class="post-date">May 17th, 2013</span>
+
+  
+
+  <p>[<a href="/bib#Stevens12">Stevens12</a>] performed an extensive study of the these two measures on one dataset, New York Times articles (93k New York Times articles from 2003 and a vocabulary size of 36k tokens after removing the ones occurring less than 200 times throughout the corpus), in order to compare the three models: LDA, LSA with SVD, and LSA with NMF.</p>
+
+<p>However, they did not use the formulations of the measures used by their original authors.</p>
+
+<h3 id="umass-measure">UMass measure</h3>
+
+<p>For the UMass measure, they introduced a free parameter $\varepsilon$, instead of just one, for smoothing in the pairwise scoring function</p>
+
+\[\text{score}_{\text{UMass}}(w_i, w_j) =
+\log
+\frac{D(w_i, w_j) + \varepsilon}{D(w_i)}\]
+
+<p>and tried both $\varepsilon = 1$ and $\varepsilon = 10^{-12}$. Setting $\varepsilon = 10^{-12}$ seems to over-penalize pairs that never occur together, i.e. when $D(w_i, w_j) = 0$, as it will decrease the score of that pair by 12</p>
+
+\[\text{score}_{\text{UMass}}(w_i, w_j)
+= \log \frac{\varepsilon}{D(w_i)}
+= -12 - \log D(w_i)\]
+
+<p>which is very large in the log space of document counts. It is also equivalent to say that we would have to see $10^{12}$ more documents to see the two words appearing only once together. Having $\varepsilon = 1$ looks more reasonable as it is treating pairs that appear once throughout the corpus, i.e. when $D(w_i, w_j) = 1$, and pairs that never appear, i.e. when $D(w_i, w_j) = 0$, roughly in the same order of magnitude.</p>
+
+<h3 id="uci-measure">UCI measure</h3>
+
+<p>For the UCI measure, they introduced a smoothing $\varepsilon$ in the pairwise score that the original authors did not</p>
+
+\[\text{score}_{\text{UCI}}(w_i, w_j)  = \log \frac{p(w_i, w_j) + \varepsilon}{p(w_i)p(w_j)}\]
+
+<p>with $\varepsilon$ initially set to one. Here, we are at a different scale as we are dealing with probabilities and not counts. As $\varepsilon = 1$ is likely to be huge compared to $p(w_i, w_j)$, the smoothing parameter artificially increases the topic coherence, and not even by the same amount for all pairs of words. Then, using $\varepsilon = 10^{-12}$, which is likely to be smaller than $p(w_i, w_j)$, caused big changes, and therefore the authors concluded that coherence measures depend heavily on smoothing $\varepsilon$.</p>
+
+<p>Nonetheless a smoothing parameter is required to avoid taking the logarithm of zero. A reasonable choice for smoothing is to assume that every pair of words is present at least once in the corpus, and compute the empirical probability</p>
+
+\[p(w_i, w_j) = \frac{D_{\text{Wikipedia}}(w_i, w_j) + 1}{D_{\text{Wikipedia}}}\]
+
+<p>which is the same smoothing as the UMass measure.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/on-smoothing-in-topic-coherence-measures/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Reverse-engineering Of Google Home Animations · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/reverse-engineering-of-google-homepage-animation/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Reverse-engineering Of Google Home Animations</h1>
+  <span class="post-date">Jun 14th, 2011</span>
+
+  
+
+  <p>Discover what is the technology behing animations on Google homepage.</p>
+
+<p>I am sure you’ve noticed that sometimes you can
+see animations for special events instead of the logo of Google on its
+homepage such as this one:</p>
+
+<style>
+#logoGoogle {
+    position: relative;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+
+    box-shadow: 0 0 5px rgba(0,0,0,.25);
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,.25);
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,.25);
+    width: 403px;
+    height: 156px;
+    background: white url(/img/post-reverse-engineering-of-google-homepage-animation/anim-start.png) no-repeat top left;
+    margin: 30px auto;
+}
+
+#logoGoogle div { position: absolute; }
+</style>
+
+<div id="logoGoogle"></div>
+<script src="/js/reverse-engineering-of-google-homepage-animation.js" type="text/javascript"></script>
+
+<p>This animation is not a movie and it not made with flash. It is pure
+javascript. And one thing great with javascript is that it is a
+client-side code, so you can read it. When you browse the web and you
+see something cool, you can just open the cover and see how it is made.
+Let’s do it for this animation.</p>
+
+<h3 id="code-compression">Code compression</h3>
+
+<p>But, for speed reasons, the javascript is compressed to make the code
+shorter and faster to download :</p>
+
+<ul>
+  <li>
+    <p>all the variables and functions are renamed with letters to make it
+shorter,</p>
+  </li>
+  <li>
+    <p>all the white spaces and end of lines are trimmed,</p>
+  </li>
+  <li>
+    <p>and some tricks such as <code class="language-plaintext highlighter-rouge">a == 1 &amp;&amp; doThing()</code> instead of</p>
+
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span><span class="p">(</span><span class="nx">a</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">doThing</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>And the result of that process is that it looks like a Christmas Tree :</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-reverse-engineering-of-google-homepage-animation/christmas-tree.png" />
+</div>
+
+<p>This code is not made to be human-readable, but fast to be downloaded.</p>
+
+<h3 id="images-sprites">Images sprites</h3>
+
+<p>So how can you make that kind of animation in Javascript? The trick used
+by Google is a loop that add a new image every 86ms (I don’t know why
+86). But this is not the whole image that is repainted at each
+iteration, it is only the part that has changed. So Google made 155
+different images that the script displays one by one. But it would be
+too slow to make 155 requests to load all the images. So Google used
+only one big image with all the small images:</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-reverse-engineering-of-google-homepage-animation/sprite.png" />
+</div>
+
+<p>And for each iteration of the loop, it says:</p>
+
+<blockquote>
+  <p>Put this part of the big image here on the screen</p>
+</blockquote>
+
+<p>I unpacked the code and cleaned it to keep only what is essential the
+make the animation run. I renamed the variables and functions with
+meaningful names so you can read and understand the code pretty easily.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">307</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">89</span><span class="p">],</span> <span class="p">...];</span> <span class="c1">// 155 elements in the array data</span>
+ 
+<span class="kd">var</span> <span class="nx">logo</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nf">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">logoGoogle</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">tileNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">offSetX</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">offSetY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">maxHeigth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ 
+<span class="kd">var</span> <span class="nx">displayNext</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">tileNumber</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">top</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">tileNumber</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">tileNumber</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">height</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">tileNumber</span><span class="p">][</span><span class="mi">3</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">newLine</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">tileNumber</span><span class="p">][</span><span class="mi">4</span><span class="p">];</span>
+ 
+    <span class="c1">// Creates and position the new tile</span>
+    <span class="kd">var</span> <span class="nx">tile</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nf">createElement</span><span class="p">(</span><span class="dl">"</span><span class="s2">div</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">tile</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">logo</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">tileNumber</span><span class="p">;</span>
+    <span class="nx">tile</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">left</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">px</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">tile</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="nx">top</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">px</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">tile</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">px</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">tile</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">height</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">px</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">tile</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">url(/img/post-reverse-engineering-of-google-homepage-animation/sprite.png) no-repeat </span><span class="dl">"</span> <span class="o">+</span> <span class="o">-</span><span class="nx">offSetX</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">px </span><span class="dl">"</span> <span class="o">+</span> <span class="o">-</span><span class="nx">offSetY</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">px</span><span class="dl">"</span><span class="p">;</span>
+    <span class="c1">//tile.style.border = "1px solid #DDD";</span>
+    <span class="nx">logo</span><span class="p">.</span><span class="nf">appendChild</span><span class="p">(</span><span class="nx">tile</span><span class="p">);</span>
+ 
+    <span class="c1">// Computes the offsets for the next tile</span>
+    <span class="nx">maxHeigth</span> <span class="o">&lt;</span> <span class="nx">height</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">maxHeigth</span> <span class="o">=</span> <span class="nx">height</span><span class="p">);</span>
+    <span class="nx">newLine</span> <span class="p">?</span> <span class="p">(</span><span class="nx">offSetX</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">offSetY</span> <span class="o">+=</span> <span class="nx">maxHeigth</span><span class="p">,</span> <span class="nx">maxHeigth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="nx">offSetX</span> <span class="o">+=</span> <span class="nx">width</span><span class="p">;</span>
+ 
+    <span class="c1">// Call this function again if it is not the last tile</span>
+    <span class="nx">tileNumber</span><span class="o">++</span><span class="p">;</span>
+    <span class="nx">tileNumber</span> <span class="o">&lt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="nb">window</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="nx">displayNext</span><span class="p">,</span> <span class="mi">83</span><span class="p">);</span>
+<span class="p">};</span>
+ 
+<span class="kd">var</span> <span class="nx">image</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nf">createElement</span><span class="p">(</span><span class="dl">"</span><span class="s2">img</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">image</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">load</span><span class="dl">"</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="nx">displayNext</span><span class="p">,</span> <span class="mi">3000</span><span class="p">));</span>
+<span class="nx">image</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">/img/post-reverse-engineering-of-google-homepage-animation/sprite.png</span><span class="dl">"</span>
+</code></pre></div></div>
+
+<h3 id="comments-on-the-code">Comments on the code</h3>
+
+<p>First, you have an array with all the coordinates of the small images
+(which part of the big image goes where). All the elements of the array
+is an 4-element array <code class="language-plaintext highlighter-rouge">[x, y, width, height]</code> except for the ends of
+line of the big image that have a 1 as 5th element
+(<code class="language-plaintext highlighter-rouge">[x, y, width, height, 1]</code>) To wait the big image to be loaded before
+starting the animation, there is this trick:</p>
+
+<ul>
+  <li>
+    <p>the area of the animation has as background the first image of the
+animation (separate from the big image).</p>
+  </li>
+  <li>
+    <p>the script creates an <code class="language-plaintext highlighter-rouge">img</code> tag with source the big image whithout
+adding it to the document. So the browser will download the big
+image but not dispay it.</p>
+  </li>
+  <li>
+    <p>the scripts add the event</p>
+
+    <blockquote>
+      <p>When this <code class="language-plaintext highlighter-rouge">img</code> is ready, launch the loop</p>
+    </blockquote>
+  </li>
+</ul>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/reverse-engineering-of-google-homepage-animation/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

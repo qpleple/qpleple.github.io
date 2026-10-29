@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Using PMI For Topic Relevance · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/using-pmi-for-topic-relevance/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Using PMI For Topic Relevance</h1>
+  <span class="post-date">Nov 4th, 2013</span>
+
+  
+
+  <p>One can ask if it is always good thing to increase the PMI score. Indeed, the major issue with PMI is that it over-estimates low-frequency events. Therefore, a high PMI may not mean a high word correlation, but maybe just low-frequency words.</p>
+
+<h4 id="example">Example</h4>
+<p>For instance, the PMI is maximal when $w_i$ and $w_j$ always occur together:</p>
+
+\[D(w_i) = D(w_j) = D(w_i, w_j) = n\]
+
+<p>where $n$ is the count of documents where their occur. Then their PMI will be</p>
+
+\[\text{PMI}(w_i, w_j) = \log \frac{\frac n D}{\frac n D \cdot \frac n D} = \log D - \log n\]
+
+<p>where $D$ is the total number of documents. So for the same high predictive power of one word given the other, if they are present in all documents, their PMI will be zero, but it will be $\log D$ if they are appear in only one document.</p>
+
+<h4 id="alternatives">Alternatives</h4>
+<p>Some alternatives have been developed to go around this issue. One is to use variants of the PMI such as the Weighted PMI [<a href="/bib#Schneider05">Schneider05</a>]:</p>
+
+\[p(w_i, w_j) \log \frac{p(w_i, w_j)}{p(w_i)p(w_j)}\]
+
+<p>or giving more weight to the joint probability:</p>
+
+\[\log \frac{p(w_i, w_j)^2}{p(w_i)p(w_j)}
+\qquad
+\text{or}
+\qquad
+\log \frac{p(w_i, w_j)^3}{p(w_i)p(w_j)}\]
+
+<p>But the most common common alternative is to heuristically choose a threshold on frequencies and don’t consider low-frequency events [<a href="/bib#Pantel02">Pantel02</a>].</p>
+
+<h4 id="pmi-for-top-words">PMI for top words</h4>
+<p>In our case, we are actually not computing the PMI for every pairs of words but just for the top ten words, either according to frequency or topic relevance. This is close to setting a threshold on frequency: we are only considering frequent words. This argument is true also for word relevance, even if we penalize some high-frequency words (the background words), a word scoring high on relevance $p(w|k) e^{-H_w}$ will have a high frequency $p(w|k)$ as well.</p>
+
+<p>So by working only with high-frequency words, high PMI is more likely to mean high correlation rather than rarer events.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/using-pmi-for-topic-relevance/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Perplexity To Evaluate Topic Models · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/perplexity-to-evaluate-topic-models/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Perplexity To Evaluate Topic Models</h1>
+  <span class="post-date">May 15th, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p>The most common way to evaluate a probabilistic model is to measure the log-likelihood of a held-out test set.</p>
+
+<p>This is usually done by splitting the dataset into two parts: one for training, the other for testing. For LDA, a test set is a collection of unseen documents $\boldsymbol w_d$, and the model is described by the topic matrix $\boldsymbol \Phi$ and the hyperparameter $\alpha$ for topic-distribution of documents. The LDA parameters $\boldsymbol \Theta$ is not taken into consideration as it represents the topic-distributions for the documents of the training set, and can therefore be ignored to compute the likelihood of unseen documents. Therefore, we need to evaluate the log-likelihood</p>
+
+\[\mathcal L (\boldsymbol w)
+= \log p(\boldsymbol w | \boldsymbol \Phi, \alpha)
+= \sum_d \log p(\boldsymbol w_d | \boldsymbol \Phi, \alpha).\]
+
+<p>of a set of unseen documents $\boldsymbol w_d$ given the topics $\boldsymbol \Phi$ and the hyperparameter $\alpha$ for topic-distribution $\boldsymbol \theta_d$ of documents. Likelihood of unseen documents can be used to compare models; higher likelihood implying a better model.</p>
+
+<p>The measure traditionally used for topic models is the <em>perplexity</em> of held-out documents $\boldsymbol w_d$ defined as</p>
+
+\[\text{perplexity}(\text{test set } \boldsymbol w) =
+    \exp \left\{
+    - \frac{\mathcal L(\boldsymbol w)}{\text{count of tokens}}
+    \right\}\]
+
+<p>which is a decreasing function of the log-likelihood $\mathcal L(\boldsymbol w)$ of the unseen documents $\boldsymbol w_d$; the lower the perplexity, the better the model.</p>
+
+<p>However,
+the likelihood $p(\boldsymbol w_d | \boldsymbol \Phi, \alpha)$ of one document is intractable, which makes the evaluation of $\mathcal L(\boldsymbol w)$, and therefore the perplexity, intractable as well. [<a href="/bib#Wallach09a">Wallach09a</a>] derive various sampling methods to approximate this probability.</p>
+
+<h3 id="perplexity-is-not-strongly-correlated-to-human-judgment">Perplexity is not strongly correlated to human judgment</h3>
+
+<p>[<a href="/bib#Chang09">Chang09</a>] have shown that, surprisingly, predictive likelihood (or equivalently, perplexity) and human judgment are often not correlated, and even sometimes slightly anti-correlated.</p>
+
+<p>They ran a large scale experiment on the Amazon Mechanical Turk platform.
+For each topic, they took the top five words (ordered by frequency $p(w|k) = \varphi_{kw}$) of that topic and added a random sixth word. Then, they presented these lists of six words to participants asking them to identify the intruder word.</p>
+
+<p>If every participant could identify the intruder, then we could conclude that the topic is good at describing an idea.
+If on the other hand, many people identified one of the topic top five word as the intruder, it means that they could not see the logic in the association of words, and we can conclude the topic was not good enough.</p>
+
+<p>It’s important to understand what this experiment is proving.
+The result proves that, given a topic, the five words that have the largest frequency $p(w|k) = \varphi_{kw}$ withing their topic are usually not good at describing one coherent idea; at least not good enough to be able to recognize an intruder.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/perplexity-to-evaluate-topic-models/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

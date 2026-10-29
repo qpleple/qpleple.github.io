@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Authenticate Users With Their Facebook Account · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/authenticate-users-with-their-facebook-account/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Authenticate Users With Their Facebook Account</h1>
+  <span class="post-date">Jun 14th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>A good and easy way to deal with Facebook authentication is to implement the server
+side flow with the Facebook PHP SDK (<a href="http://github.com/facebook/php-sdk">see on
+github</a>). Here is how you do that :</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">"facebook.php"</span><span class="p">;</span>
+<span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">'appId'</span>  <span class="o">=&gt;</span> <span class="no">YOUR_APP_ID</span><span class="p">,</span>
+    <span class="s1">'secret'</span> <span class="o">=&gt;</span> <span class="no">YOUR_APP_SECRET</span><span class="p">,</span>
+<span class="p">));</span>
+
+<span class="nv">$user</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">getUser</span><span class="p">();</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// The user is logged in</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">api</span><span class="p">(</span><span class="s1">'/me'</span><span class="p">);</span>
+    <span class="c1">// Here : API call succeeded,</span>
+    <span class="c1">// you have a valid access token</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">FacebookApiException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Here : API call failed,</span>
+    <span class="c1">// you don't have a valid access token</span>
+    <span class="c1">// you have to send him to $facebook-&gt;getLoginUrl()</span>
+    <span class="nv">$user</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="c1">// else : the user is not logged in</span></code></pre></figure>
+
+<p>After that, if <code class="language-plaintext highlighter-rouge">$user</code> is not <code class="language-plaintext highlighter-rouge">null</code>, it means that the user is
+authenticated. So here is what you can display on your page :</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">getLogoutUrl</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="s">"</span><span class="nt">&gt;</span>
+        Logout of Facebook
+    <span class="nt">&lt;/a&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">else</span><span class="o">:</span> <span class="cp">?&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">getLoginUrl</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="s">"</span><span class="nt">&gt;</span>
+       Login with Facebook
+    <span class="nt">&lt;/a&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>When the user is authenticated, you can make API calls with his access
+token (stored in <code class="language-plaintext highlighter-rouge">$facebook</code>) :</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$user_profile</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">api</span><span class="p">(</span><span class="s1">'/me'</span><span class="p">);</span></code></pre></figure>
+
+<p>For the complete flow, you can see <a href="https://github.com/facebook/php-sdk/blob/master/examples/example.php">the example of the Facebook PHP
+SDK</a>
+which is well documented.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/authenticate-users-with-their-facebook-account/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

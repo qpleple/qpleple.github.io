@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Deploy A Toy PHP Application On Pagoda Box · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/deploy-a-toy-php-application-on-pagoda-box/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Deploy A Toy PHP Application On Pagoda Box</h1>
+  <span class="post-date">Mar 22nd, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p>Yesterday I published a post about how to <a href="/deploy-a-toy-php-application-on-appfog/" title="Deploy a toy PHP application on AppFog">deploy a toy PHP application on AppFog</a>, today it is the turn of <a href="pagodabox.com">Pagoda Box</a>. <a href="https://dashboard.pagodabox.com/account/register">Create an account on Pagoda Box</a> and <a href="http://help.pagodabox.com/customer/portal/articles/200927#add-ssh-pagoda">add your SSH key to your account</a>,
+we will be pushing through SSH. Finish the initial setup by installing
+Pagoda’s command line tool:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gem <span class="nb">install </span>pagoda
+</code></pre></div></div>
+
+<p>Create your PHP app:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>coffee
+<span class="nv">$ </span><span class="nb">cd </span>coffee
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"&lt;?php echo 'Drink coffee'; ?&gt;"</span> <span class="o">&gt;</span> index.php
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git init
+<span class="nv">$ </span>git add <span class="nb">.</span>
+<span class="nv">$ </span>git commit <span class="nt">-am</span> <span class="s2">"Initial commit"</span>
+</code></pre></div></div>
+
+<p>Then create and deploy</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pagoda create coffee
+</code></pre></div></div>
+
+<p>This will create a remote git repository named <code class="language-plaintext highlighter-rouge">pagoda</code>. Just push to
+that remote to deploy or update.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git push pagoda <span class="nt">--all</span>
+</code></pre></div></div>
+
+<p>You can see you app at <code class="language-plaintext highlighter-rouge">http://&lt;yourapp&gt;.pagodabox.com/</code> To update your
+app, git commit your changes and git push them the same way:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git push pagoda <span class="nt">--all</span>
+</code></pre></div></div>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/deploy-a-toy-php-application-on-pagoda-box/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

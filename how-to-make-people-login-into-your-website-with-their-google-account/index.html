@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      How To Make People Login Into Your Website With Their Google Account · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/how-to-make-people-login-into-your-website-with-their-google-account/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">How To Make People Login Into Your Website With Their Google Account</h1>
+  <span class="post-date">Apr 27th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This is a step-by-step beginner tutorial so show you how to implement Google login in PHP from scratch.</p>
+
+<p>OpenID provides a safe, elegant and easy way for people to login into your website without
+having to fill in a registration form. They just have to have an account
+to one OpenID provider, a Google account for instance, and they will
+login into your site with this account.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/signin-google-3.png" />
+</div>
+
+<p>I will show you how to implement it with Google accounts, but the source
+code is exactly the same for other providers (such as Yahoo!), you just
+have to change the URLs.</p>
+
+<h3 id="how-does-it-work">How does it work?</h3>
+
+<p>You just have to know that you don’t have to deal with the user
+authentication. You will provide a link to a Google page in which the
+user will:</p>
+
+<ol>
+  <li>
+    <p>give his credentials (or not, if he is already logged on Gmail for instance):</p>
+
+    <div class="text-center" style="margin: 20px 0">
+     <img class="img-thumbnail" src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/google-login-2.png" />
+ </div>
+  </li>
+  <li>
+    <p>give the authorization to Google to give you some his personnal data that you request:</p>
+
+    <div class="text-center" style="margin: 20px 0">
+     <img class="img-thumbnail" src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/google-auto-2.png" />
+ </div>
+  </li>
+</ol>
+
+<p>Then the user will be redirect to a page of your website, that you
+chose, and you will be able to retrieve his personal data.</p>
+
+<h3 id="lets-write-some-code">Let’s write some code!</h3>
+
+<p>We will have two part in our the code:</p>
+
+<ol>
+  <li>
+    <p>First, the code to retrieve the user personal data. Here, you just
+want to execute that code once, only when the user clicks on “Login
+with my Google account”. </p>
+  </li>
+  <li>
+    <p>Then, the code to render the login button. You might want to display
+the login button on several pages, in your sidebar or whatever, so
+that code has to run each time you render the button.</p>
+  </li>
+</ol>
+
+<p>We will be using a one-file PHP OpenID library that you can download
+here: <a href="http://gitorious.org/lightopenid/lightopenid/blobs/raw/master/openid.php">LightOpenID</a>.
+Just put this file in your project folder.</p>
+
+<p>Here is the <code class="language-plaintext highlighter-rouge">login.php</code> file, it will be the page that the user willl be
+redirected to after having given his credentials and authorization to
+Google. This code retrieve and display the personal data of the user:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span> <span class="c1">// login.php</span>
+<span class="k">require_once</span> <span class="s1">'openid.php'</span><span class="p">;</span>
+<span class="nv">$openid</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LightOpenID</span><span class="p">(</span><span class="s2">"my-domain.com"</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$openid</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$openid</span><span class="o">-&gt;</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">'cancel'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s2">"User has canceled authentication!"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">elseif</span><span class="p">(</span><span class="nv">$openid</span><span class="o">-&gt;</span><span class="nf">validate</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$openid</span><span class="o">-&gt;</span><span class="nf">getAttributes</span><span class="p">();</span>
+        <span class="nv">$email</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'contact/email'</span><span class="p">];</span>
+        <span class="nv">$first</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'namePerson/first'</span><span class="p">];</span>
+        <span class="k">echo</span> <span class="s2">"Identity: </span><span class="nv">$openid-&gt;identity</span><span class="s2"> &lt;br&gt;"</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"Email: </span><span class="nv">$email</span><span class="s2"> &lt;br&gt;"</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"First name: </span><span class="nv">$first</span><span class="s2">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s2">"The user has not logged in"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"Go to index page to log in."</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>Make sure to replace <code class="language-plaintext highlighter-rouge">my-domain.com</code> by your domain name. If you have
+already a running signup/login system on your website, you might want to
+add a <code class="language-plaintext highlighter-rouge">openid_identity</code> field to your table <code class="language-plaintext highlighter-rouge">users</code> in your database and
+store in it <code class="language-plaintext highlighter-rouge">$openid-&gt;identity</code>. It is the unique ID that Google
+provides you to identify the user. The other fields may change if the
+user changes his Google profile.</p>
+
+<p>And last step, the code to render the button, let’s say on the home
+page, <code class="language-plaintext highlighter-rouge">index.php</code>. It will call a Google window and it will tell this
+window to redirect to your site after.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span> <span class="c1">// index.php</span>
+<span class="k">require_once</span> <span class="s1">'openid.php'</span><span class="p">;</span>
+<span class="nv">$openid</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LightOpenID</span><span class="p">(</span><span class="s2">"my-domain.com"</span><span class="p">);</span>
+
+<span class="nv">$openid</span><span class="o">-&gt;</span><span class="n">identity</span> <span class="o">=</span> <span class="s1">'https://www.google.com/accounts/o8/id'</span><span class="p">;</span>
+<span class="nv">$openid</span><span class="o">-&gt;</span><span class="n">required</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+  <span class="s1">'namePerson/first'</span><span class="p">,</span>
+  <span class="s1">'namePerson/last'</span><span class="p">,</span>
+  <span class="s1">'contact/email'</span><span class="p">,</span>
+<span class="p">);</span>
+<span class="nv">$openid</span><span class="o">-&gt;</span><span class="n">returnUrl</span> <span class="o">=</span> <span class="s1">'http://my-domain.com/login.php'</span>
+<span class="cp">?&gt;</span>
+
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$openid</span><span class="o">-&gt;</span><span class="nf">authUrl</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="s">"</span><span class="nt">&gt;</span>Login with Google<span class="nt">&lt;/a&gt;</span>
+</code></pre></div></div>
+
+<p>Here you have to change the <code class="language-plaintext highlighter-rouge">returnUrl</code> field: put the absolute URL of
+the PHP page. Once again, make sure to replace <code class="language-plaintext highlighter-rouge">my-domain.com</code> by your domain name.</p>
+
+<h3 id="persisting-the-authenticated-state">Persisting the authenticated state</h3>
+
+<p>OpenID is just the authentication mechanism: is the user the one he claims to be? In order to persist the state in your application you can use sessions.</p>
+
+<p>When you have the user’s data, you can authenticate him in your application</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">session_start</span><span class="p">();</span>
+<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$email</span><span class="p">;</span></code></pre></figure>
+
+<p>To test if the user is logged in your application or not:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">session_start</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="c1">// user logged in</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// user not logged in</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>To logout the user, just destroy the session:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nb">session_start</span><span class="p">();</span>
+<span class="nb">session_destroy</span><span class="p">();</span></code></pre></figure>
+
+<h3 id="other-openid-providers">Other OpenID providers</h3>
+
+<p>And that’s it! Finally, some figures about with what authentication provider
+users prefer login according to <a href="http://janrain.com/blog/social-login-trends-across-the-web-for-q4-2013/">JanRain</a>.</p>
+
+<div class="text-center" style="margin: 20px 0;"><img src="/img/post-how-to-make-people-login-into-your-website-with-their-google-account/login-preferences.png" /></div>
+
+<p>You can use this code to make people login into your website with some
+other accounts: Yahoo, Wordpress, AOL, … You just have to change the
+url <code class="language-plaintext highlighter-rouge">$openid-&gt;identity</code> by:</p>
+
+<ul>
+  <li>Google: <code class="language-plaintext highlighter-rouge">https://www.google.com/accounts/o8/id</code></li>
+  <li>Google profile: <code class="language-plaintext highlighter-rouge">http://www.google.com/profiles/\~YOURUSERNAME</code></li>
+  <li>Yahoo: <code class="language-plaintext highlighter-rouge">https://me.yahoo.com</code></li>
+  <li>AOL: <code class="language-plaintext highlighter-rouge">https://www.aol.com</code></li>
+  <li>Wordpress: <code class="language-plaintext highlighter-rouge">http://YOURBLOG.wordpress.com</code></li>
+  <li>LiveJournal: <code class="language-plaintext highlighter-rouge">http://www.livejournal.com/openid/server.bml</code></li>
+</ul>
+
+<p>However, Facebook and Twitter are not OpenID provider: you cannot use the above code with them. Here is an article I wrote for <a href="/authenticate-users-with-their-facebook-account">implementing Facebook authentication in PHP</a>. As for Twitter, refer to <a href="https://dev.twitter.com/docs/auth/sign-twitter">the official documentation</a>.</p>
+
+<h3 id="other-languages">Other languages</h3>
+
+<p>You can find the equivalent of LightOpenID that I used in PHP in the
+other languages on <a href="http://wiki.openid.net/w/page/12995176/Libraries">this page of the OpenID.net wiki</a>.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/how-to-make-people-login-into-your-website-with-their-google-account/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

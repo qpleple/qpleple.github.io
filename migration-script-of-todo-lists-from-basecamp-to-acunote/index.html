@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Migration Script Of Todo Lists From Basecamp To Acunote · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/migration-script-of-todo-lists-from-basecamp-to-acunote/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Migration Script Of Todo Lists From Basecamp To Acunote</h1>
+  <span class="post-date">Jun 15th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This script if made for those who want to migrate their todo lists from
+Basecamp to Acunote.</p>
+
+<p><a href="http://github.com/qpleple/migration-basecamp-acunote">See project on github</a></p>
+
+<p>As Acunote does not have (yet) an API, this script
+is making API calls to get the data from Basecamp and outputs a CSV file
+that you can import in Acunote.</p>
+
+<h3 id="usage">Usage</h3>
+
+<p>Edit the file <code class="language-plaintext highlighter-rouge">params.py</code> according to your credentials :</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Basecamp URL for API calls
+</span><span class="n">url</span> <span class="o">=</span> <span class="sh">"</span><span class="s">https://example.basecamphq.com</span><span class="sh">"</span>
+
+<span class="c1"># Basecamp API key
+</span><span class="n">apikey</span> <span class="o">=</span> <span class="sh">"</span><span class="s">04f69569a36d306701238466d5ea12cb097b959d</span><span class="sh">"</span>
+
+<span class="c1"># Users
+# List here all the user IDs in Basecamp
+# and associate a name in Acunote :
+# Basecamp IDs =&gt; Acunote names
+</span><span class="n">creatorNames</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">7248751</span><span class="sh">'</span> <span class="p">:</span> <span class="sh">"</span><span class="s">quentin</span><span class="sh">"</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">1122334</span><span class="sh">'</span> <span class="p">:</span> <span class="sh">"</span><span class="s">bob</span><span class="sh">"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Give the todo list ID in argument to the script and it will output the
+CSV file to import in Acunote :</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python migration-basecamp-acunote.py 3248324
+Level,Number,Description,Tags,Owner,Status,Priority,Estimate,Remaining,Wiki,Watchers,Related,Duplicate,Version 1
+,<span class="s2">"1"</span>,<span class="s2">"Item B"</span>,,<span class="s2">"quentin"</span>,<span class="s2">"Not Started"</span>,,,,,,,,
+,<span class="s2">"1"</span>,<span class="s2">"Item C"</span>,,<span class="s2">"quentin"</span>,<span class="s2">"Completed"</span>,,,,,,,,
+,<span class="s2">"2"</span>,<span class="s2">"Item A"</span>,,<span class="s2">"bob"</span>,<span class="s2">"Not Started"</span>,,,,,,,,
+,<span class="s2">"3"</span>,<span class="s2">"Item D"</span>,,<span class="s2">"blabla"</span>,<span class="s2">"Not Started"</span>,,,,,,,,
+</code></pre></div></div>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/migration-script-of-todo-lists-from-basecamp-to-acunote/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

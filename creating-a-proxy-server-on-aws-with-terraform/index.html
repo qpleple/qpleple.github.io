@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Setting up an Apache proxy on EC2 with Terraform · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/creating-a-proxy-server-on-aws-with-terraform/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Setting up an Apache proxy on EC2 with Terraform</h1>
+  <span class="post-date">Dec 14th, 2023</span>
+
+  
+
+  <p>This post walks through provisioning an EC2 instance with Terraform and using its <code class="language-plaintext highlighter-rouge">user_data</code> to configure Apache as an HTTP-to-HTTPS proxy. Handy for forwarding traffic to an internal service, or fronting a backend that only speaks HTTPS.</p>
+
+<h2 id="apache-configuration-script">Apache configuration script</h2>
+
+<p>The EC2 instance runs <code class="language-plaintext highlighter-rouge">setup-proxy.sh</code> on first boot. The script:</p>
+
+<ul>
+  <li>Installs Apache and <code class="language-plaintext highlighter-rouge">mod_ssl</code>.</li>
+  <li>Writes a vhost using <code class="language-plaintext highlighter-rouge">ProxyPass</code> / <code class="language-plaintext highlighter-rouge">ProxyPassReverse</code> to forward to the target URL.</li>
+  <li>Enables <code class="language-plaintext highlighter-rouge">SSLProxyEngine</code> so traffic to the backend stays encrypted.</li>
+</ul>
+
+<p>Breakdown:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum update <span class="nt">-y</span>
+yum <span class="nb">install</span> <span class="nt">-y</span> httpd mod_ssl
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">yum update -y</code>: refresh packages.</li>
+  <li><code class="language-plaintext highlighter-rouge">yum install -y httpd mod_ssl</code>: install Apache and the SSL/TLS module.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">EOF</span><span class="sh">' &gt; /etc/httpd/conf.d/proxy.conf
+&lt;VirtualHost *:80&gt;
+  &lt;Proxy *&gt;
+    Require all granted
+  &lt;/Proxy&gt;
+
+  ProxyPass / https://target-url.com/
+  ProxyPassReverse / https://target-url.com/
+
+  SSLProxyEngine On
+  SSLProxyCheckPeerCN off
+  SSLProxyCheckPeerName off
+  SSLProxyCheckPeerExpire off
+  SSLProxyVerify none
+&lt;/VirtualHost&gt;
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<p>Writing the vhost config:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;VirtualHost *:80&gt;</code>: listen on port 80.</li>
+  <li><code class="language-plaintext highlighter-rouge">Require all granted</code>: allow all clients (lock this down via security group, not Apache).</li>
+  <li><code class="language-plaintext highlighter-rouge">ProxyPass / https://target-url.com/</code>: forward root requests to the target.</li>
+  <li><code class="language-plaintext highlighter-rouge">ProxyPassReverse</code>: rewrite the backend’s redirect/Location headers to point back at the proxy.</li>
+  <li><code class="language-plaintext highlighter-rouge">SSLProxyEngine On</code>: enable SSL on the upstream leg.</li>
+  <li><code class="language-plaintext highlighter-rouge">SSLProxyCheck*</code> and <code class="language-plaintext highlighter-rouge">SSLProxyVerify none</code>: skip cert validation. Use this only if the backend has a self-signed or non-standard cert and you accept the trade-off.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl <span class="nb">enable </span>httpd  <span class="c"># start automatically at system's boot</span>
+systemctl start httpd   <span class="c"># start immediately</span>
+</code></pre></div></div>
+
+<p>Then enable and start Apache.</p>
+
+<h2 id="security-group">Security group</h2>
+
+<p>Restrict the proxy to traffic from inside the VPC. Adjust the CIDRs to match your network.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_security_group"</span> <span class="s2">"proxy"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="o">=</span> <span class="s2">"XXXXXX"</span>   <span class="c1"># your VPC id</span>
+  <span class="nx">name</span>   <span class="o">=</span> <span class="s2">"proxy-security-group"</span>
+
+  <span class="c1"># Allow all outbound traffic.</span>
+  <span class="nx">egress</span> <span class="p">{</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">0</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"-1"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">0</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"0.0.0.0/0"</span><span class="p">]</span>
+  <span class="p">}</span>
+
+  <span class="c1"># Allow inbound SSH (port 22), HTTP (port 80), and HTTPS (port 443) traffic from the VPC's IP range.</span>
+  <span class="nx">ingress</span> <span class="p">{</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">22</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"tcp"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">22</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
+  <span class="p">}</span>
+  <span class="nx">ingress</span> <span class="p">{</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">80</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"tcp"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">80</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
+  <span class="p">}</span>
+  <span class="nx">ingress</span> <span class="p">{</span>
+    <span class="nx">from_port</span>   <span class="o">=</span> <span class="mi">443</span>
+    <span class="nx">protocol</span>    <span class="o">=</span> <span class="s2">"tcp"</span>
+    <span class="nx">to_port</span>     <span class="o">=</span> <span class="mi">443</span>
+    <span class="nx">cidr_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"10.0.0.0/8"</span><span class="p">]</span>
+  <span class="p">}</span>
+
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">Name</span> <span class="o">=</span> <span class="s2">"proxy-security-group"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="key-pair">Key pair</h2>
+
+<p>Generate a key pair locally with <code class="language-plaintext highlighter-rouge">ssh-keygen</code> (defaults are fine; keys land in <code class="language-plaintext highlighter-rouge">~/.ssh/id_rsa</code> and <code class="language-plaintext highlighter-rouge">~/.ssh/id_rsa.pub</code>). Then print the public key:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> ~/.ssh/id_rsa.pub
+</code></pre></div></div>
+
+<p>Import it into AWS:</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_key_pair"</span> <span class="s2">"ec2"</span> <span class="p">{</span>
+  <span class="c1"># this is how the key will be identified in AWS</span>
+  <span class="nx">key_name</span> <span class="o">=</span> <span class="s2">"imported-key"</span>
+
+  <span class="c1"># The public key portion of the key pair</span>
+  <span class="nx">public_key</span> <span class="o">=</span> <span class="s2">"ssh-rsa XXXXXXXX"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="ec2-instance">EC2 instance</h2>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_instance"</span> <span class="s2">"proxy"</span> <span class="p">{</span>
+  <span class="nx">ami</span>           <span class="o">=</span> <span class="s2">"ami-0ed961fa828560210"</span>
+  <span class="nx">instance_type</span> <span class="o">=</span> <span class="s2">"t2.micro"</span>
+  
+  <span class="nx">key_name</span>               <span class="o">=</span> <span class="nx">aws_key_pair</span><span class="p">.</span><span class="nx">ec2</span><span class="p">.</span><span class="nx">key_name</span>
+  <span class="nx">subnet_id</span>              <span class="o">=</span> <span class="s2">"xxx"</span>
+  <span class="nx">vpc_security_group_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nx">aws_security_group</span><span class="p">.</span><span class="nx">proxy</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span>
+
+  <span class="nx">user_data</span> <span class="o">=</span> <span class="nx">file</span><span class="p">(</span><span class="s2">"setup-proxy.sh"</span><span class="p">)</span>
+
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span><span class="nx">Name</span> <span class="o">=</span> <span class="s2">"proxy"</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Notes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ami</code>: a small Amazon Linux. Pick another one <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html">from the AMI catalog</a> if you need a different distro.</li>
+  <li><code class="language-plaintext highlighter-rouge">t2.micro</code>: fine for testing; bump it up for real traffic.</li>
+  <li><code class="language-plaintext highlighter-rouge">subnet_id</code>: the subnet to start the instance in.</li>
+  <li><code class="language-plaintext highlighter-rouge">user_data</code>: the bootstrap script, here <code class="language-plaintext highlighter-rouge">setup-proxy.sh</code>.</li>
+</ul>
+
+<h2 id="deploy">Deploy</h2>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">terraform init</code> to pull providers.</li>
+  <li><code class="language-plaintext highlighter-rouge">terraform apply</code> to create the resources.</li>
+  <li>Hit the instance’s IP in a browser to verify the proxy is forwarding.</li>
+</ol>
+
+<h2 id="debugging">Debugging</h2>
+
+<p>SSH in:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> /path/to/your-key.pem ec2-user@your-instance-ip
+</code></pre></div></div>
+
+<p>Check Apache is up:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl status httpd
+</code></pre></div></div>
+
+<p>Inspect the rendered config:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /etc/httpd/conf.d/proxy.conf
+</code></pre></div></div>
+
+<p>Read the error log:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /var/log/httpd/error_log
+</code></pre></div></div>
+
+<h2 id="complete-code">Complete code</h2>
+
+<script src="https://gist.github.com/qpleple/dcf87f84190e1bc314677ae65fa98291.js"></script>
+
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/creating-a-proxy-server-on-aws-with-terraform/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

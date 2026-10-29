@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      How To Get Your Facebook Id · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/how-to-get-your-facebook-id/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">How To Get Your Facebook Id</h1>
+  <span class="post-date">Apr 26th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>You may need to get your Facebook token if you
+install a Facebook plugin on your website or if you develop a Facebook
+application. To get your Facebook ID, go to the <a href="http://developers.facebook.com/docs/reference/api/#reading">Facebook API reference page</a>, look for the link <code class="language-plaintext highlighter-rouge">graph.facebook.com/me</code> (right above the Pictures title)
+and click it. You can then see your Facebook ID:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"id": "1536397056"
+</code></pre></div></div>
+
+<h3 id="why-do-i-get-an-error-if-i-go-directly-to-graphfacebookcomme">Why do I get an error if I go directly to <a href="https://graph.facebook.com/me">graph.facebook.com/me</a>?</h3>
+
+<p>It is because that URL is part of the Facebook API which is not made to
+be used directly but by third-party applications (applications which are
+not Facebook but that can access your Facebook data).</p>
+
+<p>To be sure that
+one application is allowed to ask for your private data, Facebook gives
+it a kind of password (an access token) if you have allowed this
+application. Your data is given only if the token is valid, otherwise it
+returns the error message you may have seen.</p>
+
+<p>Now, when Facebook generate
+the <a href="http://developers.facebook.com/docs/reference/api/#reading">Facebook API reference page</a>, it
+provides to each URL (that are API requests), a temporary access token
+in order to make you able to see examples of real responses:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://graph.facebook.com/me?access_token=983798430|dslfuqsf...
+</code></pre></div></div>
+
+<p>This access token (which is in fact a lot more longer than that) becomes
+invalid as soon as you log out from Facebook.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/how-to-get-your-facebook-id/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Geolocalize Someone By Sending Them An Email · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/geolocalize-someone-by-sending-them-an-email/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Geolocalize Someone By Sending Them An Email</h1>
+  <span class="post-date">Apr 28th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>You thought you could consult your emails from anywhere incognito. You thought you could
+not be tracked. Yeah, it is not entirely true. If you do not pay
+attention to certain little things (and most of people don’t), you may
+not be as incognito as you think you are.</p>
+
+<h3 id="how-to-geolocalize-someone">How to geolocalize someone</h3>
+
+<p>The only thing that you need is a web server on which you can read the
+access logs.</p>
+
+<ol>
+  <li>
+    <p>Upload a smiley on your web server. Let say you can access it via
+<code class="language-plaintext highlighter-rouge">http://myserver/smiley.jpeg</code>.</p>
+  </li>
+  <li>
+    <p>Prepare your message in a HTML document with the smiley in it. Like this
+message:</p>
+
+    <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code> See you tomorrow ! <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"http://myserver/smiley.jpeg"</span> <span class="nt">/&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Open it in your browser, copy the whole page and paste it in a new mail
+in Gmail that you send to the person you want to track.</p>
+
+    <p>Note: Gmail do not allow you to write email directly in HTML. That is
+ why you have to write it in a text editor, open it in a browser and
+ copy-paste it to Gmail.</p>
+  </li>
+  <li>
+    <p>When the recipient will open the mail, it will load the image. It means
+that his browser will send a request for the image to your web server
+and that request will be logged into a file. If you use Apache, that
+file will be something like <code class="language-plaintext highlighter-rouge">/var/log/apache2/access.log</code>. You will see
+a line like this one :</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> myserver.com:80 66.78.236.243 - - [28/Apr/2011:19:00:05 +0200] "GET /smiley.jpeg HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24"
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>What you can know from this line is :</p>
+
+<ul>
+  <li>
+    <p>the IP address of the receiver is 66.78.236.243, that you can
+geolocalize with a tool like <a href="http://www.geolocip.com/">geolocip.com</a>,</p>
+
+    <div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-geolocalize-someone-by-sending-him-an-email/geoloc.png" />
+</div>
+  </li>
+  <li>
+    <p>the receiver opened you mail the April 28th of 2011 at 19:00:05,</p>
+  </li>
+  <li>
+    <p>the receiver has a Mac with OSX 10.6.7 and uses Chrome v11.0.</p>
+  </li>
+</ul>
+
+<p>Kind of scary, huh?</p>
+
+<h3 id="and-how-can-i-prevent-it">And how can I prevent it?</h3>
+
+<p>Some mail client do not load automatically the images in the mail of
+people you don’t know. In gmail for instance, you are asked if you want
+to load the image or not from mail from unknown senders :</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-geolocalize-someone-by-sending-him-an-email/load-images.png" />
+</div>
+
+<p>But, here an extract from the Gmail help:</p>
+
+<blockquote>
+  <p>If someone you’ve sent email at least twice sends you a message with
+images in it, you’ll see the image by default (because the people in
+this group are likely people you know and trust).</p>
+</blockquote>
+
+<p>Understand that you can be geolocalized by all the people you have sent
+at least 2 emails. If you are paranoid, you can disable to load
+automatically all external content in your email client, then you will
+control a bit more the information you send to the
+world.</p>
+
+<div class="text-center" style="margin: 20px 0">
+    <img src="/img/post-geolocalize-someone-by-sending-him-an-email/disable-auto-load.png" />
+</div>
+
+<p>But I am not doing this, I prefer to be geolocalized rather than having
+to click each time I receive an email to display the images. And no need
+to send me an email, I am telling you: I am <a href="http://bit.ly/j34JGT">here</a>!</p>
+
+<p>More info in Gmail help: <a href="http://mail.google.com/support/bin/answer.py?hl=en&amp;answer=145919&amp;ctx=share">Display images from certain senders</a>.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/geolocalize-someone-by-sending-them-an-email/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

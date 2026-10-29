@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Project: Basecamp Python Client · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/basecamp-python-client/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Project: Basecamp Python Client</h1>
+  <span class="post-date">Jun 15th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p><a href="http://github.com/qpleple/basecamp-python-client">See project on github</a></p>
+
+<h3 id="usage">Usage</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import ElementTree and the Basecamp wrapper module.
+</span><span class="kn">import</span> <span class="n">elementtree.ElementTree</span> <span class="k">as</span> <span class="n">ET</span>
+<span class="kn">from</span> <span class="n">basecamp</span> <span class="kn">import</span> <span class="n">Basecamp</span>
+
+<span class="n">bc</span> <span class="o">=</span> <span class="nc">Basecamp</span><span class="p">(</span><span class="sh">'</span><span class="s">https://example.basecamphq.com</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">API_KEY</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="c1"># Fetch one todo list from its ID
+</span><span class="n">xml</span> <span class="o">=</span> <span class="n">bc</span><span class="p">.</span><span class="nf">todo_list</span><span class="p">(</span><span class="mi">14499317</span><span class="p">)</span>
+<span class="n">items</span> <span class="o">=</span> <span class="n">ET</span><span class="p">.</span><span class="nf">fromstring</span><span class="p">(</span><span class="n">xml</span><span class="p">).</span><span class="nf">findall</span><span class="p">(</span><span class="sh">'</span><span class="s">todo-items/todo-item</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="c1"># Let's use the ElementTree API
+# to access data via path expressions:
+</span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">item</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">content</span><span class="sh">"</span><span class="p">).</span><span class="n">text</span>
+</code></pre></div></div>
+
+<h3 id="original-code">Original Code</h3>
+
+<p>This code is built from <a href="http://homework.nwsnet.de/products/3cd4">the code of Jochen
+Kupperschmidt</a> under the MIT
+Licence. Added also <a href="http://codespatter.com/2009/04/01/getting-basecamp-api-working-with-python">some suggestions from Greg
+Allard</a>.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/basecamp-python-client/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Change DocumentRoot For AppFog PHP Apps · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/change-the-document-root-for-php-application-in-appfog/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Change DocumentRoot For AppFog PHP Apps</h1>
+  <span class="post-date">Mar 12th, 2013</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2013 and is most likely outdated.</p>
+  
+
+  <p>AppFog doesn’t allow to edit the virtual host configuration. We need a workaround.</p>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>If you are working with a framework like Symfony2, the front controller <code class="language-plaintext highlighter-rouge">index.php</code> is not in your app root directory:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/path/to/my-website   &lt;-- root directory
++- src/
++- vendor/
++- web/               &lt;-- document directory
+   +- index.php
+   +- .htaccess
+</code></pre></div></div>
+
+<p>And we don’t want to have to include the <code class="language-plaintext highlighter-rouge">web/</code> directory in all the
+adresses like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://www.my-website.com/web/index.php
+</code></pre></div></div>
+
+<p>We want adresses like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://www.my-website.com/index.php
+</code></pre></div></div>
+
+<p>Usually, we achieve that goal by setting the document root to be <code class="language-plaintext highlighter-rouge">web/</code>
+in the Apache virtual host configuration:</p>
+
+<div class="language-apache highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ServerName</span> www.my-website.com
+<span class="nc">DocumentRoot</span> /path/to/my-website/web
+</code></pre></div></div>
+
+<p>But in AppFog, we can’t edit the virtual host configuration.</p>
+
+<h2 id="the-fix">The fix</h2>
+<p>The workaround <a href="https://docs.appfog.com/languages/php">proposed by AppFog</a>
+uses URL rewriting. Let’s add a <code class="language-plaintext highlighter-rouge">.htaccess</code> in the root directory
+<code class="language-plaintext highlighter-rouge">/path/to/my-website</code> to set the document root. Maybe you already have
+one in <code class="language-plaintext highlighter-rouge">web/</code>, it doesn’t matter, it’s a different one.</p>
+
+<div class="language-apache highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">RewriteEngine</span> <span class="ss">on</span>
+<span class="nc">RewriteCond</span> %{REQUEST_URI} !web/
+<span class="nc">RewriteRule</span> (.*) /web/$1 [L]
+</code></pre></div></div>
+
+<p>As it’s not likely that your need fits exactly the previous example, let
+me explain it.</p>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">RewriteEngine on</code> activates URL rewriting for this directory
+and all the sub directory.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">RewriteCond</code> directive specifiers under which conditions we are
+going to rewrite the URL: if it doesn’t already start by <code class="language-plaintext highlighter-rouge">web/</code>.</li>
+  <li>Finally <code class="language-plaintext highlighter-rouge">RewriteRule</code> specifies how the URL gets rewritten if the
+condition if true: prepend <code class="language-plaintext highlighter-rouge">web/</code>.</li>
+</ul>
+
+<h2 id="side-note">Side note</h2>
+
+<p>AppFog proposes this configuration file adding two <code class="language-plaintext highlighter-rouge">RewriteCond</code>
+directives to check the domain names:</p>
+
+<div class="language-apache highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">RewriteEngine</span> <span class="ss">on</span>
+<span class="nc">RewriteCond</span> %{HTTP_HOST} ^my-website.com$ [NC,OR]
+<span class="nc">RewriteCond</span> %{HTTP_HOST} ^www.my-website.com$
+<span class="nc">RewriteCond</span> %{REQUEST_URI} !web/
+<span class="nc">RewriteRule</span> (.*) /web/$1 [L]
+</code></pre></div></div>
+
+<p>But there is no specific reason to check the domain name. The simpler
+<code class="language-plaintext highlighter-rouge">.htaccess</code> is just rewriting for whatever domain name. It’s also
+convenient if you have different environment (dev, prod, test, …) that
+have the same code but different domain names, like dev.my-website.com.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/change-the-document-root-for-php-application-in-appfog/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Get Started With Wordpress Plugins · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/get-started-with-wordpress-plugins/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Get Started With Wordpress Plugins</h1>
+  <span class="post-date">Jun 25th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>The purpose of this article is to get you started with Wordpress plugin.</p>
+
+<ol>
+  <li>
+    <p>Create a PHP file in
+<code class="language-plaintext highlighter-rouge">wp-content/plugins</code> with the name of the plugin, let’s say
+<code class="language-plaintext highlighter-rouge">qpleple-plugin.php</code>. Add some metadata and one first function:</p>
+
+    <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="cm">/*
+Plugin Name: qpleple plugin
+*/</span>
+       
+<span class="k">function</span> <span class="n">qpleple_page</span><span class="p">(</span><span class="nv">$page</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'&lt;a href="http://qpleple.com/'</span> <span class="mf">.</span> <span class="nv">$page</span> <span class="mf">.</span> <span class="s1">'"&gt;'</span> <span class="mf">.</span> <span class="nv">$page</span> <span class="mf">.</span> <span class="s1">'&lt;/a&gt;'</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The plugin <code class="language-plaintext highlighter-rouge">qpleple-plugin</code> is now listed on the plugin page in the admin console. Activate it.</p>
+  </li>
+  <li>
+    <p>You may now call all the functions of <code class="language-plaintext highlighter-rouge">qpleple-plugin.php</code> into your theme:</p>
+
+    <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You may want to read: 
+<span class="cp">&lt;?php</span> <span class="nf">qpleple_page</span><span class="p">(</span><span class="s2">"get-started-with-wordpress-plugins"</span><span class="p">)</span> <span class="cp">?&gt;</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="going-further">Going further</h3>
+
+<p>Of course, now you want to know more about it. I am kind enough to give
+you some leads:</p>
+
+<ul>
+  <li><a href="http://codex.wordpress.org/Writing_a_Plugin">Writing a Plugin</a>
+(wordpress.org) : official documentation</li>
+  <li><a href="http://planetozh.com/blog/2009/09/top-10-most-common-coding-mistakes-in-wordpress-plugins/">Top 10 Most Common Coding Mistakes in WordPress
+Plugins</a>
+(planetozh.com)</li>
+  <li><a href="http://fuelyourcoding.com/getting-started-writing-wordpress-plugins/">Getting Started Writing WordPress
+Plugins</a>
+(fuelyourcoding.com)</li>
+</ul>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/get-started-with-wordpress-plugins/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

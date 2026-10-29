@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      How Many Times A URL Has Been Liked/Shared On Facebook · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/how-many-times-a-url-has-been-liked-or-shared-on-facebook/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">How Many Times A URL Has Been Liked/Shared On Facebook</h1>
+  <span class="post-date">Jun 16th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>Facebook keeps track of every likes, shares and comments for URLs. You can ask for
+theses counts in order to see how much a URL has been seen on Facebook.</p>
+
+<p>Facebook is more and more closing public access to their API (<a href="http://developers.facebook.com/blog/post/509/">this blog post on Facebook developers blog</a>). So even if you
+can make the request directly, you should do as following and use the
+Facebook PHP SDK with apps credentials to make API calls.</p>
+
+<p>If you don’t
+have a Facebook app registered or you don’t know what that means, go to
+<a href="http://www.facebook.com/developers">facebook.com/developers</a>, click on
+“Set Up New App” and follow the wizard. You are given an App ID and an
+App Secret that we will be using.</p>
+
+<p><strong>Important</strong>: make sure you filled “Site URL” and “Site Domain” with your infos.</p>
+
+<p>We are using the Facebook PHP SDK (<a href="https://github.com/facebook/php-sdk">see on github</a>) to make API calls :</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">require</span> <span class="s2">"facebook.php"</span><span class="p">;</span>
+<span class="nv">$facebook</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Facebook</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">'appId'</span>  <span class="o">=&gt;</span> <span class="no">YOUR_APP_ID</span><span class="p">,</span>
+    <span class="s1">'secret'</span> <span class="o">=&gt;</span> <span class="no">YOUR_APP_SECRET</span><span class="p">,</span>
+<span class="p">));</span>
+
+<span class="nv">$fql</span> <span class="o">=</span> <span class="s1">'SELECT url, share_count, like_count, comment_count, total_count 
+        FROM link_stat WHERE url="http://stackoverflow.com"'</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$facebook</span><span class="o">-&gt;</span><span class="nf">api</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">'method'</span> <span class="o">=&gt;</span> <span class="s1">'fql.query'</span><span class="p">,</span>
+    <span class="s1">'query'</span> <span class="o">=&gt;</span> <span class="nv">$fql</span><span class="p">,</span>
+<span class="p">));</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">$result</code> array contains all the info you need, and even more :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array (
+    [0] =&gt; Array (
+        [url] =&gt; http://stackoverflow.com
+        [share_count] =&gt; 1356
+        [like_count] =&gt; 332
+        [comment_count] =&gt; 538
+        [total_count] =&gt; 2226
+    )
+)
+</code></pre></div></div>
+
+<p>You have here :</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">share_count</code> : the number of times this URL has been shared on
+Facebook</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">like_count</code> : the number of times this URL has been liked (either
+from a share or from a like or recommend button on the page)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">comment_count</code> : the count of comments below the shares</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">total_count</code> : the sum of the three last counts</p>
+  </li>
+</ul>
+
+<p>I wrote this page after <a href="http://stackoverflow.com/questions/6197344/how-to-get-facebook-recommendations-count-in-php/6198877#6198877">this answer on Stackoverflow I made</a>.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/how-many-times-a-url-has-been-liked-or-shared-on-facebook/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

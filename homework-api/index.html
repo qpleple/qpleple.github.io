@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Project: Homework API · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/homework-api/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Project: Homework API</h1>
+  <span class="post-date">Jun 15th, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>This API is an interface to order some homework to be done. See the
+<a href="http://www.mashape.com/apis/Getting%20Homework%20Done">hosted version on Mashape</a>.</p>
+
+<p><a href="http://github.com/qpleple/homework-api">See project on github</a></p>
+
+<h3 id="usage">Usage</h3>
+
+<p>POST request on <code class="language-plaintext highlighter-rouge">/submitHomework</code> with the parameter <code class="language-plaintext highlighter-rouge">content</code>
+containing the exercise will issue a job id. An notification email is
+sent to the API host with the id of the new homework. You can check the
+status (<code class="language-plaintext highlighter-rouge">pending</code> or <code class="language-plaintext highlighter-rouge">done</code>) of the job with a GET request on
+<code class="language-plaintext highlighter-rouge">/status/{id}</code>. You can get the solution of the exercise when the job is
+done with a GET request on <code class="language-plaintext highlighter-rouge">/solution/{id}</code>. Powered by <a href="http://www.mashape.com/">mashape.com</a> API Framework.</p>
+
+<h3 id="installation">Installation</h3>
+
+<ul>
+  <li>
+    <p>Edit <code class="language-plaintext highlighter-rouge">config-example.php</code> into <code class="language-plaintext highlighter-rouge">config.php</code> by filling out the
+parameters</p>
+  </li>
+  <li>
+    <p>Edit <code class="language-plaintext highlighter-rouge">api-example.php</code> into <code class="language-plaintext highlighter-rouge">api.php</code> by changing the
+<code class="language-plaintext highlighter-rouge">baseUrl</code></p>
+  </li>
+  <li>
+    <p>If you are behind Nginx and you can not use Apache url
+rewriting, add the line <code class="language-plaintext highlighter-rouge">try_files $uri /api.php;</code> to the nginx
+configuration.</p>
+  </li>
+</ul>
+
+<h3 id="comments">Comments</h3>
+
+<p>Mentioned by Techcrunch in <a href="http://techcrunch.com/2011/06/02/mashape-the-etsy-of-cloud-services-goes-beta-lets-you-monetize-your-apis-in-a-click/">Mashape, The Etsy Of Cloud Services, Goes Beta; Lets You Monetize Your APIs In A Click</a></p>
+
+<p>Tweeted by <a href="https://twitter.com/#!/sinzone/status/73829844483444737">@sinzone</a>:</p>
+
+<blockquote>
+  <p>Check out this awesome API: Getting Homework Done <a href="http://t.co/GviiPyj">mashape.com/apis/Getting+Homework+Done</a> via <a href="http://twitter.com/mashape">@mashape</a> - AMAZING IDEA! <a href="http://twitter.com/qpleple">@qpleple</a></p>
+</blockquote>
+
+<p>Tweeted by <a href="https://twitter.com/#!/antz29/status/74438857772384257">@antz29</a>:</p>
+
+<blockquote>
+  <p>Made  me giggle. Late on your homework ? There’s an API for that <a href="http://bit.ly/jwoTpB">http://bit.ly/jwoTpB</a></p>
+</blockquote>
+
+<p>Tweeted by <a href="https://twitter.com/#!/hassanseth/status/74404693048180736">@hassanseth</a>:</p>
+
+<blockquote>
+  <p>Getting
+Homework Done: an API to order your homework to be done
+<a href="http://bit.ly/k0VO9E">http://bit.ly/k0VO9E</a></p>
+</blockquote>
+
+<p>Tweeted by
+<a href="http://twitter.com/#!/bzurek/status/111823176543109120">@bzurek</a>:</p>
+
+<blockquote>
+  <p>With
+school back in session, clearly lots of homework being done. Go
+figure, here is a HomeWork API on Mashape to help.
+<a href="http://bit.ly/pkNGnt">http://bit.ly/pkNGnt</a></p>
+</blockquote>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/homework-api/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

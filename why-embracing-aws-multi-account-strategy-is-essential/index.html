@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Why an AWS Multi-Account Strategy Matters · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/why-embracing-aws-multi-account-strategy-is-essential/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Why an AWS Multi-Account Strategy Matters</h1>
+  <span class="post-date">Dec 12th, 2023</span>
+
+  
+
+  <p>A multi-account architecture means splitting your AWS workloads across several accounts instead of running everything in one. This post explains why I think it’s worth the extra setup cost.</p>
+
+<h2 id="what-it-looks-like">What it looks like</h2>
+
+<p>A simple split:</p>
+
+<ul>
+  <li><strong>Production</strong>: the live, customer-facing workload.</li>
+  <li><strong>Development</strong>: a sandbox where engineers can break things without touching prod.</li>
+  <li><strong>Security</strong>: central account for security tooling and cross-account monitoring.</li>
+  <li><strong>Audit</strong>: stores logs and audit trails for compliance.</li>
+</ul>
+
+<h2 id="what-you-get">What you get</h2>
+
+<p><strong>Security isolation.</strong> A compromise in one account stays in that account. Blast radius shrinks to whatever lived in the breached account, not your whole infrastructure.</p>
+
+<p><strong>Clear billing.</strong> Each account has its own bill. You stop guessing which team or environment is burning money.</p>
+
+<p><strong>Compliance and audit.</strong> You can apply different policies per account, which makes audits easier when regulatory scope differs between workloads.</p>
+
+<p><strong>Operational policies per account.</strong> You can enforce different SCPs, IAM boundaries, and tooling per account rather than bolting workload-specific rules onto a single shared account.</p>
+
+<h2 id="use-terraform-to-manage-them">Use Terraform to manage them</h2>
+
+<p>Managing multiple accounts by hand quickly becomes unmanageable. I use <a href="https://www.terraform.io/">Terraform</a> with one root module per account (or per environment) and shared modules for common resources. This keeps account setup reproducible and reviewable.</p>
+
+<p>The main thing Terraform buys you here is cross-account consistency: the same VPC layout, IAM baselines, and logging config across all accounts, defined once.</p>
+
+<h2 id="what-it-costs-you">What it costs you</h2>
+
+<p>It’s more complex than a single account. You need:</p>
+
+<ul>
+  <li>Cross-account access patterns (typically AWS SSO + role assumption).</li>
+  <li>A consistent IAM baseline so engineers don’t need a different setup per account.</li>
+  <li>Some way to share resources you don’t want to duplicate (KMS keys, Route53 zones, etc.).</li>
+  <li>Team comfort with Terraform.</li>
+</ul>
+
+<p>For a small project this is overkill. For anything with production data, customers, or compliance requirements, the isolation pays for itself the first time something goes wrong.</p>
+
+<p>The AWS whitepaper <a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html">Organizing Your AWS Environment Using Multiple Accounts</a> is a good reference if you want to go deeper.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/why-embracing-aws-multi-account-strategy-is-essential/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>
