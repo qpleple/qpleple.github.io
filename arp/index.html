@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      ARP poisoning : sniffer une communication · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/arp/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">ARP poisoning : sniffer une communication</h1>
+  <span class="post-date">Jul 14th, 2010</span>
+
+  
+
+  <p>Cet article présente comment on peut écouter le trafic entrant et sortant d’un ordinateur de son sous-réseau.</p>
+
+<p>On ne peut pas vraiment s’en protéger, il faut juste savoir que ça existe.
+Rassurez vous, même
+si un pirate peut voir tout votre flux internet même le crypté, il ne
+pourra pas décoder les flux sécurisés. Cela englobe tout ce que est
+HTTPS (site où un petit cadenas s’affiche dans le navigateur), SSH,
+etc… Rassurez vous, votre mot de passe bancaire est bien protégé !</p>
+
+<p>Il faut être dans le même sous-réseau que l’une au moins des deux
+extrémités de la communication, qui sera alors notre cible. Pour
+l’exemple, les adresses se terminant par 1 sont celles de la passerelle,
+par 2 sont celles de la cible et par 3 sont les notres. Les commandes
+présentées ici peuvent être tapées sous Linux ou Mac. Nemesis est un
+utilitaire qui permet de construire et d’injecter dans le réseau des
+paquets de différents protocoles (dans notre cas ARP). Pour obtenir
+l’utilitaire nemesis sous Mac, vous pouvez par exemple <a href="http://www.macports.org/install.php">utiliser
+MacPorts</a>.</p>
+
+<h2 id="principe">Principe</h2>
+
+<p>Les communications dans un même sous-réseau se font avec les adresses
+MAC (niveau 2), les adresses IP (niveau 3) étant en quelques sorte
+utilisées pour acheminer les paquets vers le bon sous-réseau. Or
+lorsqu’un ordinateur (192.168.0.3 par exemple) veut envoyer un paquet à
+un destinataire (192.168.0.2 par exemple) de son sous-réseau pour la
+première fois, il ne connait en général que son adresse IP. Il va donc
+envoyer à tout le monde sur le sous-réseau un message du type (requête
+ARP) :</p>
+
+<blockquote>
+  <p>Quelle a l’adresse MAC de 192.168.0.2 ? Répondre à 192.168.0.3.</p>
+</blockquote>
+
+<p>et 192.168.0.2 va se reconnaitre et répondre un message du type :</p>
+
+<blockquote>
+  <p>192.168.0.2 a l’adresse MAC 00:00:00:00:00:03</p>
+</blockquote>
+
+<p>L’expéditeur obtient ainsi l’adresse MAC du destinataire et peux lui
+envoyer le paquet. Pour éviter d’envoyer des requêtes ARP à chaque fois
+qu’on doit envoyer un paquet, les systèmes gardent les correspondances
+IP-MAC en cache dans la table ARP. Le principe de l’ARP poisoning est
+d’envoyer de faux paquets qui vont modifier la table ARP de la cible et
+fausser les correspondances IP-MAC. Dans notre cas, on :</p>
+
+<ul>
+  <li>chez la passerelle, associer l’adresse IP de la cible avec notre
+adresse MAC</li>
+  <li>chez la cible, associer l’adresse IP de la passerelle avec notre
+adresse MAC</li>
+</ul>
+
+<p>Tous les paquets vont donc nous arriver dessus, il suffira ensuite de
+les faire suivre au bon destinataire.</p>
+
+<h2 id="1-prendre-lidentité-de-la-cible-auprès-de-la-passerelle">1. Prendre l’identité de la cible auprès de la passerelle</h2>
+
+<p>C’est fait en envoyant à la passerelle des paquets qui signifient :</p>
+
+<blockquote>
+  <p>Je suis la cible (192.168.0.2) et mon adresse MAC est 00:00:00:00:00:03</p>
+</blockquote>
+
+<p>c’est notre adresse MAC ! Ceci se fait avec la commande <code class="language-plaintext highlighter-rouge">nemesis</code> entrée
+avec les options suivantes :</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-S 192.168.0.2</code> IP source, celle de la cible</li>
+  <li><code class="language-plaintext highlighter-rouge">-D 192.168.0.1</code> IP de destination, celle de la passerelle</li>
+  <li><code class="language-plaintext highlighter-rouge">-H 00:00:00:00:00:03</code> MAC source, la notre !</li>
+  <li><code class="language-plaintext highlighter-rouge">-M 00:00:00:00:00:01</code> MAC de destination, celle de la passerelle</li>
+  <li><code class="language-plaintext highlighter-rouge">-r</code> ARP reply</li>
+  <li><code class="language-plaintext highlighter-rouge">-v</code> mode verbose</li>
+  <li><code class="language-plaintext highlighter-rouge">-d eth0</code> interface réseau</li>
+</ul>
+
+<p>Comme la passerelle redonne régulièrement à tout le sous-réseau son
+adresse MAC (encore par un message ARP), ce paquet doit être réinjecté
+régulièrement à l’aide par exemple d’une boucle qui répète toutes les 2
+secondes la commande <code class="language-plaintext highlighter-rouge">commande</code> :</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do </span>commande<span class="p">;</span> <span class="nb">sleep </span>2<span class="p">;</span> <span class="k">done</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="2-prendre-lidentité-de-la-passerelle-auprès-de-la-cible">2. Prendre l’identité de la passerelle auprès de la cible</h2>
+
+<p>C’est fait en envoyant à la passerelle des paquets qui signifient :</p>
+
+<blockquote>
+  <p>Je suis la passerelle (192.168.0.1) et mon adresse MAC est 00:00:00:00:00:03</p>
+</blockquote>
+
+<p>c’est encore notre adresse MAC ! Ceci se fait avec la commande <code class="language-plaintext highlighter-rouge">nemesis</code>
+entrée avec les options suivantes :</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-S 192.168.0.1</code> IP source, celle de la passerelle</li>
+  <li><code class="language-plaintext highlighter-rouge">-D 192.168.0.2</code> IP de destination, celle de la cible</li>
+  <li><code class="language-plaintext highlighter-rouge">-H 00:00:00:00:00:03</code> MAC source, la notre !</li>
+  <li><code class="language-plaintext highlighter-rouge">-M 00:00:00:00:00:02</code> MAC de destination, celle de la cible</li>
+  <li><code class="language-plaintext highlighter-rouge">-r</code> ARP reply</li>
+  <li><code class="language-plaintext highlighter-rouge">-v</code> mode verbose</li>
+  <li><code class="language-plaintext highlighter-rouge">-d eth0</code> interface réseau</li>
+</ul>
+
+<p>De la même façon, il faut que ce paquet soit régulièrement injecté dans
+le réseau en utilisant par exemple une boucle comme à l’étape 1.</p>
+
+<h2 id="3-routage">3. Routage</h2>
+
+<p>A ce stade là, tous les paquets envoyés par la cible (resp. la
+passerelle) à la passerelle (resp. la cible) sont adressés à notre
+adresse MAC et donc nous parviennent. Nous sommes donc en mesure de les
+lire. Cependant, notre système ouvre ces paquets qui lui sont adressés
+au niveau 2 (adresses MAC) et constate qu’ils ne lui sont pas adressés
+au niveau 3 (adresses IP) et donc les ignore. Le destinataire final
+n’obtiendra donc jamais le paquet et ne pourra pas continuer à naviguer.
+Il suffit simplement de demander au système de faire suivre vers leur
+distinataire final les paquets qui ne nous sommes pas addressés. Il faut
+pour cela activer la redirection de paquet :</p>
+
+<ul>
+  <li>Sous Linux : <code class="language-plaintext highlighter-rouge">echo 1 &gt; /proc/sys/net/ipv4/ip_forward</code></li>
+  <li>Sous Mac : <code class="language-plaintext highlighter-rouge">sysctl -w net.inet.ip.forwarding=1</code></li>
+</ul>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/arp/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

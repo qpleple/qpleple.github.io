@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Probabilistic Topic Modeling · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/probabilistic-topic-modeling/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Probabilistic Topic Modeling</h1>
+  <span class="post-date">Apr 18th, 2013</span>
+
+  
+
+  <h2 id="probabilistic-models">Probabilistic models</h2>
+<p>LSA represents topics as points in Euclidean space and documents as linear combination of topics. Probabilistic topic models differ from LSA by representing topics as distributions over words, and documents as probabilistic mixtures of topics.</p>
+
+<p>Formally, given a vocabulary of $W$ words, each topic $k = 1, …, K$ has a word-distribution $\boldsymbol \varphi_k \in \Delta_W$, with $\Delta_n$ the simplex of dimension $n$, and each document $d = 1, …, D$ has a topic-distribution $\boldsymbol \theta_d \in \Delta_K$. We call $\boldsymbol \Phi$ the matrix with rows $\boldsymbol \varphi_k$ and $\boldsymbol \Theta$ the matrix with rows $\boldsymbol \theta_d$.</p>
+
+<p>By estimating the model parameters $(\boldsymbol \Phi, \boldsymbol \Theta)$, we discover new knowledge about the corpus; topics are represented by the word-distributions $\boldsymbol \varphi_k$, and each document is tagged with discovered topics, which is represented by $\boldsymbol \theta_d$.</p>
+
+<h2 id="probabilistic-latent-semantic-indexing">Probabilistic Latent Semantic Indexing</h2>
+
+<p>Probabilistic Latent Semantic Indexing (pLSI) is described as a generative process [<a href="/bib#Hofmann99">Hofmann99</a>], a procedure that probabilistically generates documents given the parameters of the model.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generative process for pLSI
+
+procedure GenerativePLSI(document-tagging theta_d, topics phi_k):
+  for document d = 1..D:
+    for position i = 1..N_d in document d:
+      draw a topic z_di from Discrete(theta_d)
+      draw a word w_di from Discrete(phi_z_di)
+
+  return counts n_dw = sum_i I(w_di = w)
+</code></pre></div></div>
+
+<p>Here is a graphical representation of the model:</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/plsi.png" />
+<small>pLSI model</small>
+</p>
+
+<p>Parameters of the model are then learned by Bayesian inference.</p>
+
+<p>Although the formulation of the model is probabilistic, [<a href="/bib#Ding08">Ding08</a>] proved the equivalence between pLSI and NMF, by showing that they both optimize the same objective function.</p>
+
+<p>As they are different algorithms, they will navigate in the parameters space differently. It is possible to design an hybrid algorithm alternating between NMF and pLSI, every time jumping out of the local optimum of the other method.</p>
+
+<h2 id="latent-dirichlet-allocation">Latent Dirichlet Allocation</h2>
+
+<p>[<a href="/bib#Blei03">Blei03</a>] extended pLSI by adding a symmetric Dirichlet prior $\text{Dir}(\alpha)$ on topic-distributions $\boldsymbol \theta_d$ of documents and derived a variational EM algorithm for the Bayesian inference.
+[<a href="/bib#Griffiths02a">Griffiths02a</a>] [<a href="/bib#Griffiths02b">Griffiths02b</a>] went further by adding a symmetric Dirichlet prior $\text{Dir}(\beta)$ on topics $\boldsymbol \varphi_k$, and derived a Gibbs sampler for the Bayesian inference. Here is the generative process of LDA.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generative process for LDA
+
+procedure GenerativeLDA(document-tagging smoothing alpha, topic smoothing beta):
+  for topic k = 1..K:
+    draw a word-distribution phi_k from Dir(beta)
+  for document d = 1..D:
+    draw a topic-distribution theta_d from Dir(alpha)
+    for position i = 1..N_d in document d:
+      draw a topic z_di from Discrete(theta_d)
+      draw a word w_di from Discrete(phi_z_di)
+
+  return counts n_dw = sum_i I(w_di = w)
+</code></pre></div></div>
+
+<p>Here is a graphical representation of the model:</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/lda.png" />
+<small>LDA model</small>
+</p>
+
+<p>Bayesian model can also be described graphically in plate notation which helps to understand the dependencies between random variables.</p>
+
+<p>We suppose documents are generated according to this generative model and we want to estimate values for a set a parameters $(\boldsymbol \Phi, \boldsymbol \Theta)$ that can best explain the set of observations: the word counts $n_{di}$.</p>
+
+<p>Theoretically, we could learn hyperparameters $\alpha$ and $\beta$ using Newton-Raphson method [<a href="/bib#Blei03">Blei03</a>]. But usually, hyperparameters are fixed heuristically to simplify the algorithm and make it converge faster. Common values are $\alpha = \frac 1 K$ and $\beta = 0.1$ [<a href="/bib#Steyvers06">Steyvers06</a>].</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/probabilistic-topic-modeling/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

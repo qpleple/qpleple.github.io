@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Archive Your Files Instead Of Deleting Them · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/never-delete-files-again-easy-archive-from-command-line/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Archive Your Files Instead Of Deleting Them</h1>
+  <span class="post-date">Jul 15th, 2011</span>
+
+  
+
+  <p>This is a command-line tool to archive files instead of deleting them.</p>
+
+<p>We hate deleting. This is why Gmail invites users to archive emails instead of deleting them. What if
+we apply the same idea to files ? By providing an easy way to archives
+files, this script will help you to keep your files organized and not
+being distracted or lost into tons of old files. In any directory, just
+type :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>archive my_file.txt
+</code></pre></div></div>
+
+<p>to archive <code class="language-plaintext highlighter-rouge">my_file.txt</code> into the sub-directory <code class="language-plaintext highlighter-rouge">Archives/</code>. If
+<code class="language-plaintext highlighter-rouge">Archives/</code> does not exist, il will be created.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+
+<span class="c"># stop on error</span>
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="nv">CURRENT_PATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
+<span class="nv">ARCHIVES_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$CURRENT_PATH</span><span class="s2">/Archives"</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="o">!</span> <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"No file or directory to archive."</span>
+    <span class="nb">exit </span>1
+<span class="k">fi</span>
+
+<span class="c"># Creates the archive directory if doesn't exists</span>
+<span class="k">if</span> <span class="o">[</span> <span class="o">!</span> <span class="nt">-d</span> <span class="s2">"</span><span class="nv">$ARCHIVES_PATH</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">mkdir</span> <span class="nv">$ARCHIVES_PATH</span>
+<span class="k">fi
+
+for </span>file <span class="k">in</span> <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+    </span><span class="nb">echo</span> <span class="s2">"Archiving </span><span class="nv">$file</span><span class="s2">"</span>
+    <span class="nb">tar </span>cfz <span class="k">${</span><span class="nv">ARCHIVES_PATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">file</span><span class="k">}</span>.tar.gz <span class="nv">$file</span>
+    <span class="nb">rm</span> <span class="nt">-rf</span> <span class="nv">$file</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h2 id="installing">Installing</h2>
+
+<p>Make it accessible from everywhere by placing it into a directory that
+is in your <code class="language-plaintext highlighter-rouge">$PATH</code> environment variable. If you don’t have such
+directory for your personal script, you can add one by doing something
+like :</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> ~/bin
+<span class="nv">$ </span><span class="nb">cd</span> ~/bin
+<span class="nv">$ </span>vim archive
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'export PATH=~/bin:$PATH'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+</code></pre></div></div>
+
+<p>Instead of <code class="language-plaintext highlighter-rouge">.bashrc</code> it can be <code class="language-plaintext highlighter-rouge">.bash_profile</code>, <code class="language-plaintext highlighter-rouge">.zsh/zshexport</code> or else
+depending on the shell you are using.</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/never-delete-files-again-easy-archive-from-command-line/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

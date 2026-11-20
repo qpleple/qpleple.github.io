@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Hive: How To Create A Table From CSV Files in AWS S3 · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/hive-how-to-create-a-table-from-csv-files/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Hive: How To Create A Table From CSV Files in AWS S3</h1>
+  <span class="post-date">Jul 12th, 2015</span>
+
+  
+
+  <p>Say your CSV files are on Amazon S3 in the following directory:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>s3://my-bucket/files/
+</code></pre></div></div>
+
+<p>Files can be plain text files or text files gzipped:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>aws s3 <span class="nb">ls </span>s3://my-bucket/files/
+2015-07-06 00:37:06          0
+2015-07-06 00:37:17   74796978 file_a.txt.gz
+2015-07-06 00:37:20   84324787 file_b.txt.gz
+2015-07-06 00:37:22   85376585 file_b.txt.gz
+</code></pre></div></div>
+
+<p>To create a Hive table on top of those files, you have to specify the structure of the files by giving columns names and types.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">posts</span> <span class="p">(</span><span class="n">title</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">comment_count</span> <span class="nb">INT</span><span class="p">)</span>
+<span class="k">LOCATION</span> <span class="s1">'s3://my-bucket/files/'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Here is a <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types">list of all types allowed</a>.</p>
+
+<h2 id="excluding-the-first-line-of-each-csv-file">Excluding the first line of each CSV file</h2>
+
+<p>Most CSV files have a first line of headers, you can tell Hive to ignore it with <code class="language-plaintext highlighter-rouge">TBLPROPERTIES</code>:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">posts</span> <span class="p">(</span><span class="n">title</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">comment_count</span> <span class="nb">INT</span><span class="p">)</span>
+<span class="k">LOCATION</span> <span class="s1">'s3://my-bucket/files/'</span>
+<span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="nv">"skip.header.line.count"</span><span class="o">=</span><span class="nv">"1"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="use-a-custom-seperator-in-csv-files">Use a custom seperator in CSV files</h2>
+
+<p>To specify a custom field separator, say <code class="language-plaintext highlighter-rouge">|</code>, for your existing CSV files:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">posts</span> <span class="p">(</span><span class="n">title</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">comment_count</span> <span class="nb">INT</span><span class="p">)</span>
+<span class="k">ROW</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span> <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">'|'</span>
+<span class="k">LOCATION</span> <span class="s1">'s3://my-bucket/files/'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="flatten-a-nested-directory-structure">Flatten a nested directory structure</h2>
+
+<p>If your CSV files are in a nested directory structure, it requires a little bit of work to tell Hive to go through directories recursively. A simple solution is to programmatically copy all files in a new directory:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3 <span class="nb">ls</span> <span class="nt">--recursive</span> s3://my-bucket/nested-structure/ <span class="se">\</span>
+| <span class="nb">awk</span> <span class="s1">'{print $4}'</span> <span class="se">\</span>
+| <span class="nb">awk</span> <span class="nt">-F</span> <span class="s1">'/'</span> <span class="s1">'{print $1"/"$2" "$3" "$4}'</span> <span class="se">\</span>
+| <span class="k">while </span><span class="nb">read </span>root <span class="nb">dir </span>filename<span class="p">;</span> <span class="se">\</span>
+aws s3 <span class="nb">cp </span>s3://my-bucket/<span class="nv">$root</span>/<span class="nv">$dir</span>/<span class="nv">$filename</span> s3://my-bucket/flatten-structure/<span class="nv">$filename</span><span class="p">;</span> <span class="se">\</span>
+end
+</code></pre></div></div>
+
+<h2 id="replace-an-existing-table">Replace an existing table</h2>
+
+<p>If the table already exists, there will be an error when trying to create it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. AlreadyExistsException(message:Table my_table already exists)
+</code></pre></div></div>
+
+<p>To delete a table if it exists:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">my_table</span><span class="p">;</span>
+</code></pre></div></div>
+
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/hive-how-to-create-a-table-from-csv-files/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

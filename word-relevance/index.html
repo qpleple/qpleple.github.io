@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Word relevance within a topic · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/word-relevance/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+      </script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+      </script>
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Word relevance within a topic</h1>
+  <span class="post-date">Nov 2nd, 2013</span>
+
+  
+
+  <p>The most common way to display a topic, a discrete distribution over words, is to print out the top ten words ordered by decreasing frequency within this topic. Given a single topic, there is nothing much more we can do. But knowing other topics that are describing the same corpus gives us more information. It seems we can use this information to pick better words to represent topics.</p>
+
+<p>In this article we present a novel way to pick words to represent topics and illustrate it by examples of this new representation.</p>
+
+<h3 id="word-relevance-for-a-topic">Word relevance for a topic</h3>
+<p><a href="/word-distinctiveness-and-saliency">Word distinctiveness and saliency</a> have been design to find relevant words corpus-wide, not for a specific topic. They are not good to find candidates for topic representatives. In this section, we present a word relevance score within a topic based on the same idea: penalize the word frequency by a factor that captures how much the word is shared across topics.</p>
+
+<p>First, instead of the global word frequency $p(w)$, we consider the frequency $p(w|k)$ of the word within a topic $k$. Then as a sharing penalty, we divide by the exponential entropy $e^{H_w}$, where</p>
+
+\[H_w \triangleq - \sum_k p(k|w) \log p(k|w)\]
+
+<p>is the entropy of the distribution of topics given a word $w$, capturing how much the word $w$ is shared across several topics. We define the relevance measure</p>
+
+\[\mathcal R (w|k) \triangleq \frac{p(w|k)}{e^{H_w}}\]
+
+<p>for word $w$ within topic $k$ as being the frequency divided by the exponential entropy.</p>
+
+<h4 id="interpretation-of-exponential-entropy-eh">Interpretation of exponential entropy $e^{H}$</h4>
+<p>The exponential entropy can be seen as a measure of the extent, or the spread, of a distribution [<a href="/bib#Campbell66">Campbell66</a>].  By extent, we mean the size of the support, or the number of elements with non-zero probability. Here is a figure illustrating it on three examples.</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/eh-delta.png" />
+<small>Delta distribution $H = 0$, and $e^H = 1$</small>
+</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/eh-example.png" />
+<small>Example distribution $H=0.67$, and $e^H = 1.96$</small>
+</p>
+
+<p class="figure-sm">
+<img src="/img/thesis/eh-uniform.png" />
+<small>Uniform distribution $H=\log K$, and $e^H = K$</small>
+</p>
+
+<h3 id="computation-of-word-relevance-measure">Computation of word relevance measure</h3>
+<p>Let’s see how to express relevance $\mathcal R(w|k)$ in terms of LDA parameters. The numerator is straightforward</p>
+
+\[\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H_w}} = \frac{\varphi_{kw}}{e^{H_w}}\]
+
+<p>Now, computing the entropy</p>
+
+\[E_w = \sum_k p(k|w) \log p(k|w)\]
+
+<p>requires applying Bayes rule on $p(k|w)$:</p>
+
+\[\begin{aligned}
+    p(k|w) &amp; \propto p(w|k) \ p(k)\\\
+    &amp; = \varphi_{kw} \ \sum_d p(k|d) p(d)\\\
+    &amp; \propto \varphi_{kw} \ \sum_d \theta_{dk} N_d
+\end{aligned}\]
+
+<p>where $N_d$ is the length of document.
+Recombining the results, we get a procedure to compute the relevance score:</p>
+
+<ol>
+  <li>
+    <p>Compute topic-distribution given word $w$:</p>
+
+\[p(k|w) \propto \varphi_{kw} \ \sum_d \theta_{dk} N_d\]
+  </li>
+  <li>
+    <p>Compute its entropy:</p>
+
+\[H_w \triangleq \sum_k p(k|w) \log p(k|w)\]
+  </li>
+  <li>
+    <p>Divide the frequency of word $w$ within topic $k$ by the exponential entropy:</p>
+
+\[\mathcal R(w|k) \triangleq \frac{p(w|k)}{e^{H_w}}\]
+  </li>
+</ol>
+
+<h3 id="top-relevant-word-to-describe-topics">Top relevant word to describe topics</h3>
+<p>When running LDA on a corpus, some <em>background</em> words are going to be frequent throughout the corpus, and therefore be found as top words by frequency $p(w|k)$ of several topics. The following table shows this situation on the [20news] corpus where most of the top words are background words and don’t convey any meaning: <em>people</em>, <em>writes</em>, <em>article</em>, <em>good</em>, etc. These are three topics extracted from the output of LDA run on the corpus [20news] with 30 topics. For each topic, we give the top words according to frequency $p(w|k)$ and relevance $p(w|k) e^{-H_w}$.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Topic 1</th>
+            <th>Topic 2</th>
+            <th>Topic 3</th>
+        </tr>
+        <tr>
+            <td>Top words by frequency $p(w|k)$</td>
+            <td><i>people<br />writes<br />article<br />guns<br />police<br />government<br />state</i> </td>
+            <td><i>writes <br /> space <br /> article <br /> power <br /> radio <br /> ground <br /> problem</i></td>
+            <td><i>writes<br />article<br />good<br />cars<br />engine<br />bike<br />time</i></td>
+        </tr>
+        <tr>
+            <td>Top words by relevance  $p(w|k)e^{-H_w}$</td>
+            <td><i>guns <br /> firearms <br /> weapons <br /> firearm <br /> handgun <br /> crime <br /> police</i></td>
+            <td><i>voltage <br /> circuit <br /> space <br /> larson <br /> wiring <br /> circuits <br /> wire</i></td>
+            <td><i>engine <br /> cars <br /> bike <br /> tires <br /> drive <br /> miles <br /> ford</i></td>
+        </tr>
+    </thead>
+</table>
+
+<p>Those background words such as <em>people</em>, <em>writes</em>, <em>article</em>, <em>good</em>, etc. are shared across numerous topics, and their $e^{H_w}$ will be high. They will be penalized by $e^{-H_w}$ and score low on word relevance measure. On the other hand, words scoring high on word relevance measure $p(w|k) e^{-H_w}$ are more descriptive, and topics that did not make sense when described by top words by frequency $p(w|k)$, become intelligible when described by top words by relevance $p(w|k) e^{-H_w}$.</p>
+
+<p>This effect is even stronger for specialized corpora, such as [nips] or [nsf] that contain research papers of one specific area. The following table shows six topics extracted from a run of LDA on the highly specialized corpus [nips] with 30 topics. For each topic, we give the top words by frequency $p(w|k)$ and relevance $p(w|k)e^{-H_w}$.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Topic 1</th>
+            <th>Topic 2</th>
+            <th>Topic 3</th>
+            <th>Topic 4</th>
+            <th>Topic 5</th>
+            <th>Topic 6</th>
+        </tr>
+        <tr>
+            <td>Top words sorted by $p(w|k)$</td>
+            <td><i>network <br /> input <br /> output <br /> neural <br /> time</i></td>
+            <td><i>network <br /> neural <br /> training <br /> networks <br /> input</i></td>
+            <td><i>network <br /> input <br /> model <br /> system <br /> neural</i></td>
+            <td><i>network <br /> neural <br /> control <br /> model <br /> system</i></td>
+            <td><i>network <br /> networks <br /> neural <br /> neurons <br /> dynamics</i></td>
+            <td><i>network <br /> neural <br /> networks <br /> algorithm <br /> time</i></td>
+        </tr>
+        <tr>
+            <td>Relevant words sorted by $\mathcal R(w|k)$</td>
+            <td><i>chip <br /> analog <br /> network <br /> circuit <br /> voltage</i></td>
+            <td><i>characters <br /> character <br /> network <br /> printed <br /> classifier</i></td>
+            <td><i>head <br /> cells <br /> motor <br /> network <br /> vestibular</i></td>
+            <td><i>controller <br /> precursor <br /> plant <br /> parse <br /> control</i></td>
+            <td><i>dynamics <br /> neurons <br /> bifurcation <br /> neuron <br /> network</i></td>
+            <td><i>dataflow <br /> network <br /> neural <br /> networks <br /> boolean</i></td>
+        </tr>
+    </thead>
+</table>
+
+<p>Background words here are not general English words, like for [20news], but words describing the field of the research papers: <em>network, networks, neural</em>, and <em>input</em>. Each of these topics, taken alone by itself, will look intelligible by humans. However, all presented next to each other, it becomes unclear what is the difference between them. Being able to understand interactions between topics is important when topics are used for an external task, such as browsing the corpus or information retrieval.</p>
+
+<p>Showing the top words by relevance $p(w|k)e^{-H_w}$ will show what is specific about each topic. Topic 1 is more about chips and circuits where topic 3 is specifically about head direction cells, a special type of neurons involved in self-motion, and topic 4 about controlled substances (drugs, precursors and plants).</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/word-relevance/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>

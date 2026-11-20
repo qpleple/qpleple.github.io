@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Code Faster Symfony2s Interactive Generators · Quentin Pleplé
+    
+  </title>
+
+  
+  <link rel="canonical" href="https://qpleple.com/code-faster-symfony2s-interactive-generators/">
+  
+
+  <link rel="stylesheet" href="https://qpleple.com/css/poole.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/syntax.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/lanyon.css">
+  <link rel="stylesheet" href="https://qpleple.com/css/style.css">
+
+  
+    
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y81P7ZE990"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y81P7ZE990');
+  </script>
+</head>
+
+
+  <body>
+
+    
+
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">🌱 Quentin Pleplé</a>
+            <a href="https://www.linkedin.com/in/qpleple/" style="font-size: 75%; font-weight: 400; margin-left: 0.5rem; color: #0a66c2;">LinkedIn</a>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Code Faster Symfony2s Interactive Generators</h1>
+  <span class="post-date">Jul 3rd, 2011</span>
+
+  
+    <p class="message warning">🦖 This post was published in 2011 and is most likely outdated.</p>
+  
+
+  <p>When building a Symfony2 application, there are some tasks that you always
+do. In the lifetime of every project, you will create around 2 bundles,
+5 and 10 entities, and for almost all entities, you will implement a
+CRUD (Create, Read, Update, Delete) interface with controllers and
+templates to deal with them.</p>
+
+<p>Symonfy2’s interactive generators save you
+a lot of time. Currently, there are 3 of them:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">generate:bundle</code> generates a new bundle</li>
+  <li><code class="language-plaintext highlighter-rouge">generate:doctrine:entity</code> generates a new entity</li>
+  <li><code class="language-plaintext highlighter-rouge">generate:doctrine:crud</code> generates a CRUD based on an entity</li>
+</ul>
+
+<p>Before starting, get excited by watching <a href="http://symfony.com/blog/symfony2-getting-easier-interactive-generators">the screencast made by the Symfony2 team</a>.</p>
+
+<h2 id="new-bundle">New Bundle</h2>
+
+<p>To create a new bundle, run the command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/console generate:bundle
+</code></pre></div></div>
+
+<p>It will launch an assistant that will ask you these questions: Bundle
+namespace, Bundle name, Target directory, Configuration format (yml,
+xml, php, or annotation). And you have a running bundle, you don’t have
+to bother about anything else! The script took care of adding the bundle
+to the autoloader, subscribing it in the kernel and adding routing
+rules. It has already a default controller with a basic function that
+you can start to play with:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="kd">class</span> <span class="nc">DefaultController</span> <span class="kd">extends</span> <span class="nc">Controller</span>
+<span class="p">{</span>
+    <span class="cd">/**
+     * @Route("/hello/{name}")
+     * @Template()
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">indexAction</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>And a template for this controller:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello !
+</code></pre></div></div>
+
+<h2 id="new-entity">New Entity</h2>
+
+<p>Instead of creating all your entities by creating and editing the PHP
+files in <code class="language-plaintext highlighter-rouge">MyBundle/Entity</code>, just run the command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/console generate:doctrine:entity
+</code></pre></div></div>
+
+<p>Follow the wizard and declare the name of your entity and the fields you
+want. The script will generate all the code for you. Here is an example
+of the code generated with only one field <code class="language-plaintext highlighter-rouge">name</code>:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cd">/**
+ * Acme\Bundle\BlogBundle\Entity\Post
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Acme\Bundle\BlogBundle\Entity\PostRepository")
+ */</span>
+<span class="kd">class</span> <span class="nc">Post</span> <span class="p">{</span>
+    <span class="cd">/**
+     * @var integer $id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */</span>
+    <span class="k">private</span> <span class="nv">$id</span><span class="p">;</span>
+
+    <span class="cd">/**
+     * @var string $name
+     * @ORM\Column(name="name", type="string", length=255)
+     */</span>
+    <span class="k">private</span> <span class="nv">$name</span><span class="p">;</span>
+
+    <span class="cd">/**
+     * Get id
+     * @return integer $id
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">getId</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">id</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * Set name
+     * @param string $name
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">setName</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">name</span> <span class="o">=</span> <span class="nv">$name</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * Get name
+     * @return string $name
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">getName</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>See how much time you just saved ? It can even generate an empty
+repository for this entity if you say <code class="language-plaintext highlighter-rouge">yes</code> during when you are asked
+the question:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="kn">namespace</span> <span class="nn">Acme\Bundle\BlogBundle\Entity</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nc">Doctrine\ORM\EntityRepository</span><span class="p">;</span>
+
+<span class="cd">/**
+ * PostRepository
+ * This class was generated by the Doctrine ORM.
+ * Add your own custom repository methods below.
+ */</span>
+<span class="kd">class</span> <span class="nc">PostRepository</span> <span class="kd">extends</span> <span class="nc">EntityRepository</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="entity-crud-generator">Entity CRUD generator</h2>
+
+<p>But the real time saver is the CRUD generator. You run the command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/console generate:doctrine:crud
+</code></pre></div></div>
+
+<p>Answer the question (what bundle, write actions or not, route prefix,
+etc.) and it will generate a new controller with all the method to deal
+with this entity and the corresponding templates. Here is for example
+the <code class="language-plaintext highlighter-rouge">update</code> action for my entity that the script just generated:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cd">/**
+ * Edits an existing Post entity.
+ *
+ * @Route("/{id}/update", name="post_update")
+ * @Method("post")
+ * @Template("AcmeBundleBlogBundle:Post:edit.html.twig")
+ */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="n">updateAction</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getDoctrine</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">getEntityManager</span><span class="p">();</span>
+
+    <span class="nv">$entity</span> <span class="o">=</span> <span class="nv">$em</span><span class="o">-&gt;</span><span class="nf">getRepository</span><span class="p">(</span><span class="s1">'AcmeBundleBlogBundle:Post'</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$entity</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">createNotFoundException</span><span class="p">(</span><span class="s1">'Unable to find Post entity.'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nv">$editForm</span>   <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">createForm</span><span class="p">(</span><span class="k">new</span> <span class="nc">PostType</span><span class="p">(),</span> <span class="nv">$entity</span><span class="p">);</span>
+    <span class="nv">$deleteForm</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">createDeleteForm</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+
+    <span class="nv">$request</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getRequest</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s1">'POST'</span> <span class="o">===</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="nf">getMethod</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nv">$editForm</span><span class="o">-&gt;</span><span class="nf">bindRequest</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$editForm</span><span class="o">-&gt;</span><span class="nf">isValid</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$em</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">getDoctrine</span><span class="p">()</span><span class="o">-&gt;</span><span class="nf">getEntityManager</span><span class="p">();</span>
+            <span class="nv">$em</span><span class="o">-&gt;</span><span class="nf">persist</span><span class="p">(</span><span class="nv">$entity</span><span class="p">);</span>
+            <span class="nv">$em</span><span class="o">-&gt;</span><span class="nb">flush</span><span class="p">();</span>
+
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">redirect</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="nf">generateUrl</span><span class="p">(</span><span class="s1">'post_edit'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">)));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'entity'</span>      <span class="o">=&gt;</span> <span class="nv">$entity</span><span class="p">,</span>
+        <span class="s1">'edit_form'</span>   <span class="o">=&gt;</span> <span class="nv">$editForm</span><span class="o">-&gt;</span><span class="nf">createView</span><span class="p">(),</span>
+        <span class="s1">'delete_form'</span> <span class="o">=&gt;</span> <span class="nv">$deleteForm</span><span class="o">-&gt;</span><span class="nf">createView</span><span class="p">(),</span>
+    <span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>and the template:</p>
+
+<pre><code class="language-html+jinja">
+&lt;h1&gt;Post edit&lt;/h1&gt;
+
+&lt;form action="{{ path('post_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}&gt;
+    {{ form_widget(edit_form) }}
+    &lt;p&gt;
+        &lt;button type="submit"&gt;Edit&lt;/button&gt;
+    &lt;/p&gt;
+&lt;/form&gt;
+
+&lt;ul class="record_actions"&gt;
+    &lt;li&gt;
+        &lt;a href="{{ path('post') }}"&gt;
+            Back to the list
+        &lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;form action="{{ path('post_delete', { 'id': entity.id }) }}" method="post"&gt;
+            {{ form_widget(delete_form) }}
+            &lt;button type="submit"&gt;Delete&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+
+</code></pre>
+
+<p>Now you just saved one day of work, you can take your week-end on
+thursday night! Further reading:</p>
+
+<ul>
+  <li><a href="http://symfony.com/blog/symfony2-getting-easier-interactive-generators">Blog post announcing the interactive generators</a></li>
+  <li><a href="https://github.com/sensio/SensioGeneratorBundle">Repository on github of the bundle powering those generator</a> (fork
+it!)</li>
+</ul>
+
+<p>And more commands to come!</p>
+
+
+  <h1 style="margin-top: 80px">Comments</h1>
+  <div id="disqus_thread"></div>
+  <script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function () {
+      this.page.url = "https://qpleple.com/code-faster-symfony2s-interactive-generators/";  // Replace PAGE_URL with your page's canonical URL variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://qpleple.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</div>
+      </div>
+    </div>
+
+    <!-- <label for="sidebar-checkbox" class="sidebar-toggle"></label> -->
+
+    <script src='/js/script.js'></script>
+  </body>
+</html>
